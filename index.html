@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cuenta Ovejas... digo, Vacas para Fercita</title>
+    <title>Cuenta Animales Nocturnos para Fercita</title>
     <style>
         body {
             margin: 0;
@@ -31,22 +31,21 @@
             width: 100%;
             height: 60vh;
             overflow: hidden;
-            background: linear-gradient(to bottom, #1b5e20, #2e7d32);
-            box-shadow: inset 0 0 100px rgba(0, 0, 0, 0.7);
+            background: #121212;
         }
         
-        .pasture {
+        .ground {
             position: absolute;
             bottom: 0;
             width: 100%;
-            height: 30%;
-            background: #1b5e20;
+            height: 25%;
+            background: linear-gradient(to top, #1b5e20, #2e7d32);
             border-top: 10px dashed #689f38;
         }
         
         .barn {
             position: absolute;
-            bottom: 30%;
+            bottom: 25%;
             right: 20px;
             width: 120px;
             height: 80px;
@@ -74,7 +73,7 @@
             z-index: 20;
         }
         
-        .cow {
+        .animal {
             position: absolute;
             font-size: 40px;
             cursor: pointer;
@@ -84,7 +83,7 @@
             filter: drop-shadow(0 0 8px rgba(156, 39, 176, 0.7));
         }
         
-        .cow:hover {
+        .animal:hover {
             transform: scale(1.1);
         }
         
@@ -94,6 +93,7 @@
             color: #d1c4e9;
             padding: 0 20px;
             text-shadow: 0 0 5px #7b1fa2;
+            max-width: 90%;
         }
         
         .stars {
@@ -123,7 +123,7 @@
             z-index: 2;
         }
         
-        .sleep-message {
+        .message {
             position: fixed;
             top: 50%;
             left: 50%;
@@ -164,7 +164,7 @@
             100% { transform: translate(-50%, -50%) scale(1); }
         }
         
-        .restart-btn {
+        .btn {
             margin-top: 20px;
             padding: 10px 20px;
             background: #4a148c;
@@ -176,46 +176,78 @@
             transition: all 0.3s;
         }
         
-        .restart-btn:hover {
+        .btn:hover {
             background: #7b1fa2;
             transform: scale(1.1);
+        }
+        
+        .wrong-animal {
+            animation: shake 0.5s;
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
         }
     </style>
 </head>
 <body>
     <div class="header">
-        <h1>¡A dormir contando vacas, Fercita! 🌙🐄</h1>
+        <h1>¡A dormir contando animales, Fercita! 🌙🐄</h1>
         <div class="counter" id="counter">Vacas en el corral: 0</div>
     </div>
     
     <div class="game-container">
         <div class="stars" id="stars"></div>
         <div class="moon"></div>
-        <div class="pasture"></div>
+        <div class="ground"></div>
         <div class="barn">Corral</div>
-        <!-- Las vacas se generarán automáticamente aquí -->
+        <!-- Los animales se generarán automáticamente aquí -->
     </div>
     
     <div class="instructions">
-        <p>Toca las vacas para hacerlas saltar al corral. Cuando llegues a 50, será hora de dormir 💤</p>
+        <p>Toca solo las VACAS (🐄) para hacerlas saltar al corral. Si tocas otro animal, el juego se reiniciará.</p>
+        <p>Cuando llegues a 50 vacas, será hora de dormir 💤</p>
     </div>
     
-    <div class="sleep-message" id="sleepMessage">
+    <div class="message" id="sleepMessage">
         <div>¡Ya te duermes mi vida! 😴💜</div>
-        <button class="restart-btn" id="restartBtn">Contar más vacas</button>
+        <button class="btn" id="restartBtn">Contar más vacas</button>
+    </div>
+    
+    <div class="message" id="wrongAnimalMessage">
+        <div>¿Apoco ya te estás durmiendo? 😏<br>¡Tocaste el animal equivocado!</div>
+        <button class="btn" id="continueBtn">Intentar de nuevo</button>
     </div>
 
     <script>
         const gameContainer = document.querySelector('.game-container');
         const counter = document.getElementById('counter');
         const sleepMessage = document.getElementById('sleepMessage');
+        const wrongAnimalMessage = document.getElementById('wrongAnimalMessage');
         const restartBtn = document.getElementById('restartBtn');
+        const continueBtn = document.getElementById('continueBtn');
         const starsContainer = document.getElementById('stars');
         let cowsInBarn = 0;
+        let gameActive = true;
+        
+        // Animales disponibles (vacas y distractores)
+        const animals = {
+            cow: '🐄',
+            purpleCow: '🐮',
+            sheep: '🐑',
+            horse: '🐴',
+            pig: '🐷',
+            rabbit: '🐰',
+            fox: '🦊',
+            owl: '🦉',
+            raccoon: '🦝'
+        };
         
         // Crear estrellas
         function createStars() {
-            for (let i = 0; i < 100; i++) {
+            for (let i = 0; i < 150; i++) {
                 const star = document.createElement('div');
                 star.className = 'star';
                 star.style.left = `${Math.random() * 100}%`;
@@ -230,42 +262,62 @@
         // Posiciones fijas para el corral
         const barn = {
             x: gameContainer.offsetWidth - 140,
-            y: gameContainer.offsetHeight * 0.7 - 40
+            y: gameContainer.offsetHeight * 0.75 - 40
         };
         
-        // Crear vacas aleatorias
-        function createCow() {
-            const cow = document.createElement('div');
-            cow.className = 'cow';
-            cow.innerHTML = Math.random() > 0.3 ? '🐄' : '🐮';
+        // Crear animales aleatorios
+        function createAnimal() {
+            if (!gameActive) return;
             
-            // Posición aleatoria en el pasto (parte inferior)
-            const x = Math.random() * (gameContainer.offsetWidth - 50);
-            const y = gameContainer.offsetHeight * 0.7 - 20 + Math.random() * 20;
+            const animal = document.createElement('div');
+            animal.className = 'animal';
             
-            cow.style.left = `${x}px`;
-            cow.style.top = `${y}px`;
+            // 60% de probabilidad de vaca, 40% de otros animales
+            const isCow = Math.random() < 0.6;
+            let animalType;
             
-            // Color morado para algunas vacas
-            if (Math.random() > 0.5) {
-                cow.style.filter = 'hue-rotate(270deg) drop-shadow(0 0 10px #9c27b0)';
+            if (isCow) {
+                animalType = Math.random() > 0.5 ? 'cow' : 'purpleCow';
+                animal.dataset.type = 'cow';
+            } else {
+                const otherAnimals = Object.keys(animals).filter(a => a !== 'cow' && a !== 'purpleCow');
+                animalType = otherAnimals[Math.floor(Math.random() * otherAnimals.length)];
+                animal.dataset.type = 'other';
             }
             
-            cow.addEventListener('click', function(e) {
+            animal.innerHTML = animals[animalType];
+            
+            // Posición aleatoria en el suelo
+            const x = Math.random() * (gameContainer.offsetWidth - 50);
+            const y = gameContainer.offsetHeight * 0.75 - 20 + Math.random() * 20;
+            
+            animal.style.left = `${x}px`;
+            animal.style.top = `${y}px`;
+            
+            // Color morado para las vacas moradas
+            if (animalType === 'purpleCow') {
+                animal.style.filter = 'hue-rotate(270deg) drop-shadow(0 0 10px #9c27b0)';
+            }
+            
+            animal.addEventListener('click', function(e) {
                 e.stopPropagation();
-                moveCowToBarn(cow, x, y);
+                if (this.dataset.type === 'cow') {
+                    moveToBarn(animal, x, y);
+                } else {
+                    wrongAnimalSelected(animal);
+                }
             });
             
-            gameContainer.appendChild(cow);
+            gameContainer.appendChild(animal);
             
-            // Mover vaca aleatoriamente cada cierto tiempo
-            if (Math.random() > 0.5) {
+            // Mover animal aleatoriamente cada cierto tiempo
+            if (Math.random() > 0.4) {
                 setInterval(() => {
-                    if (!cow.classList.contains('jumping')) {
-                        const currentX = parseInt(cow.style.left);
+                    if (gameActive && !animal.classList.contains('jumping')) {
+                        const currentX = parseInt(animal.style.left);
                         const newX = currentX + (Math.random() * 40 - 20);
                         if (newX > 0 && newX < gameContainer.offsetWidth - 50) {
-                            cow.style.left = `${newX}px`;
+                            animal.style.left = `${newX}px`;
                         }
                     }
                 }, 1000);
@@ -273,23 +325,23 @@
         }
         
         // Mover vaca al corral
-        function moveCowToBarn(cow, startX, startY) {
-            if (cow.classList.contains('jumping')) return;
+        function moveToBarn(animal, startX, startY) {
+            if (!gameActive || animal.classList.contains('jumping')) return;
             
-            cow.classList.add('jumping');
+            animal.classList.add('jumping');
             
             // Calcular trayectoria al corral
             const dx = barn.x - startX;
             const dy = barn.y - startY;
             
             // Asignar variables CSS para la animación
-            cow.style.setProperty('--tx', `${dx * 0.5}px`);
-            cow.style.setProperty('--ty', `${dy * 0.5 - 100}px`);
-            cow.style.setProperty('--tx-final', `${dx}px`);
-            cow.style.setProperty('--ty-final', `${dy}px`);
+            animal.style.setProperty('--tx', `${dx * 0.5}px`);
+            animal.style.setProperty('--ty', `${dy * 0.5 - 100}px`);
+            animal.style.setProperty('--tx-final', `${dx}px`);
+            animal.style.setProperty('--ty-final', `${dy}px`);
             
             // Aplicar animación
-            cow.style.animation = 'jumpToBarn 1s forwards';
+            animal.style.animation = 'jumpToBarn 1s forwards';
             
             // Actualizar contador
             setTimeout(() => {
@@ -298,41 +350,61 @@
                 
                 // Mostrar mensaje al llegar a 50
                 if (cowsInBarn === 50) {
+                    gameActive = false;
                     setTimeout(() => {
                         sleepMessage.style.display = 'block';
                     }, 500);
                 } else {
-                    // Crear nueva vaca después de un tiempo
-                    setTimeout(createCow, 800);
+                    // Crear nuevo animal después de un tiempo
+                    setTimeout(createAnimal, 800);
                 }
             }, 1000);
         }
         
+        // Animal equivocado seleccionado
+        function wrongAnimalSelected(animal) {
+            if (!gameActive) return;
+            
+            gameActive = false;
+            animal.classList.add('wrong-animal');
+            
+            // Mostrar mensaje de animal equivocado
+            setTimeout(() => {
+                wrongAnimalMessage.style.display = 'block';
+            }, 500);
+        }
+        
         // Reiniciar juego
-        restartBtn.addEventListener('click', function() {
+        function restartGame() {
             cowsInBarn = 0;
             counter.textContent = `Vacas en el corral: ${cowsInBarn}`;
             sleepMessage.style.display = 'none';
+            wrongAnimalMessage.style.display = 'none';
+            gameActive = true;
             
-            // Eliminar todas las vacas
-            document.querySelectorAll('.cow').forEach(cow => cow.remove());
+            // Eliminar todos los animales
+            document.querySelectorAll('.animal').forEach(animal => animal.remove());
             
-            // Crear nuevas vacas
+            // Crear nuevos animales
             for (let i = 0; i < 5; i++) {
-                setTimeout(createCow, i * 500);
+                setTimeout(createAnimal, i * 500);
             }
-        });
+        }
+        
+        // Event listeners para botones
+        restartBtn.addEventListener('click', restartGame);
+        continueBtn.addEventListener('click', restartGame);
         
         // Inicializar juego
         createStars();
         for (let i = 0; i < 5; i++) {
-            setTimeout(createCow, i * 500);
+            setTimeout(createAnimal, i * 500);
         }
         
-        // Permitir agregar vacas tocando el pasto
+        // Permitir agregar animales tocando el suelo
         gameContainer.addEventListener('click', function(e) {
-            if (e.target === gameContainer) {
-                createCow();
+            if (gameActive && e.target === gameContainer) {
+                createAnimal();
             }
         });
     </script>
