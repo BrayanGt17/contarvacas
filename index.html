@@ -324,13 +324,20 @@
         let cowsInBarn = 0;
         let gameActive = true;
         let soundEnabled = true;
+        let audioInitialized = false;
         
-        // Inicializar sonido ambiente
-        ambientSound.volume = 0.3;
-        ambientSound.play().catch(e => console.log("El audio no se pudo reproducir automáticamente"));
+        // Inicializar audio solo después de interacción del usuario
+        function initAudio() {
+            if (!audioInitialized) {
+                audioInitialized = true;
+                ambientSound.volume = 0.3;
+                ambientSound.play().catch(e => console.log("Audio no disponible"));
+            }
+        }
         
         // Control de sonido
         soundControl.addEventListener('click', function() {
+            initAudio();
             soundEnabled = !soundEnabled;
             this.textContent = soundEnabled ? "🔊 Sonido ON" : "🔇 Sonido OFF";
             
@@ -584,6 +591,8 @@ function createNameStars() {
                 e.stopPropagation();
                 if (!gameActive) return;
                 
+                initAudio();
+                
                 const animalX = parseInt(animal.style.left);
                 const animalY = parseInt(animal.style.top);
                 
@@ -729,6 +738,7 @@ function createNameStars() {
         
         // Hacer clic en el cielo para añadir más animales
         gameContainer.addEventListener('click', function(e) {
+            initAudio();
             // Verificar si se hizo clic en el cielo (no en un animal o en el pasto)
             if (e.target === gameContainer || e.target === starsContainer || e.target.classList.contains('star')) {
                 for (let i = 0; i < 3; i++) {
@@ -738,8 +748,15 @@ function createNameStars() {
         });
         
         // Event listeners
-        restartBtn.addEventListener('click', restartGame);
-        continueBtn.addEventListener('click', continueGame);
+        restartBtn.addEventListener('click', function() {
+            initAudio();
+            restartGame();
+        });
+        
+        continueBtn.addEventListener('click', function() {
+            initAudio();
+            continueGame();
+        });
         
         // Inicializar juego
         createStars();
