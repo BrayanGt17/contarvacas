@@ -288,9 +288,7 @@
         <button class="btn" id="continueBtn">Continuar</button>
     </div>
 
-    <audio id="cowSound">
-        <source src="https://soundbible.com/grab.php?moo=1778" type="audio/mpeg">
-    </audio>
+    <audio id="cowSound" preload="auto">
 
     <script>
         // URLs de imágenes
@@ -315,19 +313,36 @@
         
         let cowsInBarn = 0;
         let gameActive = true;
-        let audioInitialized = false;
+        
+        // Web Audio API para generar sonido de vaca
+        let audioCtx = null;
         
         function playCowSound() {
-            if (!audioInitialized) {
-                audioInitialized = true;
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
             }
-            try {
-                cowSound.currentTime = 0;
-                cowSound.play().catch(() => {});
-            } catch(e) {}
+            
+            // Generar sonido de vaca (bajo, largo)
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(150, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(80, audioCtx.currentTime + 0.5);
+            osc.frequency.setValueAtTime(80, audioCtx.currentTime + 0.5);
+            osc.frequency.exponentialRampToValueAtTime(120, audioCtx.currentTime + 0.8);
+            
+            gain.gain.setValueAtTime(0.4, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.8);
+            
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.8);
         }
         
-        // Control de sonido (opcional)
+        // Control de sonido (oculto)
         soundControl.style.display = 'none';
         
     // Configuración de símbolos
