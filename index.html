@@ -289,15 +289,15 @@
     </div>
 
     <audio id="ambientSound" loop>
-        <source src="https://assets.mixkit.co/sfx/preview/mixkit-nature-ambience-1189.mp3" type="audio/mpeg">
+        <source src="https://soundbible.com/grab.php?nature=1835" type="audio/mpeg">
     </audio>
 
     <audio id="cowSound">
-        <source src="https://assets.mixkit.co/sfx/preview/mixkit-cow-moo-1744.mp3" type="audio/mpeg">
+        <source src="https://soundbible.com/grab.php?moo=1778" type="audio/mpeg">
     </audio>
 
     <audio id="wrongSound">
-        <source src="https://assets.mixkit.co/sfx/preview/mixkit-wrong-answer-fail-notification-946.mp3" type="audio/mpeg">
+        <source src="https://orangefreesounds.com/wp-content/uploads/2024/01/Wrong-answer-sound-effect.mp3" type="audio/mpeg">
     </audio>
 
     <script>
@@ -326,13 +326,57 @@
         let soundEnabled = true;
         let audioInitialized = false;
         
-        // Inicializar audio solo después de interacción del usuario
+        // Web Audio API para sonidos de respaldo
+        let audioCtx = null;
+        
         function initAudio() {
             if (!audioInitialized) {
                 audioInitialized = true;
-                ambientSound.volume = 0.3;
-                ambientSound.play().catch(e => console.log("Audio no disponible"));
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                playAmbient();
             }
+        }
+        
+        function playAmbient() {
+            if (!soundEnabled || !audioCtx) return;
+            try {
+                ambientSound.volume = 0.3;
+                ambientSound.play().catch(() => {});
+            } catch(e) {}
+        }
+        
+        function playCowSound() {
+            if (!soundEnabled) return;
+            try {
+                cowSound.currentTime = 0;
+                cowSound.play().catch(() => generateTone(300, 0.3, 'sawtooth'));
+            } catch(e) {
+                generateTone(300, 0.3, 'sawtooth');
+            }
+        }
+        
+        function playWrongSound() {
+            if (!soundEnabled) return;
+            try {
+                wrongSound.currentTime = 0;
+                wrongSound.play().catch(() => generateTone(150, 0.5, 'square'));
+            } catch(e) {
+                generateTone(150, 0.5, 'square');
+            }
+        }
+        
+        function generateTone(freq, duration, type = 'sine') {
+            if (!audioCtx) return;
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = type;
+            osc.frequency.value = freq;
+            gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start();
+            osc.stop(audioCtx.currentTime + duration);
         }
         
         // Control de sonido
@@ -342,7 +386,7 @@
             this.textContent = soundEnabled ? "🔊 Sonido ON" : "🔇 Sonido OFF";
             
             if (soundEnabled) {
-                ambientSound.play();
+                playAmbient();
             } else {
                 ambientSound.pause();
             }
@@ -600,7 +644,7 @@ function createNameStars() {
                 const isNearFence = animalY >= fence.y - 30 && animalY <= fence.y + 30;
                 
                 if (this.dataset.isTarget === 'true') {
-                    if (soundEnabled) cowSound.currentTime = 0, cowSound.play();
+                    playCowSound();
                     
                     if (isNearFence) {
                         // Saltar la valla primero
@@ -617,7 +661,7 @@ function createNameStars() {
                         moveToBarn(animal, animalX, animalY);
                     }
                 } else {
-                    if (soundEnabled) wrongSound.currentTime = 0, wrongSound.play();
+                    playWrongSound();
                     wrongAnimalSelected();
                 }
             });
