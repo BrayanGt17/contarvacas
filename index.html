@@ -553,20 +553,32 @@ function createNameStars() {
             animal.dataset.type = animalData.type;
             animal.dataset.isTarget = animalData.isTarget;
             
-            // Todos los animales aparecen en el pasto (debajo de la valla)
+            // Los animales aparecen desde arriba del cielo y caen al pasto
             const x = Math.random() * (gameContainer.offsetWidth - 100);
-            const y = gameContainer.offsetHeight * 0.7 - 20 + Math.random() * 20;
             
             animal.style.left = `${x}px`;
-            animal.style.top = `${y}px`;
-            animal.style.animation = 'none';
+            animal.style.top = '-80px';
             
-            // Movimiento aleatorio para todos los animales
+            // Scroll vertical de arriba hacia abajo
+            const scrollDuration = 5000 + Math.random() * 3000;
+            animal.style.transition = `top ${scrollDuration}ms linear`;
+            
+            setTimeout(() => {
+                animal.style.top = `${gameContainer.offsetHeight + 80}px`;
+            }, 100);
+            
+            // Después de pasar, movimiento aleatorio en el pasto
             setTimeout(() => {
                 if (animal.parentNode && gameActive) {
-                    moveRandomly(animal);
+                    animal.style.transition = '';
+                    animal.style.top = `${gameContainer.offsetHeight * 0.7 - 20 + Math.random() * 20}px`;
+                    setTimeout(() => {
+                        if (animal.parentNode && gameActive) {
+                            moveRandomly(animal);
+                        }
+                    }, 500);
                 }
-            }, Math.random() * 3000);
+            }, scrollDuration);
             
             animal.addEventListener('click', function(e) {
                 e.stopPropagation();
