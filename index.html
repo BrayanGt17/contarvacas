@@ -12,61 +12,29 @@
             flex-direction: column;
             align-items: center;
             min-height: 100vh;
-            background: linear-gradient(to bottom, #1a0a2e, #2d1b4e); /* Fondo morado más intenso */
+            background: linear-gradient(to bottom, #1a0a2e, #2d1b4e);
             font-family: 'Arial', sans-serif;
             overflow-y: auto;
             touch-action: manipulation;
             color: #e1bee7;
         }
         
-        /* Evitar zoom en dispositivos táctiles al hacer clic */
-        @media (max-width: 768px) {
-            body {
-                -webkit-tap-highlight-color: transparent;
-            }
-        }
-        
         .header {
             text-align: center;
-            margin: 10px 0;
+            margin: 20px 0;
             color: #d1c4e9;
             text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
-        }
-        
-        .header h1 {
-            font-size: 1.2em;
-            margin: 0;
-        }
-        
-        /* Tamaño normal para pantallas medianas y grandes */
-        @media (min-width: 600px) {
-            .header {
-                margin: 15px 0;
-            }
-            .header h1 {
-                font-size: 1.5em;
-            }
-        }
-        
-        @media (min-width: 800px) {
-            .header h1 {
-                font-size: 1.8em;
-            }
         }
         
         .game-container {
             position: relative;
             width: 100%;
-            max-width: 800px; /* Máximo ancho para tablets y desktop */
-            height: 50vh;
-            min-height: 300px; /* Altura mínima para móviles */
-            max-height: 400px; /* Altura máxima para tablets */
+            height: 60vh;
             overflow: hidden;
             background: linear-gradient(to bottom, #1a0a2e, #2d1b4e);
             cursor: pointer;
             border: 2px solid rgba(126, 87, 194, 0.5);
             border-radius: 10px;
-            margin: 0 10px; /* Margen lateral para móviles */
         }
         
         .pasture {
@@ -83,7 +51,7 @@
             bottom: 30%;
             left: 0;
             width: 100%;
-            height: 40px;
+            height: 60px;
             background-image: url('https://i.ibb.co/m5c4ybP2/cerca.png');
             background-size: contain;
             background-repeat: repeat-x;
@@ -93,9 +61,9 @@
         .barn {
             position: absolute;
             bottom: 30%;
-            right: 10px;
-            width: 100px;
-            height: 80px;
+            right: 20px;
+            width: 150px;
+            height: 120px;
             background-image: url('https://i.ibb.co/kgGHz9sG/corral.png');
             background-size: contain;
             background-repeat: no-repeat;
@@ -103,94 +71,30 @@
             z-index: 6;
         }
         
-        /* Tamaño más grande para pantallas medianas y grandes */
-        @media (min-width: 600px) {
-            .fence {
-                height: 50px;
-            }
-            .barn {
-                width: 120px;
-                height: 96px;
-                right: 15px;
-            }
-        }
-        
-        @media (min-width: 800px) {
-            .fence {
-                height: 60px;
-            }
-            .barn {
-                width: 150px;
-                height: 120px;
-                right: 20px;
-            }
-        }
-        
         .counter {
             position: absolute;
-            top: 5px;
-            right: 5px;
+            top: 10px;
+            right: 10px;
             background: rgba(30, 30, 60, 0.8);
-            padding: 5px 10px;
-            border-radius: 15px;
-            font-size: 0.9em;
+            padding: 10px 15px;
+            border-radius: 20px;
+            font-size: 1.2em;
             color: #d1c4e9;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
             border: 1px solid #7e57c2;
             z-index: 10;
         }
         
-        /* Tamaño normal para pantallas medianas y grandes */
-        @media (min-width: 600px) {
-            .counter {
-                top: 10px;
-                right: 10px;
-                padding: 8px 12px;
-                font-size: 1.1em;
-            }
-        }
-        
-        @media (max-width: 350px) {
-            .counter {
-                padding: 4px 8px;
-                font-size: 0.8em;
-            }
-            .header h1 {
-                font-size: 1em;
-            }
-        }
-        
-        /* Clases de animales eliminadas - ahora se dibujan en canvas */
-        
         .instructions {
-            margin-top: 10px;
+            margin-top: 20px;
             text-align: center;
             color: #b39ddb;
-            padding: 8px 12px;
+            padding: 0 20px;
             background: rgba(30, 30, 60, 0.7);
-            border-radius: 8px;
+            border-radius: 15px;
+            padding: 15px;
             border: 1px solid #7e57c2;
-            max-width: 90%;
-            font-size: 0.8em;
-            line-height: 1.4;
-        }
-        
-        /* Tamaño normal para pantallas medianas y grandes */
-        @media (min-width: 600px) {
-            .instructions {
-                margin-top: 15px;
-                padding: 12px 16px;
-                font-size: 0.9em;
-            }
-        }
-        
-        @media (min-width: 800px) {
-            .instructions {
-                margin-top: 20px;
-                padding: 15px 20px;
-                font-size: 1em;
-                max-width: 80%;
-            }
+            max-width: 80%;
         }
         @keyframes heart-pulse {
     0%, 100% { 
@@ -234,31 +138,15 @@
             transform: translate(-50%, -50%);
             background: rgba(67, 55, 111, 0.95);
             color: white;
-            padding: 20px;
-            border-radius: 15px;
-            font-size: 1.2em;
+            padding: 30px;
+            border-radius: 20px;
+            font-size: 2em;
             text-align: center;
-            box-shadow: 0 0 20px #7e57c2;
+            box-shadow: 0 0 30px #7e57c2;
             z-index: 100;
             display: none;
             animation: pulse 2s infinite;
             border: 2px solid #b39ddb;
-            max-width: 90%;
-        }
-        
-        /* Tamaño normal para pantallas medianas y grandes */
-        @media (min-width: 600px) {
-            .message {
-                padding: 30px;
-                font-size: 1.5em;
-                max-width: 80%;
-            }
-        }
-        
-        @media (min-width: 800px) {
-            .message {
-                font-size: 2em;
-            }
         }
         
         .wrong-message {
@@ -388,8 +276,8 @@
         
         .animal {
             position: absolute;
-            width: 60px;
-            height: 60px;
+            width: 80px;
+            height: 80px;
             cursor: pointer;
             user-select: none;
             z-index: 10;
@@ -398,21 +286,6 @@
             background-position: center;
             transition: transform 0.2s;
             filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.3));
-        }
-        
-        /* Tamaño más grande para pantallas medianas y grandes */
-        @media (min-width: 600px) {
-            .animal {
-                width: 70px;
-                height: 70px;
-            }
-        }
-        
-        @media (min-width: 800px) {
-            .animal {
-                width: 80px;
-                height: 80px;
-            }
         }
         
         .animal:hover {
@@ -717,35 +590,18 @@ function createNameStars() {
             { type: 'chicken', image: chickenImageUrl, isTarget: false }
         ];
         
-        // Función para calcular las posiciones del juego
-        function updateGamePositions() {
-            const containerWidth = gameContainer.offsetWidth;
-            const containerHeight = gameContainer.offsetHeight;
-            
-            // Calcular tamaño relativo para móviles
-            const scale = Math.min(containerWidth / 800, 1); // Escala basada en el ancho máximo
-            const barnWidth = 150 * scale;
-            const animalSize = 80 * scale;
-            
-            barn.x = containerWidth - barnWidth - 20;
-            barn.y = containerHeight * 0.7 - 60 * scale;
-            
-            fence.right = containerWidth;
-            fence.y = containerHeight * 0.7 - 30 * scale;
-            
-            // Actualizar posiciones de elementos estáticos
-            const barnElement = document.querySelector('.barn');
-            const fenceElement = document.querySelector('.fence');
-            if (barnElement) barnElement.style.right = `${10 * scale}px`;
-            if (fenceElement) fenceElement.style.height = `${40 * scale}px`;
-        }
+        // Posición del corral
+        const barn = {
+            x: gameContainer.offsetWidth - 170,
+            y: gameContainer.offsetHeight * 0.7 - 60
+        };
         
-        // Variables de posición
-        let barn = { x: 0, y: 0 };
-        let fence = { left: 0, right: 0, y: 0 };
-        
-        // Inicializar posiciones
-        updateGamePositions();
+        // Posición de la valla
+        const fence = {
+            left: 0,
+            right: gameContainer.offsetWidth,
+            y: gameContainer.offsetHeight * 0.7 - 30
+        };
         
         // Crear animal
         function createAnimal() {
@@ -768,15 +624,8 @@ function createNameStars() {
             animal.dataset.type = animalData.type;
             animal.dataset.isTarget = animalData.isTarget;
             
-            // Calcular tamaño relativo del animal basado en el ancho del contenedor
-            const containerWidth = gameContainer.offsetWidth;
-            const scale = Math.min(containerWidth / 800, 1.2);
-            const animalSize = 60 * scale;
-            animal.style.width = `${animalSize}px`;
-            animal.style.height = `${animalSize}px`;
-            
             // Los animales aparecen desde arriba del cielo y caen al pasto
-            const x = Math.random() * (containerWidth - animalSize);
+            const x = Math.random() * (gameContainer.offsetWidth - 100);
             
             animal.style.left = `${x}px`;
             animal.style.top = '-80px';
@@ -828,21 +677,17 @@ function createNameStars() {
             
             const currentX = parseInt(animal.style.left);
             const currentY = parseInt(animal.style.top);
-            const containerWidth = gameContainer.offsetWidth;
-            const containerHeight = gameContainer.offsetHeight;
             
-            // Calcular movimiento relativo al tamaño del contenedor
-            const moveRange = containerWidth * 0.25; // 25% del ancho
             const targetX = Math.max(0, Math.min(
-                containerWidth - 60, // Tamaño aproximado del animal
-                currentX + (Math.random() * moveRange - moveRange / 2)
+                gameContainer.offsetWidth - 100, 
+                currentX + (Math.random() * 200 - 100)
             ));
             
             const targetY = Math.max(
-                containerHeight * 0.7 - 40, 
+                gameContainer.offsetHeight * 0.7 - 40, 
                 Math.min(
-                    containerHeight * 0.7, 
-                    currentY + (Math.random() * 30 - 15)
+                    gameContainer.offsetHeight * 0.7, 
+                    currentY + (Math.random() * 40 - 20)
                 )
             );
             
@@ -868,9 +713,6 @@ function createNameStars() {
         // Mover vaca al corral
         function moveToBarn(animal, startX, startY) {
             if (animal.classList.contains('jumping')) return;
-            
-            // Recalcular posición del corral por si cambió el tamaño
-            updateGamePositions();
             
             animal.classList.add('jumping');
             animal.style.transition = 'none';
@@ -1029,7 +871,6 @@ function createNameStars() {
         // Redimensionar canvas cuando cambia el tamaño de la ventana
         window.addEventListener('resize', () => {
             resizeCanvas();
-            updateGamePositions();
         });
         
         // Inicializar juego
