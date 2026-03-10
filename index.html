@@ -453,6 +453,33 @@
             });
         }
         
+        function playVictorySound() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            
+            // Melodía de victoria: notas ascendentes
+            const notes = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6
+            
+            notes.forEach((freq, i) => {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(freq, audioCtx.currentTime + i * 0.15);
+                
+                gain.gain.setValueAtTime(0, audioCtx.currentTime + i * 0.15);
+                gain.gain.linearRampToValueAtTime(0.15, audioCtx.currentTime + i * 0.15 + 0.05);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + i * 0.15 + 0.3);
+                
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                
+                osc.start(audioCtx.currentTime + i * 0.15);
+                osc.stop(audioCtx.currentTime + i * 0.15 + 0.35);
+            });
+        }
+        
         // Control de sonido (oculto)
         soundControl.style.display = 'none';
         
@@ -780,6 +807,7 @@ function createNameStars() {
                     
                     if (cowsInBarn === 50) {
                         gameActive = false;
+                        playVictorySound(); // Sonido de victoria
                         setTimeout(() => {
                             sleepMessage.style.display = 'block';
                         }, 500);
