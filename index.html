@@ -749,6 +749,12 @@ function createNameStars() {
         // Animal equivocado seleccionado
         function wrongAnimalSelected() {
             playWrongSound();
+            
+            // Vibrar el dispositivo (si está soportado)
+            if (navigator.vibrate) {
+                navigator.vibrate([200, 100, 200]); // Vibración en patrón: 200ms, pausa 100ms, 200ms
+            }
+            
             gameActive = false;
             cowsInBarn = 0;
             counter.textContent = `Vacas en el corral: ${cowsInBarn}`;
