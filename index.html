@@ -257,14 +257,27 @@
             pointer-events: none;
         }
         
-        #animalCanvas {
+        .animal {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 8; /* Entre la valla (z-index: 5) y la luna (z-index: 2) */
-            pointer-events: none; /* El manejador de clics se hará en el contenedor */
+            width: 80px;
+            height: 80px;
+            cursor: pointer;
+            user-select: none;
+            z-index: 10;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            transition: transform 0.2s;
+            filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.3));
+        }
+        
+        .animal:hover {
+            transform: scale(1.1);
+            filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.5));
+        }
+        
+        .animal.moving-left {
+            transform: scaleX(-1);
         }
     </style>
 </head>
@@ -276,7 +289,6 @@
     </div>
     
     <div class="game-container" id="gameContainer">
-        <canvas id="animalCanvas"></canvas>
         <div class="stars" id="stars"></div>
         <div class="moon"></div>
         <div class="pasture"></div>
@@ -551,167 +563,155 @@ function createNameStars() {
             }
         }
         
-        // Configuración de Canvas para animales
-        const animalCanvas = document.getElementById('animalCanvas');
-        const animalCtx = animalCanvas.getContext('2d');
+        // Tipos de animales
+        const animals = [
+            { type: 'cow', image: cowImageUrl, isTarget: true },
+            { type: 'giraffe', image: giraffeImageUrl, isTarget: false },
+            { type: 'sheep', image: sheepImageUrl, isTarget: false },
+            { type: 'pig', image: pigImageUrl, isTarget: false },
+            { type: 'horse', image: horseImageUrl, isTarget: false },
+            { type: 'chicken', image: chickenImageUrl, isTarget: false }
+        ];
         
-        // Estado de los animales
-        let animalObjects = [];
-        let animalImages = {};
-        let animalIdCounter = 0;
+        // Posición del corral
+        const barn = {
+            x: gameContainer.offsetWidth - 170,
+            y: gameContainer.offsetHeight * 0.7 - 60
+        };
         
-        // Posiciones del juego (se calculan al redimensionar)
-        let barnX = 0;
-        let barnY = 0;
-        let fenceY = 0;
+        // Posición de la valla
+        const fence = {
+            left: 0,
+            right: gameContainer.offsetWidth,
+            y: gameContainer.offsetHeight * 0.7 - 30
+        };
         
-        // Cargar imágenes de animales
-        function loadAnimalImages() {
-            const animalTypes = [
-                { type: 'cow', url: cowImageUrl, isTarget: true },
-                { type: 'giraffe', url: giraffeImageUrl, isTarget: false },
-                { type: 'sheep', url: sheepImageUrl, isTarget: false },
-                { type: 'pig', url: pigImageUrl, isTarget: false },
-                { type: 'horse', url: horseImageUrl, isTarget: false },
-                { type: 'chicken', url: chickenImageUrl, isTarget: false }
-            ];
-            
-            animalTypes.forEach(animalType => {
-                const img = new Image();
-                img.src = animalType.url;
-                img.onload = () => {
-                    animalImages[animalType.type] = {
-                        image: img,
-                        isTarget: animalType.isTarget
-                    };
-                };
-            });
-        }
-        
-        // Inicializar canvas de animales
-        function initAnimalCanvas() {
-            resizeAnimalCanvas();
-            window.addEventListener('resize', resizeAnimalCanvas);
-        }
-        
-        function resizeAnimalCanvas() {
-            animalCanvas.width = gameContainer.offsetWidth;
-            animalCanvas.height = gameContainer.offsetHeight;
-            
-            // Actualizar posiciones del corral y la valla
-            barnX = animalCanvas.width - 170;
-            barnY = animalCanvas.height * 0.7 - 60;
-            fenceY = animalCanvas.height * 0.7 - 30;
-        }
-        
-        // Crear animal en canvas
+        // Crear animal
         function createAnimal() {
             if (!gameActive) return;
             
             // 50% de probabilidad de vaca, 50% de otros animales
             const isCow = Math.random() < 0.5;
-            let animalType;
+            let animalData;
             
             if (isCow) {
-                animalType = 'cow';
+                animalData = animals.find(a => a.type === 'cow');
             } else {
-                const otherTypes = Object.keys(animalImages).filter(t => animalImages[t].isTarget === false);
-                animalType = otherTypes[Math.floor(Math.random() * otherTypes.length)];
+                const otherAnimals = animals.filter(a => !a.isTarget);
+                animalData = otherAnimals[Math.floor(Math.random() * otherAnimals.length)];
             }
             
-            if (!animalImages[animalType]) return; // Imagen no cargada aún
+            const animal = document.createElement('div');
+            animal.className = 'animal';
+            animal.style.backgroundImage = `url('${animalData.image}')`;
+            animal.dataset.type = animalData.type;
+            animal.dataset.isTarget = animalData.isTarget;
             
-            const x = Math.random() * (animalCanvas.width - 100);
-            const animal = {
-                id: animalIdCounter++,
-                type: animalType,
-                x: x,
-                y: -80,
-                width: 80,
-                height: 80,
-                vx: 0,
-                vy: 0,
-                state: 'falling', // falling, moving, jumping, barn
-                targetX: 0,
-                targetY: 0,
-                startTime: Date.now(),
-                duration: 5000 + Math.random() * 3000,
-                isTarget: animalImages[animalType].isTarget,
-                movingLeft: false,
-                jumping: false
-            };
+            // Los animales aparecen desde arriba del cielo y caen al pasto
+            const x = Math.random() * (gameContainer.offsetWidth - 100);
             
-            // Iniciar caída
-            animal.vy = (animalCanvas.height + 80 - animal.y) / (animal.duration / 16); // Velocidad para llegar al suelo
+            animal.style.left = `${x}px`;
+            animal.style.top = '-80px';
             
-            animalObjects.push(animal);
+            // Scroll vertical de arriba hacia abajo
+            const scrollDuration = 5000 + Math.random() * 3000;
+            animal.style.transition = `top ${scrollDuration}ms linear`;
             
-            // Después de la caída, empezar a moverse en el pasto
             setTimeout(() => {
-                const foundAnimal = animalObjects.find(a => a.id === animal.id);
-                if (foundAnimal && gameActive) {
-                    foundAnimal.state = 'moving';
-                    foundAnimal.vy = 0;
-                    foundAnimal.y = animalCanvas.height * 0.7 - 20 + Math.random() * 20;
-                    startRandomMovement(foundAnimal);
-                }
-            }, animal.duration);
+                animal.style.top = `${gameContainer.offsetHeight + 80}px`;
+            }, 100);
             
+            // Después de pasar, movimiento aleatorio en el pasto
+            setTimeout(() => {
+                if (animal.parentNode && gameActive) {
+                    animal.style.transition = '';
+                    animal.style.top = `${gameContainer.offsetHeight * 0.7 - 20 + Math.random() * 20}px`;
+                    setTimeout(() => {
+                        if (animal.parentNode && gameActive) {
+                            moveRandomly(animal);
+                        }
+                    }, 500);
+                }
+            }, scrollDuration);
+            
+            animal.addEventListener('click', function(e) {
+                e.stopPropagation();
+                if (!gameActive) return;
+                
+                const animalX = parseInt(animal.style.left);
+                const animalY = parseInt(animal.style.top);
+                
+                if (this.dataset.isTarget === 'true') {
+                    // Mover al corral
+                    moveToBarn(animal, animalX, animalY);
+                } else {
+                    wrongAnimalSelected();
+                }
+            });
+            
+            gameContainer.appendChild(animal);
             return animal;
         }
         
         // Mover animal aleatoriamente en el pasto
-        function startRandomMovement(animal) {
-            if (!gameActive) return;
+        function moveRandomly(animal) {
+            if (!animal.parentNode || !gameActive) return;
+            
+            const currentX = parseInt(animal.style.left);
+            const currentY = parseInt(animal.style.top);
             
             const targetX = Math.max(0, Math.min(
-                animalCanvas.width - animal.width, 
-                animal.x + (Math.random() * 200 - 100)
+                gameContainer.offsetWidth - 100, 
+                currentX + (Math.random() * 200 - 100)
             ));
             
             const targetY = Math.max(
-                animalCanvas.height * 0.7 - 40, 
+                gameContainer.offsetHeight * 0.7 - 40, 
                 Math.min(
-                    animalCanvas.height * 0.7, 
-                    animal.y + (Math.random() * 40 - 20)
+                    gameContainer.offsetHeight * 0.7, 
+                    currentY + (Math.random() * 40 - 20)
                 )
             );
             
-            animal.targetX = targetX;
-            animal.targetY = targetY;
-            animal.movingLeft = targetX < animal.x;
-            
             const duration = 2000 + Math.random() * 3000;
-            const steps = duration / 16; // Aproximadamente 60 FPS
             
-            animal.vx = (targetX - animal.x) / steps;
-            animal.vy = (targetY - animal.y) / steps;
-        }
-        
-        // Mover vaca al corral (animación)
-        function moveToBarn(animal) {
-            if (animal.jumping) return;
+            animal.style.transition = `left ${duration}ms ease-in-out, top ${duration}ms ease-in-out`;
+            animal.style.left = `${targetX}px`;
+            animal.style.top = `${targetY}px`;
             
-            animal.jumping = true;
-            animal.state = 'jumping';
-            animal.startTime = Date.now(); // Para la animación de salto
-            
-            const dx = barnX - animal.x;
-            const dy = barnY - animal.y;
-            
-            // Animación de salto (parábola)
-            animal.targetX = barnX;
-            animal.targetY = barnY;
-            
-            // Tiempo de animación: 1 segundo
-            const duration = 1000;
-            const steps = duration / 16;
-            
-            animal.vx = dx / steps;
-            animal.vy = dy / steps;
+            if (targetX < currentX) {
+                animal.classList.add('moving-left');
+            } else {
+                animal.classList.remove('moving-left');
+            }
             
             setTimeout(() => {
-                if (animal.isTarget) {
+                if (animal.parentNode && gameActive) {
+                    moveRandomly(animal);
+                }
+            }, duration);
+        }
+        
+        // Mover vaca al corral
+        function moveToBarn(animal, startX, startY) {
+            if (animal.classList.contains('jumping')) return;
+            
+            animal.classList.add('jumping');
+            animal.style.transition = 'none';
+            animal.style.animation = 'none';
+            
+            const dx = barn.x - startX;
+            const dy = barn.y - startY;
+            
+            animal.style.setProperty('--tx', `${dx * 0.5}px`);
+            animal.style.setProperty('--ty', `${dy * 0.5 - 100}px`);
+            animal.style.setProperty('--tx-final', `${dx}px`);
+            animal.style.setProperty('--ty-final', `${dy}px`);
+            
+            animal.style.animation = 'jumpToBarn 1s forwards';
+            
+            setTimeout(() => {
+                if (animal.dataset.isTarget === 'true') {
                     cowsInBarn++;
                     counter.textContent = `Vacas en el corral: ${cowsInBarn}`;
                     
@@ -723,114 +723,10 @@ function createNameStars() {
                     }
                 }
                 
-                // Eliminar animal
-                animalObjects = animalObjects.filter(a => a.id !== animal.id);
-                
+                animal.remove();
                 if (gameActive) createAnimal();
             }, 1000);
         }
-        
-        // Dibujar todos los animales
-        function drawAnimals() {
-            animalCtx.clearRect(0, 0, animalCanvas.width, animalCanvas.height);
-            
-            animalObjects.forEach(animal => {
-                const imgData = animalImages[animal.type];
-                if (!imgData || !imgData.image) return;
-                
-                // Actualizar posición
-                if (animal.state === 'falling') {
-                    animal.y += animal.vy;
-                } else if (animal.state === 'moving') {
-                    animal.x += animal.vx;
-                    animal.y += animal.vy;
-                    
-                    // Rebotar en bordes del pasto
-                    if (animal.x <= 0 || animal.x >= animalCanvas.width - animal.width) {
-                        animal.vx *= -1;
-                        animal.movingLeft = animal.vx < 0;
-                    }
-                    
-                    // Limitar Y al área del pasto
-                    const minY = animalCanvas.height * 0.7 - 40;
-                    const maxY = animalCanvas.height * 0.7;
-                    if (animal.y < minY || animal.y > maxY) {
-                        animal.vy *= -1;
-                    }
-                    
-                    // Cambiar dirección aleatoriamente
-                    if (Math.random() < 0.005) {
-                        startRandomMovement(animal);
-                    }
-                } else if (animal.state === 'jumping') {
-                    animal.x += animal.vx;
-                    animal.y += animal.vy;
-                    
-                    // Efecto de salto (parábola simplificada)
-                    const progress = (Date.now() - animal.startTime) / 1000; // 0 a 1 en 1 segundo
-                    if (progress >= 1) {
-                        animal.y = animal.targetY;
-                        animal.x = animal.targetX;
-                    } else {
-                        const jumpOffset = Math.sin(progress * Math.PI) * 50;
-                        animal.y -= jumpOffset;
-                    }
-                }
-                
-                // Dibujar imagen
-                const flip = animal.movingLeft ? -1 : 1;
-                const drawX = animal.movingLeft ? animal.x + animal.width : animal.x;
-                
-                animalCtx.save();
-                animalCtx.translate(drawX + animal.width / 2, animal.y + animal.height / 2);
-                animalCtx.scale(flip, 1);
-                animalCtx.drawImage(
-                    imgData.image, 
-                    -animal.width / 2, 
-                    -animal.height / 2, 
-                    animal.width, 
-                    animal.height
-                );
-                animalCtx.restore();
-            });
-            
-            requestAnimationFrame(drawAnimals);
-        }
-        
-        // Manejar clics en el área del juego
-        gameContainer.addEventListener('click', function(e) {
-            const rect = gameContainer.getBoundingClientRect();
-            const clickX = e.clientX - rect.left;
-            const clickY = e.clientY - rect.top;
-            
-            // Verificar si se hizo clic en el cielo (no en un animal)
-            let clickedAnimal = null;
-            
-            for (let i = animalObjects.length - 1; i >= 0; i--) {
-                const animal = animalObjects[i];
-                if (clickX >= animal.x && clickX <= animal.x + animal.width &&
-                    clickY >= animal.y && clickY <= animal.y + animal.height) {
-                    clickedAnimal = animal;
-                    break;
-                }
-            }
-            
-            if (clickedAnimal) {
-                if (!gameActive) return;
-                
-                if (clickedAnimal.isTarget) {
-                    // Mover al corral
-                    moveToBarn(clickedAnimal);
-                } else {
-                    wrongAnimalSelected();
-                }
-            } else if (e.target === gameContainer || e.target === starsContainer || e.target.classList.contains('star')) {
-                // Hacer clic en el cielo para añadir más animales
-                for (let i = 0; i < 3; i++) {
-                    setTimeout(createAnimal, i * 300);
-                }
-            }
-        });
         
         // Animal equivocado seleccionado
         function wrongAnimalSelected() {
@@ -840,8 +736,8 @@ function createNameStars() {
             counter.textContent = `Vacas en el corral: ${cowsInBarn}`;
             wrongAnimalMessage.style.display = 'block';
             
-            // Eliminar todos los animales
-            animalObjects = [];
+            // Eliminar todos los animales del pasto
+            document.querySelectorAll('.animal').forEach(animal => animal.remove());
         }
         
         // Reiniciar juego completamente
@@ -852,8 +748,8 @@ function createNameStars() {
             wrongAnimalMessage.style.display = 'none';
             gameActive = true;
             
-            // Eliminar todos los animales
-            animalObjects = [];
+            // Eliminar todos los animales del pasto
+            document.querySelectorAll('.animal').forEach(animal => animal.remove());
             
             // Crear nuevos animales
             for (let i = 0; i < 5; i++) {
@@ -867,6 +763,16 @@ function createNameStars() {
             gameActive = true;
             createAnimal();
         }
+        
+        // Hacer clic en el cielo para añadir más animales
+        gameContainer.addEventListener('click', function(e) {
+            // Verificar si se hizo clic en el cielo (no en un animal o en el pasto)
+            if (e.target === gameContainer || e.target === starsContainer || e.target.classList.contains('star')) {
+                for (let i = 0; i < 3; i++) {
+                    setTimeout(createAnimal, i * 300);
+                }
+            }
+        });
         
         // Event listeners
         restartBtn.addEventListener('click', restartGame);
@@ -953,9 +859,6 @@ function createNameStars() {
         createStars();
         createNameStars();
         initParticles();
-        initAnimalCanvas();
-        loadAnimalImages();
-        drawAnimals(); // Iniciar bucle de dibujo
         restartGame();
     </script>
 </body>
