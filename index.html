@@ -255,6 +255,41 @@
             border: 1px solid #7e57c2;
             cursor: pointer;
         }
+        
+        .particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+        
+        .particle {
+            position: absolute;
+            background-color: #b39ddb;
+            border-radius: 50%;
+            opacity: 0.6;
+            animation: floatParticle 15s infinite linear;
+        }
+        
+        @keyframes floatParticle {
+            0% {
+                transform: translateY(100vh) translateX(0) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.6;
+            }
+            90% {
+                opacity: 0.6;
+            }
+            100% {
+                transform: translateY(-100px) translateX(100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
     </style>
 </head>
 <body>
@@ -265,6 +300,7 @@
     
     <div class="game-container" id="gameContainer">
         <div class="stars" id="stars"></div>
+        <div class="particles" id="particles"></div>
         <div class="moon"></div>
         <div class="pasture"></div>
         <div class="fence"></div>
@@ -753,9 +789,38 @@ function createNameStars() {
         restartBtn.addEventListener('click', restartGame);
         continueBtn.addEventListener('click', continueGame);
         
+        // Crear partículas moradas
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 30;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                
+                const size = Math.random() * 10 + 5;
+                const startX = Math.random() * 100;
+                const delay = Math.random() * 15;
+                const duration = 15 + Math.random() * 10;
+                
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.left = `${startX}%`;
+                particle.style.animationDelay = `${delay}s`;
+                particle.style.animationDuration = `${duration}s`;
+                
+                // Colores morados variados
+                const colors = ['#b39ddb', '#9575cd', '#7e57c2', '#6a5acd', '#9370db'];
+                particle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                
+                particlesContainer.appendChild(particle);
+            }
+        }
+        
         // Inicializar juego
         createStars();
         createNameStars();
+        createParticles();
         restartGame();
     </script>
 </body>
