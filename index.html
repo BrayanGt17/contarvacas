@@ -96,6 +96,33 @@
             border: 1px solid #7e57c2;
             max-width: 80%;
         }
+        
+        .level-selector {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .level-btn {
+            padding: 8px 15px;
+            background: rgba(30, 30, 60, 0.8);
+            color: #d1c4e9;
+            border: 1px solid #7e57c2;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .level-btn:hover {
+            background: #7e57c2;
+        }
+        
+        .level-btn.active {
+            background: #7e57c2;
+            color: white;
+        }
         @keyframes heart-pulse {
     0%, 100% { 
         opacity: 0.7; 
@@ -315,9 +342,15 @@
     </div>
     
     <div class="instructions">
-        <p>Toca las VACAS cerca de la valla para que salten al corral. Otros animales reinician el contador.</p>
-        <p>Haz clic en el cielo para que aparezcan más animales.</p>
+        <p>Toca las VACAS cerca de la valla para que salten al corral.</p>
+        <p>Los animales aparecerán automáticamente según la dificultad.</p>
         <p>Cuando llegues a 50 vacas, será hora de dormir 💤</p>
+    </div>
+    
+    <div class="level-selector">
+        <button class="level-btn" data-level="easy">Fácil</button>
+        <button class="level-btn active" data-level="medium">Medio</button>
+        <button class="level-btn" data-level="hard">Difícil</button>
     </div>
     
     <div class="message" id="sleepMessage">
@@ -356,8 +389,19 @@
         let cowsInBarn = 0;
         let gameActive = true;
         
+        // Configuración de niveles
+        const levels = {
+            easy: { animalSpeed: 7000, spawnRate: 2500 },
+            medium: { animalSpeed: 5000, spawnRate: 1800 },
+            hard: { animalSpeed: 3500, spawnRate: 1200 }
+        };
+        let currentLevel = 'medium'; // Nivel por defecto
+        
         // Web Audio API para generar sonido de vaca
         let audioCtx = null;
+        
+        // Timer para generación automática de animales
+        let spawnInterval = null;
         
         function playCowSound() {
             if (!audioCtx) {
@@ -630,8 +674,9 @@ function createNameStars() {
             animal.style.left = `${x}px`;
             animal.style.top = '-80px';
             
-            // Scroll vertical de arriba hacia abajo
-            const scrollDuration = 5000 + Math.random() * 3000;
+            // Scroll vertical de arriba hacia abajo (usando velocidad del nivel actual)
+            const baseSpeed = levels[currentLevel].animalSpeed;
+            const scrollDuration = baseSpeed + Math.random() * (baseSpeed * 0.6); // Variación aleatoria
             animal.style.transition = `top ${scrollDuration}ms linear`;
             
             setTimeout(() => {
@@ -750,11 +795,6 @@ function createNameStars() {
         function wrongAnimalSelected() {
             playWrongSound();
             
-            // Vibrar el dispositivo (si está soportado)
-            if (navigator.vibrate) {
-                navigator.vibrate([200, 100, 200]); // Vibración en patrón: 200ms, pausa 100ms, 200ms
-            }
-            
             gameActive = false;
             cowsInBarn = 0;
             counter.textContent = `Vacas en el corral: ${cowsInBarn}`;
@@ -775,9 +815,20 @@ function createNameStars() {
             // Eliminar todos los animales del pasto
             document.querySelectorAll('.animal').forEach(animal => animal.remove());
             
-            // Crear nuevos animales
-            for (let i = 0; i < 5; i++) {
-                setTimeout(createAnimal, i * 800);
+            // Detener generación automática anterior
+            if (spawnInterval) clearInterval(spawnInterval);
+            
+            // Iniciar generación automática de animales
+            const spawnRate = levels[currentLevel].spawnRate;
+            spawnInterval = setInterval(() => {
+                if (gameActive) {
+                    createAnimal();
+                }
+            }, spawnRate);
+            
+            // Crear algunos animales iniciales
+            for (let i = 0; i < 3; i++) {
+                setTimeout(createAnimal, i * 500);
             }
         }
         
@@ -788,19 +839,28 @@ function createNameStars() {
             createAnimal();
         }
         
-        // Hacer clic en el cielo para añadir más animales
-        gameContainer.addEventListener('click', function(e) {
-            // Verificar si se hizo clic en el cielo (no en un animal o en el pasto)
-            if (e.target === gameContainer || e.target === starsContainer || e.target.classList.contains('star')) {
-                for (let i = 0; i < 3; i++) {
-                    setTimeout(createAnimal, i * 300);
-                }
-            }
-        });
+        // No se añaden animales al hacer clic en el cielo (generación automática)
         
         // Event listeners
         restartBtn.addEventListener('click', restartGame);
         continueBtn.addEventListener('click', continueGame);
+        
+        // Event listeners para botones de nivel
+        document.querySelectorAll('.level-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                // Actualizar clase activa
+                document.querySelectorAll('.level-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                
+                // Cambiar nivel
+                currentLevel = this.dataset.level;
+                
+                // Si el juego está activo, reiniciar con el nuevo nivel
+                if (gameActive) {
+                    restartGame();
+                }
+            });
+        });
         
         // Sistema de partículas con líneas de conexión (Constelación morada)
         let particles = [];
