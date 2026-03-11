@@ -12,11 +12,12 @@
         }
 
         body {
-            min-height: 100vh;
+            min-height: 150vh;
             background: linear-gradient(135deg, #1a0a2e 0%, #2d1b4e 50%, #1a0a2e 100%);
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             color: #e1bee7;
-            overflow: hidden;
+            overflow-y: auto;
+            overflow-x: hidden;
             touch-action: none;
             position: relative;
         }
@@ -60,6 +61,34 @@
             padding: 15px 20px;
             border-radius: 15px;
             border: 1px solid rgba(126, 87, 194, 0.5);
+        }
+        
+        .color-picker {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 10;
+            background: rgba(20, 20, 40, 0.8);
+            padding: 10px 15px;
+            border-radius: 15px;
+            border: 1px solid rgba(126, 87, 194, 0.5);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .color-picker label {
+            color: #b39ddb;
+            font-size: 0.9em;
+        }
+        
+        .color-picker input[type="color"] {
+            width: 40px;
+            height: 30px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background: transparent;
         }
 
         .score {
@@ -203,6 +232,11 @@
         <div class="record">Récord: <span id="record">0</span></div>
     </div>
     
+    <div class="color-picker">
+        <label>Color de la culebrita:</label>
+        <input type="color" id="snakeColor" value="#4caf50">
+    </div>
+    
     <div class="instructions-overlay">Usa las flechas o los botones para moverte</div>
     
     <div class="mobile-controls">
@@ -287,14 +321,19 @@
             ctx.fillRect(0, 0, canvas.width, canvas.height);
             
             // Dibujar serpiente
+            const baseColor = document.getElementById('snakeColor').value;
+            const r = parseInt(baseColor.substr(1, 2), 16);
+            const g = parseInt(baseColor.substr(3, 2), 16);
+            const b = parseInt(baseColor.substr(5, 2), 16);
+            
             snake.forEach((segment, index) => {
                 if (index === 0) {
                     // Cabeza
-                    ctx.fillStyle = '#4caf50';
+                    ctx.fillStyle = baseColor;
                 } else {
                     // Cuerpo con gradiente
                     const intensity = 1 - (index / snake.length) * 0.5;
-                    ctx.fillStyle = `rgb(${76 * intensity}, ${175 * intensity}, ${80 * intensity})`;
+                    ctx.fillStyle = `rgb(${Math.floor(r * intensity)}, ${Math.floor(g * intensity)}, ${Math.floor(b * intensity)})`;
                 }
                 ctx.fillRect(segment.x * gridSize, segment.y * gridSize, gridSize - 1, gridSize - 1);
             });
@@ -506,31 +545,57 @@
         gameRunning = true;
         gameLoop = setInterval(updateGame, 180);
         
-        // Partículas básicas
+        // Partículas con conexiones
         particleCanvas.width = window.innerWidth;
         particleCanvas.height = window.innerHeight;
         
         const particles = [];
-        for (let i = 0; i < 50; i++) {
+        for (let i = 0; i < 60; i++) {
             particles.push({
                 x: Math.random() * particleCanvas.width,
                 y: Math.random() * particleCanvas.height,
+                vx: (Math.random() - 0.5) * 0.5,
+                vy: (Math.random() - 0.5) * 0.5,
                 size: Math.random() * 2 + 1,
-                speed: Math.random() * 0.5 + 0.1
+                opacity: 0.3 + Math.random() * 0.4
             });
         }
         
         function animateParticles() {
             particleCtx.clearRect(0, 0, particleCanvas.width, particleCanvas.height);
             
+            // Actualizar y dibujar partículas
             particles.forEach(p => {
-                p.y += p.speed;
-                if (p.y > particleCanvas.height) p.y = 0;
+                p.x += p.vx;
+                p.y += p.vy;
                 
-                particleCtx.fillStyle = 'rgba(179, 157, 219, 0.5)';
+                if (p.x < 0 || p.x > particleCanvas.width) p.vx *= -1;
+                if (p.y < 0 || p.y > particleCanvas.height) p.vy *= -1;
+                
+                particleCtx.fillStyle = `rgba(179, 157, 219, ${p.opacity})`;
                 particleCtx.beginPath();
                 particleCtx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
                 particleCtx.fill();
+            });
+            
+            // Dibujar conexiones
+            particles.forEach((p1, i) => {
+                particles.slice(i + 1).forEach(p2 => {
+                    const dx = p1.x - p2.x;
+                    const dy = p1.y - p2.y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    const maxDistance = 120;
+                    
+                    if (distance < maxDistance) {
+                        const opacity = (1 - distance / maxDistance) * 0.15;
+                        particleCtx.beginPath();
+                        particleCtx.moveTo(p1.x, p1.y);
+                        particleCtx.lineTo(p2.x, p2.y);
+                        particleCtx.strokeStyle = `rgba(126, 87, 194, ${opacity})`;
+                        particleCtx.lineWidth = 1;
+                        particleCtx.stroke();
+                    }
+                });
             });
             
             requestAnimationFrame(animateParticles);
