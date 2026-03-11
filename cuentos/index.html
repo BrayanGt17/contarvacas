@@ -324,20 +324,10 @@
             </form>
         </div>
 
-        <h2 style="color: #d1c4e9; margin: 20px 0;">Cuentos Disponibles</h2>
+        <h2 style="color: #d1c4e9; margin: 20px 0;">Cuentos Clásicos Disponibles</h2>
         
         <div class="cuentos-grid" id="cuentosGrid">
             <!-- Los cuentos se cargarán dinámicamente aquí -->
-            <div class="cuento-card">
-                <h3 class="cuento-title">Ejemplo: El Viaje de la Vaca</h3>
-                <p class="cuento-description">Un cuento sobre una vaca que viaja por el mundo.</p>
-                <div class="audio-player">
-                    <audio controls>
-                        <source src="" type="audio/mpeg">
-                        Tu navegador no soporta el elemento de audio.
-                    </audio>
-                </div>
-            </div>
         </div>
 
         <a href="../index.html" class="back-link">← Volver a JuegosBYF</a>
@@ -424,86 +414,150 @@
         initParticles();
         animate();
 
-        // Cargar cuentos de la API de Project Gutenberg al inicio
-        async function loadGutenbergCuentos() {
-            try {
-                // Buscar cuentos populares
-                const response = await fetch('https://gutendex.com/books?topic=cuento&language=es&sort=downloads');
-                const data = await response.json();
-                
-                if (data.results && data.results.length > 0) {
-                    displayGutenbergCuentos(data.results);
-                }
-            } catch (error) {
-                console.log('No se pudo cargar la API de Gutenberg:', error);
+        // Lista de cuentos clásicos de dominio público en español
+        const cuentosClasicos = [
+            {
+                title: "Caperucita Roja",
+                author: "Charles Perrault / Hermanos Grimm",
+                description: "Un clásico sobre una niña que visita a su abuela y se encuentra con un lobo feroz.",
+                url: "https://es.wikipedia.org/wiki/Caperucita_Roja"
+            },
+            {
+                title: "El patito feo",
+                author: "Hans Christian Andersen",
+                description: "La historia de un patito que es rechazado por ser diferente pero se convierte en un hermoso cisne.",
+                url: "https://es.wikipedia.org/wiki/El_patito_feo"
+            },
+            {
+                title: "Los tres cerditos",
+                author: "Folklore inglés",
+                description: "Tres hermanos cerditos construyen casas de diferentes materiales para protegerse del lobo.",
+                url: "https://es.wikipedia.org/wiki/Los_tres_cerditos"
+            },
+            {
+                title: "Blancanieves y los siete enanitos",
+                author: "Hermanos Grimm",
+                description: "Una princesa perseguida por su madrastra encuentra refugio con siete enanitos.",
+                url: "https://es.wikipedia.org/wiki/Blancanieves"
+            },
+            {
+                title: "Pinocho",
+                author: "Carlo Collodi",
+                description: "Un muñeco de madera que quiere convertirse en un niño de verdad.",
+                url: "https://es.wikipedia.org/wiki/Pinocho"
+            },
+            {
+                title: "La Cenicienta",
+                author: "Charles Perrault",
+                description: "Una joven maltratada por su madrastra logra asistir al baile real con ayuda de su hada madrina.",
+                url: "https://es.wikipedia.org/wiki/Cenicienta"
+            },
+            {
+                title: "Hansel y Gretel",
+                author: "Hermanos Grimm",
+                description: "Dos hermanos se pierden en el bosque y encuentran una casa de dulces.",
+                url: "https://es.wikipedia.org/wiki/Hansel_y_Gretel"
+            },
+            {
+                title: "El flautista de Hamelín",
+                author: "Folklore alemán",
+                description: "Un misterioso flautista libera a la ciudad de Hamelín de una plaga de ratas.",
+                url: "https://es.wikipedia.org/wiki/El_flautista_de_Hamel%C3%ADn"
+            },
+            {
+                title: "La Bella Durmiente",
+                author: "Charles Perrault",
+                description: "Una princesa maldita a dormir 100 años hasta que un príncipe la despierte.",
+                url: "https://es.wikipedia.org/wiki/La_Bella_Durmiente"
+            },
+            {
+                title: "Ricitos de Oro",
+                author: "Folklore inglés",
+                description: "Una niña con cabello dorado entra en la casa de tres osos.",
+                url: "https://es.wikipedia.org/wiki/Ricitos_de_Oro"
+            },
+            {
+                title: "El príncipe rana",
+                author: "Hermanos Grimm",
+                description: "Una princesa promete a una rana que la llevará a su castillo.",
+                url: "https://es.wikipedia.org/wiki/El_pr%C3%ADncipe_rana"
+            },
+            {
+                title: "La sirenita",
+                author: "Hans Christian Andersen",
+                description: "Una princesa sirena que quiere convertirse en humana.",
+                url: "https://es.wikipedia.org/wiki/La_sirenita"
+            },
+            {
+                title: "El emperador no tiene ropa",
+                author: "Hans Christian Andersen",
+                description: "Un emperador es engañado por dos estafadores que dicen que le están haciendo un traje mágico.",
+                url: "https://es.wikipedia.org/wiki/El_emperador_no_tiene_ropa"
+            },
+            {
+                title: "Los músicos de Bremen",
+                author: "Hermanos Grimm",
+                description: "Cuatro animales viejos deciden ir a Bremen para ser músicos.",
+                url: "https://es.wikipedia.org/wiki/Los_m%C3%BAsicos_de_Bremen"
+            },
+            {
+                title: "Pulgarcito",
+                author: "Charles Perrault",
+                description: "Un niño del tamaño de un pulgar que se pierde en el bosque.",
+                url: "https://es.wikipedia.org/wiki/Pulgarcito"
             }
-        }
+        ];
 
-        function displayGutenbergCuentos(cuentos) {
+        function displayCuentos(cuentos) {
             const grid = document.getElementById('cuentosGrid');
+            grid.innerHTML = '';
             
-            // Limpiar solo los cuentos de ejemplo
-            const ejemplo = grid.querySelector('.cuento-card');
-            if (ejemplo) ejemplo.remove();
-            
-            cuentos.forEach(cuento => {
-                if (cuento.download_count > 0) {
-                    const card = document.createElement('div');
-                    card.className = 'cuento-card';
-                    card.dataset.title = cuento.title.toLowerCase();
-                    card.dataset.author = (cuento.authors[0]?.name || '').toLowerCase();
-                    
-                    // Obtener el enlace de descarga (generalmente hay varios formatos)
-                    const htmlLink = cuento.formats?.['text/html'];
-                    const textLink = cuento.formats?.['text/plain'];
-                    
-                    card.innerHTML = `
-                        <h3 class="cuento-title">${cuento.title}</h3>
-                        <p class="cuento-description">
-                            ${cuento.authors[0]?.name || 'Autor desconocido'} 
-                            • ${cuento.download_count} descargas
-                        </p>
-                        <div class="audio-player">
-                            <a href="${htmlLink || textLink || '#'}" target="_blank" class="btn" style="display: inline-block; text-decoration: none;">
-                                📖 Leer en línea
-                            </a>
-                        </div>
-                    `;
-                    
-                    grid.appendChild(card);
-                }
-            });
-        }
-
-        async function searchCuentos() {
-            const searchTerm = document.getElementById('searchInput').value.trim();
-            if (!searchTerm) {
-                loadGutenbergCuentos();
+            if (cuentos.length === 0) {
+                grid.innerHTML = `
+                    <div class="cuento-card">
+                        <h3 class="cuento-title">No se encontraron resultados</h3>
+                        <p class="cuento-description">Intenta con otro término de búsqueda</p>
+                    </div>
+                `;
                 return;
             }
             
-            try {
-                const response = await fetch(`https://gutendex.com/books?search=${encodeURIComponent(searchTerm)}&language=es`);
-                const data = await response.json();
+            cuentos.forEach(cuento => {
+                const card = document.createElement('div');
+                card.className = 'cuento-card';
                 
-                // Limpiar grid
-                const grid = document.getElementById('cuentosGrid');
-                grid.innerHTML = '';
+                card.innerHTML = `
+                    <h3 class="cuento-title">${cuento.title}</h3>
+                    <p class="cuento-description">${cuento.description}</p>
+                    <p class="cuento-author" style="color: #b39ddb; font-size: 0.9em; margin-bottom: 15px;">
+                        ✍️ ${cuento.author}
+                    </p>
+                    <div class="audio-player">
+                        <a href="${cuento.url}" target="_blank" class="btn">
+                            📖 Leer cuento completo
+                        </a>
+                    </div>
+                `;
                 
-                if (data.results && data.results.length > 0) {
-                    displayGutenbergCuentos(data.results);
-                } else {
-                    grid.innerHTML = `
-                        <div class="cuento-card">
-                            <h3 class="cuento-title">No se encontraron resultados</h3>
-                            <p class="cuento-description">Intenta con otro término de búsqueda</p>
-                        </div>
-                    `;
-                }
-            } catch (error) {
-                console.log('Error en la búsqueda:', error);
-                alert('Error al buscar. Intenta nuevamente.');
+                grid.appendChild(card);
+            });
+        }
+
+        function searchCuentos() {
+            const searchTerm = document.getElementById('searchInput').value.trim().toLowerCase();
+            
+            if (!searchTerm) {
+                displayCuentos(cuentosClasicos);
+                return;
             }
+            
+            const resultados = cuentosClasicos.filter(cuento => 
+                cuento.title.toLowerCase().includes(searchTerm) ||
+                cuento.author.toLowerCase().includes(searchTerm) ||
+                cuento.description.toLowerCase().includes(searchTerm)
+            );
+            
+            displayCuentos(resultados);
         }
 
         // Buscar al presionar Enter
@@ -514,7 +568,7 @@
         });
 
         // Cargar cuentos al iniciar
-        loadGutenbergCuentos();
+        displayCuentos(cuentosClasicos);
 
         // Manejo del formulario de subida
         document.getElementById('audioFile').addEventListener('change', function(e) {
