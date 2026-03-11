@@ -414,97 +414,77 @@
         initParticles();
         animate();
 
-        // Lista de cuentos clásicos de dominio público en español
+        // Lista de cuentos infantiles originales (creados para esta web)
         const cuentosClasicos = [
             {
-                title: "Caperucita Roja",
-                author: "Charles Perrault / Hermanos Grimm",
-                description: "Un clásico sobre una niña que visita a su abuela y se encuentra con un lobo feroz.",
-                url: "https://es.wikipedia.org/wiki/Caperucita_Roja"
+                title: "El conejito valiente",
+                author: "CuentosBYF",
+                description: "Un pequeño conejo que supera sus miedos para ayudar a sus amigos del bosque. Una historia sobre el valor y la amistad.",
+                content: "Había una vez un conejito muy pequeño llamado Tito que vivía en un bosque mágico. A Tito le daba mucho miedo la oscuridad y nunca salía de su madriguera después de que se pusiera el sol. Un día, sus amigos del bosque le pidieron ayuda porque el río había crecido demasiado y no podían cruzar para llegar a los árboles con frutas. Tito, aunque tenía miedo, decidió ayudarles. Con mucho esfuerzo y valentía, encontró un camino seguro para cruzar el río. Al final, todos sus amigos celebraron su valentía y Tito aprendió que, aunque se tenga miedo, se puede ser valiente por los demás.",
+                image: "🐰"
             },
             {
-                title: "El patito feo",
-                author: "Hans Christian Andersen",
-                description: "La historia de un patito que es rechazado por ser diferente pero se convierte en un hermoso cisne.",
-                url: "https://es.wikipedia.org/wiki/El_patito_feo"
+                title: "La mariposa de colores",
+                author: "CuentosBYF",
+                description: "Una mariposa que descubre que su verdadera belleza está en ayudar a los demás.",
+                content: "En un jardín lleno de flores vivía una mariposa llamada Lila. Lila tenía alas de todos los colores del arcoíris, pero siempre se sentía triste porque pensaba que era demasiado pequeña para importar. Un día, vio a una pequeña oruga que no podía llegar a una hoja alta. Lila, usando sus alas coloridas, la ayudó a subir. Luego ayudó a una abeja a encontrar polen y a una luciérnaga a brillar más fuerte. Pronto, todos los animales del jardín le agradecieron y Lila entendió que su verdadera belleza estaba en ayudar a los demás.",
+                image: "🦋"
             },
             {
-                title: "Los tres cerditos",
-                author: "Folklore inglés",
-                description: "Tres hermanos cerditos construyen casas de diferentes materiales para protegerse del lobo.",
-                url: "https://es.wikipedia.org/wiki/Los_tres_cerditos"
+                title: "El árbol que quería cantar",
+                author: "CuentosBYF",
+                description: "Un árbol que descubre su talento para la música con la ayuda de sus amigos.",
+                content: "En el centro del bosque vivía un roble muy alto que siempre deseaba cantar. Pero los árboles no pueden cantar, pensaba el roble. Un día, un grupo de pájaros llegó y empezó a cantar en sus ramas. El roble sintió el ritmo en sus hojas y empezó a moverse con el viento. De repente, sus hojas hicieron un sonido como música. Los pájaros se sorprendieron y animaron al roble a seguir. Con el tiempo, todos los animales del bosque venían a escuchar la música del roble que cantaba con el viento.",
+                image: "🌳"
             },
             {
-                title: "Blancanieves y los siete enanitos",
-                author: "Hermanos Grimm",
-                description: "Una princesa perseguida por su madrastra encuentra refugio con siete enanitos.",
-                url: "https://es.wikipedia.org/wiki/Blancanieves"
+                title: "La pequeña estrella",
+                author: "CuentosBYF",
+                description: "Una estrella que quiere brillar más fuerte y descubre su verdadero propósito.",
+                content: "En el cielo nocturno, una pequeña estrella llamada Stella se sentía insignificante porque las otras estrellas eran más grandes y brillantes. Stella deseaba brillar más fuerte para que la vieran. Una noche, vio a un niño perdido en el bosque que tenía miedo de la oscuridad. Stella decidió brillar tan fuerte como pudo para guiar al niño hacia su casa. El niño vio su luz y siguió hasta llegar a salvo. Stella aprendió que su verdadero brillo estaba en ayudar a los demás.",
+                image: "⭐"
             },
             {
-                title: "Pinocho",
-                author: "Carlo Collodi",
-                description: "Un muñeco de madera que quiere convertirse en un niño de verdad.",
-                url: "https://es.wikipedia.org/wiki/Pinocho"
+                title: "El delfín aventurero",
+                author: "CuentosBYF",
+                description: "Un delfín que descubre nuevos lugares y hace amigos en el océano.",
+                content: "En el vasto océano vivía un delfín llamado Delfín que siempre quería explorar lugares nuevos. Un día, decidió nadar más allá de su laguna y descubrió una cueva submarina llena de peces de colores. Dentro de la cueva, conoció a una tortuga sabia que le enseñó sobre las corrientes del océano. Delfín aprendió a navegar por las aguas y ayudó a otros animales marinos a encontrar su camino. Se convirtió en el mejor explorador del océano.",
+                image: "🐬"
             },
             {
-                title: "La Cenicienta",
-                author: "Charles Perrault",
-                description: "Una joven maltratada por su madrastra logra asistir al baile real con ayuda de su hada madrina.",
-                url: "https://es.wikipedia.org/wiki/Cenicienta"
+                title: "El gatito curioso",
+                author: "CuentosBYF",
+                description: "Un gatito que aprende a ser más cuidadoso mientras explora su jardín.",
+                content: "Mishi era un gatito muy curioso que vivía en una casita con un gran jardín. Un día, vio una mariposa colorida y decidió seguirla. Pasó por entre las flores, trepó a un árbol y llegó hasta la cerca del jardín. Pero mientras perseguía la mariposa, casi cae de la cerca. Su mamá lo salvó y le enseñó que la curiosidad es buena, pero siempre hay que tener cuidado. Mishi aprendió a explorar con más precaución y se convirtió en el mejor explorador del jardín.",
+                image: "🐱"
             },
             {
-                title: "Hansel y Gretel",
-                author: "Hermanos Grimm",
-                description: "Dos hermanos se pierden en el bosque y encuentran una casa de dulces.",
-                url: "https://es.wikipedia.org/wiki/Hansel_y_Gretel"
+                title: "El pajarito cantor",
+                author: "CuentosBYF",
+                description: "Un pajarito que aprende que su canto puede alegrar a todos.",
+                content: "Pio era un pajarito pequeño que tenía un hermoso canto, pero siempre tenía miedo de cantar delante de otros animales. Un día, vio a todos sus amigos tristes porque el sol estaba cubierto por nubes. Pio decidió cantar su canción más alegre. Su canto era tan bonito que todos los animales se alegraron y el sol empezó a salir de entre las nubes. Pio aprendió que su canto tenía el poder de alegrar a todos.",
+                image: "🐦"
             },
             {
-                title: "El flautista de Hamelín",
-                author: "Folklore alemán",
-                description: "Un misterioso flautista libera a la ciudad de Hamelín de una plaga de ratas.",
-                url: "https://es.wikipedia.org/wiki/El_flautista_de_Hamel%C3%ADn"
+                title: "El oso que quería ser amigo",
+                author: "CuentosBYF",
+                description: "Un oso que descubre cómo hacer amigos en el bosque.",
+                content: "Paco era un oso grande que siempre se sentía solo porque los otros animales le tenían miedo. Un día, vio a un grupo de conejitos que estaban asustados por una tormenta. Paco, con mucho cuidado, se acercó y los protegió bajo su peludo cuerpo. Los conejitos vieron que Paco era amable y se hicieron sus amigos. Pronto, todos los animales del bosque querían ser amigos de Paco.",
+                image: "🐻"
             },
             {
-                title: "La Bella Durmiente",
-                author: "Charles Perrault",
-                description: "Una princesa maldita a dormir 100 años hasta que un príncipe la despierte.",
-                url: "https://es.wikipedia.org/wiki/La_Bella_Durmiente"
+                title: "La hada de las flores",
+                author: "CuentosBYF",
+                description: "Un hada que cuida las flores del jardín y aprende sobre la naturaleza.",
+                content: "Flora era una hada diminuta que vivía en un jardín lleno de flores. Cada mañana, ella regaba todas las flores con su varita mágica. Pero un día, una flor muy especial no quería abrirse. Flora la visitó todos los días, le cantaba canciones y le contaba historias. Después de una semana, la flor finalmente abrió sus pétalos y reveló una belleza que nunca antes se había visto. Flora aprendió que la paciencia y el cuidado hacen florecer lo más hermoso.",
+                image: "🧚"
             },
             {
-                title: "Ricitos de Oro",
-                author: "Folklore inglés",
-                description: "Una niña con cabello dorado entra en la casa de tres osos.",
-                url: "https://es.wikipedia.org/wiki/Ricitos_de_Oro"
-            },
-            {
-                title: "El príncipe rana",
-                author: "Hermanos Grimm",
-                description: "Una princesa promete a una rana que la llevará a su castillo.",
-                url: "https://es.wikipedia.org/wiki/El_pr%C3%ADncipe_rana"
-            },
-            {
-                title: "La sirenita",
-                author: "Hans Christian Andersen",
-                description: "Una princesa sirena que quiere convertirse en humana.",
-                url: "https://es.wikipedia.org/wiki/La_sirenita"
-            },
-            {
-                title: "El emperador no tiene ropa",
-                author: "Hans Christian Andersen",
-                description: "Un emperador es engañado por dos estafadores que dicen que le están haciendo un traje mágico.",
-                url: "https://es.wikipedia.org/wiki/El_emperador_no_tiene_ropa"
-            },
-            {
-                title: "Los músicos de Bremen",
-                author: "Hermanos Grimm",
-                description: "Cuatro animales viejos deciden ir a Bremen para ser músicos.",
-                url: "https://es.wikipedia.org/wiki/Los_m%C3%BAsicos_de_Bremen"
-            },
-            {
-                title: "Pulgarcito",
-                author: "Charles Perrault",
-                description: "Un niño del tamaño de un pulgar que se pierde en el bosque.",
-                url: "https://es.wikipedia.org/wiki/Pulgarcito"
+                title: "El pequeño dragón",
+                author: "CuentosBYF",
+                description: "Un dragón que descubre que no todos los dragones son malvados.",
+                content: "Drake era un pequeño dragón que vivía en una montaña. Todos decían que los dragones eran malvados, pero Drake solo quería ser amable. Un día, vio a un pastor perdido con su rebaño. Drake los guio de regreso a su aldea usando su fuego para iluminar el camino. El pastor y los aldeanos vieron que Drake era bueno y lo invitaron a vivir con ellos. Drake aprendió que las apariencias no siempre son la verdad.",
+                image: "🐉"
             }
         ];
 
@@ -522,26 +502,120 @@
                 return;
             }
             
-            cuentos.forEach(cuento => {
+            cuentos.forEach((cuento, index) => {
                 const card = document.createElement('div');
                 card.className = 'cuento-card';
+                card.dataset.index = index;
                 
                 card.innerHTML = `
+                    <div style="font-size: 3em; text-align: center; margin-bottom: 10px;">${cuento.image}</div>
                     <h3 class="cuento-title">${cuento.title}</h3>
                     <p class="cuento-description">${cuento.description}</p>
                     <p class="cuento-author" style="color: #b39ddb; font-size: 0.9em; margin-bottom: 15px;">
                         ✍️ ${cuento.author}
                     </p>
-                    <div class="audio-player">
-                        <a href="${cuento.url}" target="_blank" class="btn">
-                            📖 Leer cuento completo
-                        </a>
-                    </div>
+                    <button class="btn" onclick="mostrarCuento(${index})">
+                        📖 Leer cuento
+                    </button>
                 `;
                 
                 grid.appendChild(card);
             });
         }
+
+        // Modal para mostrar el cuento completo
+        let cuentoModal = null;
+
+        function crearModal() {
+            cuentoModal = document.createElement('div');
+            cuentoModal.id = 'cuentoModal';
+            cuentoModal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.9);
+                z-index: 1000;
+                display: none;
+                justify-content: center;
+                align-items: center;
+                padding: 20px;
+                overflow-y: auto;
+            `;
+            
+            cuentoModal.innerHTML = `
+                <div style="
+                    background: linear-gradient(135deg, #1a0a2e 0%, #2d1b4e 100%);
+                    border: 2px solid #7e57c2;
+                    border-radius: 20px;
+                    padding: 30px;
+                    max-width: 600px;
+                    width: 100%;
+                    max-height: 90vh;
+                    overflow-y: auto;
+                    position: relative;
+                ">
+                    <button onclick="cerrarModal()" style="
+                        position: absolute;
+                        top: 15px;
+                        right: 15px;
+                        background: rgba(255,255,255,0.2);
+                        border: none;
+                        color: white;
+                        width: 35px;
+                        height: 35px;
+                        border-radius: 50%;
+                        cursor: pointer;
+                        font-size: 1.2em;
+                    ">✕</button>
+                    <div id="modalContent"></div>
+                </div>
+            `;
+            
+            document.body.appendChild(cuentoModal);
+        }
+
+        function mostrarCuento(index) {
+            if (!cuentoModal) crearModal();
+            
+            const cuento = cuentosClasicos[index];
+            const modalContent = document.getElementById('modalContent');
+            
+            modalContent.innerHTML = `
+                <div style="text-align: center; font-size: 4em; margin-bottom: 20px;">${cuento.image}</div>
+                <h2 style="color: #e1bee7; text-align: center; margin-bottom: 10px;">${cuento.title}</h2>
+                <p style="color: #b39ddb; text-align: center; margin-bottom: 20px;">Por ${cuento.author}</p>
+                <div style="
+                    background: rgba(0,0,0,0.3);
+                    padding: 20px;
+                    border-radius: 15px;
+                    line-height: 1.8;
+                    color: #d1c4e9;
+                    text-align: justify;
+                ">
+                    ${cuento.content}
+                </div>
+                <div style="text-align: center; margin-top: 20px;">
+                    <button class="btn" onclick="cerrarModal()">Cerrar</button>
+                </div>
+            `;
+            
+            cuentoModal.style.display = 'flex';
+        }
+
+        function cerrarModal() {
+            if (cuentoModal) {
+                cuentoModal.style.display = 'none';
+            }
+        }
+
+        // Cerrar modal con la tecla Escape
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && cuentoModal) {
+                cerrarModal();
+            }
+        });
 
         function searchCuentos() {
             const searchTerm = document.getElementById('searchInput').value.trim().toLowerCase();
