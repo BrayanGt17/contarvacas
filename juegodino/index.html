@@ -302,6 +302,40 @@
             }
         }
         
+        // Actualizar obstáculos
+        function updateObstacles() {
+            if (!gameState.playing || gameState.paused) return;
+            
+            obstacles.forEach(obs => {
+                obs.x -= config.obstacleSpeed;
+                
+                // Contar puntos
+                if (!obs.passed && obs.x + obs.width < cow.x) {
+                    obs.passed = true;
+                    gameState.score++;
+                    
+                    // Formato 00000
+                    const scoreStr = gameState.score.toString().padStart(5, '0');
+                    scoreEl.textContent = scoreStr;
+                    
+                    // Sonido cada 10 puntos
+                    if (gameState.score % 10 === 0) {
+                        playMilestoneSound(gameState.score);
+                        config.obstacleSpeed += 0.3;
+                    }
+                }
+            });
+            
+            // Eliminar obstáculos fuera de pantalla
+            obstacles = obstacles.filter(obs => obs.x > -100);
+            
+            // Crear nuevos obstáculos
+            while (obstacles.length === 0 || 
+                   obstacles[obstacles.length - 1].x < canvas.width + config.obstacleGap) {
+                obstacles.push(createObstacle());
+            }
+        }
+        
         // Saltar - instantáneo sin retraso
         function jump() {
             if (!gameState.playing || gameState.paused) return;
