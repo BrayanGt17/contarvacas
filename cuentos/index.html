@@ -272,24 +272,6 @@
             color: #d1c4e9;
         }
 
-        /* Scrollbar personalizado */
-        ::-webkit-scrollbar {
-            width: 10px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: #1a0a2e;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: #7e57c2;
-            border-radius: 5px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: #b39ddb;
-        }
-
         @media (max-width: 768px) {
             .logo {
                 font-size: 2em;
@@ -432,70 +414,97 @@
         initParticles();
         animate();
 
-        // Lista de cuentos infantiles originales con más contenido e imágenes
+        // Lista de cuentos clásicos de dominio público en español
         const cuentosClasicos = [
             {
-                title: "La Aventura del Conejito Valiente",
-                author: "CuentosBYF",
-                description: "Un conejito pequeño que supera sus miedos para salvar a sus amigos del bosque.",
-                images: ["🐰", "🌲", "🌊"],
-                content: `
-                    <p>Había una vez, en un bosque mágico lleno de árboles altos y flores coloridas, un conejito muy pequeño que se llamaba Tito. Tito era tan pequeño que cabía perfectamente en la palma de tu mano. Vivía en una acogedora madriguera bajo un roble gigante.</p>
-                    <p>Al conejito Tito le daba mucho miedo la oscuridad. Cuando el sol se ocultaba y la luna aparecía en el cielo, Tito se escondía en su madriguera y no salía hasta que el sol volvía a brillar. Sus amigos del bosque, como el pájaro Pío y la ardilla Suri, siempre intentaban convencerlo de que saliera a jugar por la noche, pero Tito siempre decía "No, tengo miedo".</p>
-                    <p>Un día de verano, después de una fuerte tormenta, el río del bosque creció tanto que inundó el camino hacia los árboles más altos donde crecían las deliciosas manzanas. Los animales del bosque estaban muy preocupados porque no podían conseguir comida.</p>
-                    <p>El pájaro Pío voló hasta la madriguera de Tito para pedirle ayuda. "¡Tito! ¡Necesitamos tu ayuda! El río está muy alto y no podemos cruzar para llegar a las manzanas". Tito, con mucho miedo, respondió: "Pero... ¿y si me caigo al río? ¡Es tan oscuro y profundo!".</p>
-                    <p>Pero Tito vio que sus amigos estaban muy tristes y hambrientos. Con mucho esfuerzo, decidió ayudarles. Recordó que cerca de su madriguera había un viejo tronco caído que cruzaba el río en su punto más angosto. Tito esperó a que la luna saliera brillante y comenzó su misión.</p>
-                    <p>Cuando llegó al tronco, vio que estaba resbaladizo por la lluvia. Tito caminó muy despacio, paso a paso, sin mirar hacia abajo. Su corazón latía muy rápido, pero pensaba en sus amigos. Cuando llegó al otro lado, ¡encontró un camino seco que llevaba directamente a los árboles!</p>
-                    <p>Los animales celebraron el regreso de Tito con manzanas frescas. Tito aprendió que, aunque se tenga miedo, se puede ser valiente cuando se piensa en ayudar a los demás. Desde ese día, Tito ya no tenía tanto miedo a la oscuridad porque sabía que sus amigos siempre estarían ahí para él.</p>
-                    <p>Y así, el conejito valiente vivió muchas más aventuras en el bosque mágico, siempre ayudando a sus amigos y descubriendo que la valentía está dentro de todos nosotros, solo hay que encontrarla.</p>
-                `,
-                preguntas: [
-                    "¿Por qué tenía miedo el conejito Tito?",
-                    "¿Qué problema tuvieron los animales del bosque?",
-                    "¿Cómo ayudó Tito a sus amigos?",
-                    "¿Qué aprendió Tito al final de la historia?"
-                ]
+                title: "Caperucita Roja",
+                author: "Charles Perrault / Hermanos Grimm",
+                description: "Un clásico sobre una niña que visita a su abuela y se encuentra con un lobo feroz.",
+                url: "https://es.wikipedia.org/wiki/Caperucita_Roja"
             },
             {
-                title: "El Misterio de la Mariposa de Colores",
-                author: "CuentosBYF",
-                description: "Una mariposa que descubre que su verdadera belleza está en hacer felices a los demás.",
-                images: ["🦋", "🌸", "☀️"],
-                content: `
-                    <p>En un hermoso jardín lleno de flores de todos los colores vivía una mariposa llamada Lila. Lila tenía alas de colores increíbles: azul como el cielo, amarillo como el sol, rojo como las rosas y naranja como las naranjas.</p>
-                    <p>Aunque muchas personas decían que Lila era la mariposa más bonita del jardín, ella no se sentía feliz. Veía a las flores tan altas y grandiosas, a las abejas tan trabajadoras, y pensaba: "¿Para qué sirve ser bonita si no ayudo a nadie?"</p>
-                    <p>Un día de primavera, mientras volaba cerca de una planta alta, vio a una pequeña oruga que estaba intentando llegar a una hoja jugosa. La oruga era muy pequeña y se caía siempre que intentaba subir.</p>
-                    <p>Lila se acercó y le dijo: "¡Hola! ¿Necesitas ayuda?" La oruga, muy cansada, asintió con su cabeza. Lila extendió sus coloridas alas y creó un puente suave para que la oruga pudiera subir hasta la hoja más alta. La oruga estaba muy agradecida y le sonrió a Lila.</p>
-                    <p>El resto del día, Lila siguió ayudando a otros insectos y animales del jardín. Ayudó a una abeja a encontrar las flores con más polen, guió a una luciérnaga perdida hacia su familia y hasta ayudó a una pequeña hormiga a cruzar un charco de agua.</p>
-                    <p>Al final del día, cuando el sol empezó a ponerse, todos los animales del jardín se reunieron alrededor de Lila. Le dijeron: "Gracias, Lila, por ayudarnos a todos. Tu verdadera belleza no está en tus alas de colores, sino en tu gran corazón que ayuda a los demás".</p>
-                    <p>Lila finalmente entendió que su verdadera belleza no estaba en sus colores, sino en su capacidad de hacer felices a los demás. Desde ese día, Lila voló por el jardín ayudando a todos los que necesitaban su apoyo.</p>
-                `,
-                preguntas: [
-                    "¿Por qué no se sentía feliz Lila al principio?",
-                    "¿Qué animales ayudó Lila durante el día?",
-                    "¿Qué le dijeron los otros animales al final del día?",
-                    "¿Qué aprendió Lila sobre la verdadera belleza?"
-                ]
+                title: "El patito feo",
+                author: "Hans Christian Andersen",
+                description: "La historia de un patito que es rechazado por ser diferente pero se convierte en un hermoso cisne.",
+                url: "https://es.wikipedia.org/wiki/El_patito_feo"
             },
             {
-                title: "El Sueño del Árbol Solitario",
-                author: "CuentosBYF",
-                description: "Un árbol que descubre su talento musical con la ayuda de sus amigos del bosque.",
-                images: ["🌳", "🎵", "🐦"],
-                content: `
-                    <p>En el corazón del bosque vivía un roble muy alto y muy viejo. Tenía tantos años que ya no recordaba cuándo había empezado a crecer. Todos los días, el roble veía pasar a los animales del bosque, a los pájaros que cantaban en sus ramas y a las ardillas que saltaban de rama en rama.</p>
-                    <p>Pero el roble siempre tenía un sueño secreto: quería cantar. Veía a los pájaros cantar tan bonito y pensaba: "¡Qué lindo sería si yo también pudiera cantar!". Pero los árboles no pueden cantar, pensaba el roble tristemente.</p>
-                    <p>Un día de otoño, un grupo de pájaros se posó en sus ramas. Empezaron a cantar una hermosa melodía. El viento sopló suavemente entre las hojas del roble, y de repente... ¡las hojas empezaron a moverse al ritmo de la canción!</p>
-                    <p>¡CRAC! ¡CRAC! ¡CRAC! Las hojas del roble hacían un sonido rítmico como si fueran castañuelas. Los pájaros se sorprendieron y miraron al roble. "¡Oye, roble! ¡Tú también estás cantando con nosotros!"</p>
-                    <p>El roble no podía creerlo. Por primera vez en su vida, ¡estaba cantando! Sus hojas hacían música con el viento. Los pájaros animaron al roble a seguir cantando, y pronto todos los animales del bosque se acercaron a escuchar.</p>
-                    <p>El roble aprendió que todos tenemos un talento especial, aunque a veces no lo descubramos al principio. Desde ese día, el roble se convirtió en el músico del bosque, y todos los animales venían a escuchar su música cada vez que el viento soplaba entre sus hojas.</p>
-                `,
-                preguntas: [
-                    "¿Qué sueño tenía el roble?",
-                    "¿Cómo empezó el roble a cantar?",
-                    "¿Cómo reaccionaron los animales cuando escucharon al roble?",
-                    "¿Qué aprendió el roble sobre sí mismo?"
-                ]
+                title: "Los tres cerditos",
+                author: "Folklore inglés",
+                description: "Tres hermanos cerditos construyen casas de diferentes materiales para protegerse del lobo.",
+                url: "https://es.wikipedia.org/wiki/Los_tres_cerditos"
+            },
+            {
+                title: "Blancanieves y los siete enanitos",
+                author: "Hermanos Grimm",
+                description: "Una princesa perseguida por su madrastra encuentra refugio con siete enanitos.",
+                url: "https://es.wikipedia.org/wiki/Blancanieves"
+            },
+            {
+                title: "Pinocho",
+                author: "Carlo Collodi",
+                description: "Un muñeco de madera que quiere convertirse en un niño de verdad.",
+                url: "https://es.wikipedia.org/wiki/Pinocho"
+            },
+            {
+                title: "La Cenicienta",
+                author: "Charles Perrault",
+                description: "Una joven maltratada por su madrastra logra asistir al baile real con ayuda de su hada madrina.",
+                url: "https://es.wikipedia.org/wiki/Cenicienta"
+            },
+            {
+                title: "Hansel y Gretel",
+                author: "Hermanos Grimm",
+                description: "Dos hermanos se pierden en el bosque y encuentran una casa de dulces.",
+                url: "https://es.wikipedia.org/wiki/Hansel_y_Gretel"
+            },
+            {
+                title: "El flautista de Hamelín",
+                author: "Folklore alemán",
+                description: "Un misterioso flautista libera a la ciudad de Hamelín de una plaga de ratas.",
+                url: "https://es.wikipedia.org/wiki/El_flautista_de_Hamel%C3%ADn"
+            },
+            {
+                title: "La Bella Durmiente",
+                author: "Charles Perrault",
+                description: "Una princesa maldita a dormir 100 años hasta que un príncipe la despierte.",
+                url: "https://es.wikipedia.org/wiki/La_Bella_Durmiente"
+            },
+            {
+                title: "Ricitos de Oro",
+                author: "Folklore inglés",
+                description: "Una niña con cabello dorado entra en la casa de tres osos.",
+                url: "https://es.wikipedia.org/wiki/Ricitos_de_Oro"
+            },
+            {
+                title: "El príncipe rana",
+                author: "Hermanos Grimm",
+                description: "Una princesa promete a una rana que la llevará a su castillo.",
+                url: "https://es.wikipedia.org/wiki/El_pr%C3%ADncipe_rana"
+            },
+            {
+                title: "La sirenita",
+                author: "Hans Christian Andersen",
+                description: "Una princesa sirena que quiere convertirse en humana.",
+                url: "https://es.wikipedia.org/wiki/La_sirenita"
+            },
+            {
+                title: "El emperador no tiene ropa",
+                author: "Hans Christian Andersen",
+                description: "Un emperador es engañado por dos estafadores que dicen que le están haciendo un traje mágico.",
+                url: "https://es.wikipedia.org/wiki/El_emperador_no_tiene_ropa"
+            },
+            {
+                title: "Los músicos de Bremen",
+                author: "Hermanos Grimm",
+                description: "Cuatro animales viejos deciden ir a Bremen para ser músicos.",
+                url: "https://es.wikipedia.org/wiki/Los_m%C3%BAsicos_de_Bremen"
+            },
+            {
+                title: "Pulgarcito",
+                author: "Charles Perrault",
+                description: "Un niño del tamaño de un pulgar que se pierde en el bosque.",
+                url: "https://es.wikipedia.org/wiki/Pulgarcito"
             }
         ];
 
@@ -513,168 +522,26 @@
                 return;
             }
             
-            cuentos.forEach((cuento, index) => {
+            cuentos.forEach(cuento => {
                 const card = document.createElement('div');
                 card.className = 'cuento-card';
-                card.dataset.index = index;
-                
-                // Mostrar miniaturas de las imágenes
-                const imagesHtml = cuento.images.map(img => 
-                    `<span style="font-size: 1.5em; margin: 0 5px;">${img}</span>`
-                ).join('');
                 
                 card.innerHTML = `
-                    <div style="text-align: center; margin-bottom: 10px;">
-                        ${imagesHtml}
-                    </div>
                     <h3 class="cuento-title">${cuento.title}</h3>
                     <p class="cuento-description">${cuento.description}</p>
                     <p class="cuento-author" style="color: #b39ddb; font-size: 0.9em; margin-bottom: 15px;">
                         ✍️ ${cuento.author}
                     </p>
-                    <button class="btn" onclick="mostrarCuento(${index})">
-                        📖 Leer cuento
-                    </button>
+                    <div class="audio-player">
+                        <a href="${cuento.url}" target="_blank" class="btn">
+                            📖 Leer cuento completo
+                        </a>
+                    </div>
                 `;
                 
                 grid.appendChild(card);
             });
         }
-
-        // Modal para mostrar el cuento completo
-        let cuentoModal = null;
-
-        function crearModal() {
-            cuentoModal = document.createElement('div');
-            cuentoModal.id = 'cuentoModal';
-            cuentoModal.style.cssText = `
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: rgba(0, 0, 0, 0.9);
-                z-index: 1000;
-                display: none;
-                justify-content: center;
-                align-items: center;
-                padding: 20px;
-                overflow-y: auto;
-            `;
-            
-            cuentoModal.innerHTML = `
-                <div style="
-                    background: linear-gradient(135deg, #1a0a2e 0%, #2d1b4e 100%);
-                    border: 2px solid #7e57c2;
-                    border-radius: 20px;
-                    padding: 30px;
-                    max-width: 600px;
-                    width: 100%;
-                    max-height: 90vh;
-                    overflow-y: auto;
-                    position: relative;
-                ">
-                    <button onclick="cerrarModal()" style="
-                        position: absolute;
-                        top: 15px;
-                        right: 15px;
-                        background: rgba(255,255,255,0.2);
-                        border: none;
-                        color: white;
-                        width: 35px;
-                        height: 35px;
-                        border-radius: 50%;
-                        cursor: pointer;
-                        font-size: 1.2em;
-                    ">✕</button>
-                    <div id="modalContent"></div>
-                </div>
-            `;
-            
-            document.body.appendChild(cuentoModal);
-        }
-
-        function mostrarCuento(index) {
-            if (!cuentoModal) crearModal();
-            
-            const cuento = cuentosClasicos[index];
-            const modalContent = document.getElementById('modalContent');
-            
-            // Mostrar imágenes del cuento
-            const imagesHtml = cuento.images.map((img, i) => `
-                <div style="
-                    background: linear-gradient(135deg, rgba(126, 87, 194, 0.3), rgba(74, 39, 160, 0.3));
-                    border-radius: 15px;
-                    padding: 20px;
-                    margin: 10px 0;
-                    text-align: center;
-                ">
-                    <span style="font-size: 5em;">${img}</span>
-                    <p style="color: #b39ddb; margin-top: 10px;">Ilustración ${i + 1}</p>
-                </div>
-            `).join('');
-            
-            // Mostrar preguntas
-            const preguntasHtml = cuento.preguntas ? `
-                <div style="
-                    background: rgba(126, 87, 194, 0.2);
-                    border-radius: 15px;
-                    padding: 20px;
-                    margin-top: 20px;
-                ">
-                    <h3 style="color: #e1bee7; margin-bottom: 15px;">💭 Preguntas para pensar</h3>
-                    <ul style="list-style: none; padding: 0;">
-                        ${cuento.preguntas.map(p => `
-                            <li style="
-                                color: #d1c4e9;
-                                padding: 10px 0;
-                                border-bottom: 1px solid rgba(126, 87, 194, 0.3);
-                            ">
-                                ❓ ${p}
-                            </li>
-                        `).join('')}
-                    </ul>
-                </div>
-            ` : '';
-            
-            modalContent.innerHTML = `
-                <div style="text-align: center; margin-bottom: 20px;">
-                    ${imagesHtml}
-                </div>
-                <h2 style="color: #e1bee7; text-align: center; margin-bottom: 10px;">${cuento.title}</h2>
-                <p style="color: #b39ddb; text-align: center; margin-bottom: 20px;">Por ${cuento.author}</p>
-                <div style="
-                    background: rgba(0,0,0,0.3);
-                    padding: 25px;
-                    border-radius: 15px;
-                    line-height: 1.9;
-                    color: #d1c4e9;
-                    text-align: justify;
-                    font-size: 1.1em;
-                ">
-                    ${cuento.content}
-                </div>
-                ${preguntasHtml}
-                <div style="text-align: center; margin-top: 20px;">
-                    <button class="btn" onclick="cerrarModal()">Cerrar</button>
-                </div>
-            `;
-            
-            cuentoModal.style.display = 'flex';
-        }
-
-        function cerrarModal() {
-            if (cuentoModal) {
-                cuentoModal.style.display = 'none';
-            }
-        }
-
-        // Cerrar modal con la tecla Escape
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && cuentoModal) {
-                cerrarModal();
-            }
-        });
 
         function searchCuentos() {
             const searchTerm = document.getElementById('searchInput').value.trim().toLowerCase();
