@@ -3,18 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dino Vaca - JuegosBYF</title>
+    <title>Vaca Corredora</title>
     <style>
-        * {
+        body {
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
             min-height: 100vh;
-            background: linear-gradient(135deg, #1a0a2e 0%, #2d1b4e 50%, #1a0a2e 100%);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(to bottom, #1a0a2e, #2d1b4e);
+            font-family: 'Arial', sans-serif;
             color: #e1bee7;
             overflow: hidden;
             touch-action: none;
@@ -27,115 +27,69 @@
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: 0;
+            z-index: -1;
             pointer-events: none;
         }
         
-        .game-wrapper {
-            position: relative;
-            z-index: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            padding: 20px;
-        }
-
         #gameCanvas {
             width: 100%;
-            max-width: 800px;
+            max-width: 600px;
             height: auto;
-            aspect-ratio: 8/3;
-            border: 2px solid #7e57c2;
-            border-radius: 15px;
+            aspect-ratio: 4/1;
+            border: 3px solid #7e57c2;
+            border-radius: 10px;
             background: linear-gradient(to bottom, #1a0a2e 0%, #2d1b4e 100%);
-            box-shadow: 0 0 30px rgba(126, 87, 194, 0.4),
-                        inset 0 0 60px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 0 20px rgba(126, 87, 194, 0.5);
         }
         
         .ui {
-            margin-top: 25px;
+            margin-top: 20px;
             text-align: center;
-            background: rgba(20, 20, 40, 0.9);
-            padding: 20px 30px;
-            border-radius: 15px;
-            border: 1px solid rgba(126, 87, 194, 0.5);
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
         }
         
         .score {
-            font-size: 1.8em;
+            font-size: 1.5em;
             color: #d1c4e9;
-            font-weight: 600;
-            text-shadow: 0 0 10px rgba(179, 157, 219, 0.5);
         }
         
         .instructions {
             margin-top: 10px;
             color: #b39ddb;
-            font-size: 0.95em;
-            letter-spacing: 0.5px;
+            font-size: 0.9em;
         }
         
         .controls {
-            margin-top: 20px;
+            margin-top: 15px;
             display: flex;
-            gap: 12px;
-            justify-content: center;
-            flex-wrap: wrap;
+            gap: 10px;
         }
         
         button {
-            padding: 12px 25px;
-            background: linear-gradient(135deg, #4527a0 0%, #5e35b1 100%);
+            padding: 10px 20px;
+            background: #4527a0;
             color: white;
             border: 1px solid #7e57c2;
-            border-radius: 25px;
+            border-radius: 20px;
             cursor: pointer;
             transition: all 0.3s;
-            font-weight: 600;
-            font-size: 0.95em;
-            letter-spacing: 0.5px;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        button::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-            transition: left 0.5s;
-        }
-        
-        button:hover::before {
-            left: 100%;
         }
         
         button:hover {
-            background: linear-gradient(135deg, #5e35b1 0%, #7e57c2 100%);
-            transform: scale(1.05);
-            box-shadow: 0 5px 15px rgba(126, 87, 194, 0.5);
+            background: #7e57c2;
+            transform: scale(1.1);
         }
     </style>
 </head>
 <body>
     <canvas id="particleCanvas"></canvas>
-    
-    <div class="game-wrapper">
-        <canvas id="gameCanvas" width="800" height="300"></canvas>
-        <div class="ui">
-            <div class="score">Puntuación: <span id="score">0</span></div>
-            <div class="instructions">Presiona ESPACIO o TOCA para saltar</div>
-            <div class="controls">
-                <button id="startBtn">Iniciar</button>
-                <button id="pauseBtn">Pausar</button>
-                <button id="restartBtn">Reiniciar</button>
-            </div>
+    <canvas id="gameCanvas" width="600" height="150"></canvas>
+    <div class="ui">
+        <div class="score">Puntuación: <span id="score">0</span></div>
+        <div class="instructions">Presiona ESPACIO o TOCA para saltar</div>
+        <div class="controls">
+            <button id="startBtn">Iniciar</button>
+            <button id="pauseBtn">Pausar</button>
+            <button id="restartBtn">Reiniciar</button>
         </div>
     </div>
     
@@ -149,15 +103,15 @@
         // Separador para formato 00000 00000 (asumiendo 10 dígitos en dos grupos)
         // Para un solo grupo de 5 dígitos, lo dejamos simple
         
-        // Configuración del juego
+        // Configuración del juego (Chrome Dino style)
         const config = {
             gravity: 0.6,
-            jumpForce: -12,
-            groundHeight: 50,
+            jumpForce: -9,  // Ajustado para 150px alto
+            groundHeight: 25,  // Proporcional a 150px alto
             obstacleSpeed: 6,
-            obstacleGap: 150,
-            minObstacleGap: 120,
-            maxObstacleGap: 200
+            obstacleGap: 120,
+            minObstacleGap: 100,
+            maxObstacleGap: 150
         };
         
         // Estado del juego
@@ -168,12 +122,12 @@
             highScore: 0
         };
         
-        // Vaca
+        // Vaca (tamaño proporcional a Chrome Dino)
         const cow = {
-            x: 100,
+            x: 60,
             y: 0,
-            width: 60,
-            height: 50,
+            width: 35,
+            height: 35,
             velocityY: 0,
             isJumping: false,
             jumpCount: 0,
@@ -272,16 +226,16 @@
         
         function initParticles() {
             particles = [];
-            const particleCount = Math.min(80, Math.floor(particleCanvas.width / 15));
+            const particleCount = 40;
             
             for (let i = 0; i < particleCount; i++) {
                 particles.push({
                     x: Math.random() * particleCanvas.width,
                     y: Math.random() * particleCanvas.height,
-                    vx: (Math.random() - 0.5) * 0.4,
-                    vy: (Math.random() - 0.5) * 0.4,
-                    size: Math.random() * 2 + 0.5,
-                    opacity: 0.3 + Math.random() * 0.4
+                    vx: (Math.random() - 0.5) * 0.5,
+                    vy: (Math.random() - 0.5) * 0.5,
+                    size: Math.random() * 2 + 1,
+                    color: `hsla(${260 + Math.random() * 40}, 60%, 70%, ${0.3 + Math.random() * 0.4})`
                 });
             }
         }
@@ -304,7 +258,7 @@
             particles.forEach(p => {
                 particleCtx.beginPath();
                 particleCtx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-                particleCtx.fillStyle = `rgba(179, 157, 219, ${p.opacity || 0.4})`;
+                particleCtx.fillStyle = 'rgba(255, 255, 255, 0.5)';
                 particleCtx.fill();
             });
             
@@ -314,14 +268,14 @@
                     const dx = p1.x - p2.x;
                     const dy = p1.y - p2.y;
                     const distance = Math.sqrt(dx * dx + dy * dy);
-                    const maxDistance = 150;
+                    const maxDistance = 120;
                     
                     if (distance < maxDistance) {
-                        const opacity = (1 - distance / maxDistance) * 0.15;
+                        const opacity = 1 - (distance / maxDistance);
                         particleCtx.beginPath();
                         particleCtx.moveTo(p1.x, p1.y);
                         particleCtx.lineTo(p2.x, p2.y);
-                        particleCtx.strokeStyle = `rgba(126, 87, 194, ${opacity})`;
+                        particleCtx.strokeStyle = `rgba(179, 157, 219, ${opacity * 0.3})`;
                         particleCtx.lineWidth = 1;
                         particleCtx.stroke();
                     }
@@ -377,12 +331,12 @@
             const type = Math.random() > 0.5 ? 'fence' : 'barn';
             const obstacle = {
                 x: nextObstacleX,
-                width: type === 'fence' ? 30 : 60,
-                height: type === 'fence' ? 50 : 40,
+                width: type === 'fence' ? 15 : 30,
+                height: type === 'fence' ? 25 : 20,
                 type: type,
                 passed: false
             };
-            nextObstacleX += obstacle.width + config.obstacleGap + Math.random() * 50 - 25;
+            nextObstacleX += obstacle.width + config.obstacleGap + Math.random() * 30 - 15;
             return obstacle;
         }
         
@@ -724,15 +678,8 @@
         }
         
         // Inicializar tamaño de canvas de partículas
-        function resizeParticleCanvas() {
-            particleCanvas.width = window.innerWidth;
-            particleCanvas.height = window.innerHeight;
-            initParticles();
-        }
-        
-        resizeParticleCanvas();
-        
-        window.addEventListener('resize', resizeParticleCanvas);
+        particleCanvas.width = window.innerWidth;
+        particleCanvas.height = window.innerHeight;
         
         // Dibujar estado inicial
         initParticles();
