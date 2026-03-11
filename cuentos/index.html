@@ -61,50 +61,6 @@
             margin-top: 10px;
         }
 
-        .search-section {
-            background: rgba(30, 30, 60, 0.9);
-            border: 1px solid rgba(126, 87, 194, 0.5);
-            border-radius: 20px;
-            padding: 20px;
-            margin: 20px 0;
-            width: 100%;
-            max-width: 800px;
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
-
-        .search-section input {
-            flex: 1;
-            padding: 12px 15px;
-            border: 1px solid #7e57c2;
-            border-radius: 10px;
-            background: rgba(20, 20, 40, 0.8);
-            color: #e1bee7;
-            font-size: 1em;
-        }
-
-        .search-section input:focus {
-            outline: none;
-            border-color: #b39ddb;
-            box-shadow: 0 0 10px rgba(126, 87, 194, 0.3);
-        }
-
-        .search-section button {
-            padding: 12px 25px;
-            background: linear-gradient(135deg, #4527a0 0%, #5e35b1 100%);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s;
-        }
-
-        .search-section button:hover {
-            background: linear-gradient(135deg, #5e35b1 0%, #7e57c2 100%);
-        }
-
         .upload-section {
             background: rgba(30, 30, 60, 0.9);
             border: 1px solid rgba(126, 87, 194, 0.5);
@@ -192,22 +148,15 @@
         .btn {
             background: linear-gradient(135deg, #4527a0 0%, #5e35b1 100%);
             color: white;
-            padding: 12px 30px;
+            padding: 15px 40px;
             border: none;
-            border-radius: 25px;
+            border-radius: 30px;
             cursor: pointer;
-            font-size: 0.95em;
+            font-size: 1em;
             font-weight: 600;
             letter-spacing: 1px;
             transition: all 0.3s;
-            display: inline-block;
-            text-align: center;
-            margin-top: 10px;
-        }
-        
-        .btn:hover {
-            background: linear-gradient(135deg, #5e35b1 0%, #7e57c2 100%);
-            transform: scale(1.05);
+            width: 100%;
         }
 
         .btn:hover {
@@ -292,11 +241,6 @@
             <p class="tagline">🎵 Colección de Cuentos y Audios 🎵</p>
         </header>
 
-        <div class="search-section">
-            <input type="text" id="searchInput" placeholder="Buscar cuentos por título o autor...">
-            <button onclick="searchCuentos()">🔍 Buscar</button>
-        </div>
-
         <div class="upload-section">
             <h2>Subir Nuevo Cuento</h2>
             <form id="uploadForm">
@@ -324,10 +268,20 @@
             </form>
         </div>
 
-        <h2 style="color: #d1c4e9; margin: 20px 0;">Cuentos Clásicos Disponibles</h2>
+        <h2 style="color: #d1c4e9; margin: 20px 0;">Cuentos Disponibles</h2>
         
         <div class="cuentos-grid" id="cuentosGrid">
             <!-- Los cuentos se cargarán dinámicamente aquí -->
+            <div class="cuento-card">
+                <h3 class="cuento-title">Ejemplo: El Viaje de la Vaca</h3>
+                <p class="cuento-description">Un cuento sobre una vaca que viaja por el mundo.</p>
+                <div class="audio-player">
+                    <audio controls>
+                        <source src="" type="audio/mpeg">
+                        Tu navegador no soporta el elemento de audio.
+                    </audio>
+                </div>
+            </div>
         </div>
 
         <a href="../index.html" class="back-link">← Volver a JuegosBYF</a>
@@ -413,162 +367,6 @@
         resizeCanvas();
         initParticles();
         animate();
-
-        // Lista de cuentos clásicos de dominio público en español
-        const cuentosClasicos = [
-            {
-                title: "Caperucita Roja",
-                author: "Charles Perrault / Hermanos Grimm",
-                description: "Un clásico sobre una niña que visita a su abuela y se encuentra con un lobo feroz.",
-                url: "https://es.wikipedia.org/wiki/Caperucita_Roja"
-            },
-            {
-                title: "El patito feo",
-                author: "Hans Christian Andersen",
-                description: "La historia de un patito que es rechazado por ser diferente pero se convierte en un hermoso cisne.",
-                url: "https://es.wikipedia.org/wiki/El_patito_feo"
-            },
-            {
-                title: "Los tres cerditos",
-                author: "Folklore inglés",
-                description: "Tres hermanos cerditos construyen casas de diferentes materiales para protegerse del lobo.",
-                url: "https://es.wikipedia.org/wiki/Los_tres_cerditos"
-            },
-            {
-                title: "Blancanieves y los siete enanitos",
-                author: "Hermanos Grimm",
-                description: "Una princesa perseguida por su madrastra encuentra refugio con siete enanitos.",
-                url: "https://es.wikipedia.org/wiki/Blancanieves"
-            },
-            {
-                title: "Pinocho",
-                author: "Carlo Collodi",
-                description: "Un muñeco de madera que quiere convertirse en un niño de verdad.",
-                url: "https://es.wikipedia.org/wiki/Pinocho"
-            },
-            {
-                title: "La Cenicienta",
-                author: "Charles Perrault",
-                description: "Una joven maltratada por su madrastra logra asistir al baile real con ayuda de su hada madrina.",
-                url: "https://es.wikipedia.org/wiki/Cenicienta"
-            },
-            {
-                title: "Hansel y Gretel",
-                author: "Hermanos Grimm",
-                description: "Dos hermanos se pierden en el bosque y encuentran una casa de dulces.",
-                url: "https://es.wikipedia.org/wiki/Hansel_y_Gretel"
-            },
-            {
-                title: "El flautista de Hamelín",
-                author: "Folklore alemán",
-                description: "Un misterioso flautista libera a la ciudad de Hamelín de una plaga de ratas.",
-                url: "https://es.wikipedia.org/wiki/El_flautista_de_Hamel%C3%ADn"
-            },
-            {
-                title: "La Bella Durmiente",
-                author: "Charles Perrault",
-                description: "Una princesa maldita a dormir 100 años hasta que un príncipe la despierte.",
-                url: "https://es.wikipedia.org/wiki/La_Bella_Durmiente"
-            },
-            {
-                title: "Ricitos de Oro",
-                author: "Folklore inglés",
-                description: "Una niña con cabello dorado entra en la casa de tres osos.",
-                url: "https://es.wikipedia.org/wiki/Ricitos_de_Oro"
-            },
-            {
-                title: "El príncipe rana",
-                author: "Hermanos Grimm",
-                description: "Una princesa promete a una rana que la llevará a su castillo.",
-                url: "https://es.wikipedia.org/wiki/El_pr%C3%ADncipe_rana"
-            },
-            {
-                title: "La sirenita",
-                author: "Hans Christian Andersen",
-                description: "Una princesa sirena que quiere convertirse en humana.",
-                url: "https://es.wikipedia.org/wiki/La_sirenita"
-            },
-            {
-                title: "El emperador no tiene ropa",
-                author: "Hans Christian Andersen",
-                description: "Un emperador es engañado por dos estafadores que dicen que le están haciendo un traje mágico.",
-                url: "https://es.wikipedia.org/wiki/El_emperador_no_tiene_ropa"
-            },
-            {
-                title: "Los músicos de Bremen",
-                author: "Hermanos Grimm",
-                description: "Cuatro animales viejos deciden ir a Bremen para ser músicos.",
-                url: "https://es.wikipedia.org/wiki/Los_m%C3%BAsicos_de_Bremen"
-            },
-            {
-                title: "Pulgarcito",
-                author: "Charles Perrault",
-                description: "Un niño del tamaño de un pulgar que se pierde en el bosque.",
-                url: "https://es.wikipedia.org/wiki/Pulgarcito"
-            }
-        ];
-
-        function displayCuentos(cuentos) {
-            const grid = document.getElementById('cuentosGrid');
-            grid.innerHTML = '';
-            
-            if (cuentos.length === 0) {
-                grid.innerHTML = `
-                    <div class="cuento-card">
-                        <h3 class="cuento-title">No se encontraron resultados</h3>
-                        <p class="cuento-description">Intenta con otro término de búsqueda</p>
-                    </div>
-                `;
-                return;
-            }
-            
-            cuentos.forEach(cuento => {
-                const card = document.createElement('div');
-                card.className = 'cuento-card';
-                
-                card.innerHTML = `
-                    <h3 class="cuento-title">${cuento.title}</h3>
-                    <p class="cuento-description">${cuento.description}</p>
-                    <p class="cuento-author" style="color: #b39ddb; font-size: 0.9em; margin-bottom: 15px;">
-                        ✍️ ${cuento.author}
-                    </p>
-                    <div class="audio-player">
-                        <a href="${cuento.url}" target="_blank" class="btn">
-                            📖 Leer cuento completo
-                        </a>
-                    </div>
-                `;
-                
-                grid.appendChild(card);
-            });
-        }
-
-        function searchCuentos() {
-            const searchTerm = document.getElementById('searchInput').value.trim().toLowerCase();
-            
-            if (!searchTerm) {
-                displayCuentos(cuentosClasicos);
-                return;
-            }
-            
-            const resultados = cuentosClasicos.filter(cuento => 
-                cuento.title.toLowerCase().includes(searchTerm) ||
-                cuento.author.toLowerCase().includes(searchTerm) ||
-                cuento.description.toLowerCase().includes(searchTerm)
-            );
-            
-            displayCuentos(resultados);
-        }
-
-        // Buscar al presionar Enter
-        document.getElementById('searchInput').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                searchCuentos();
-            }
-        });
-
-        // Cargar cuentos al iniciar
-        displayCuentos(cuentosClasicos);
 
         // Manejo del formulario de subida
         document.getElementById('audioFile').addEventListener('change', function(e) {
