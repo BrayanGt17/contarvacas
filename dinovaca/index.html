@@ -18,7 +18,8 @@
             background: linear-gradient(135deg, #1a0a2e 0%, #2d1b4e 50%, #1a0a2e 100%);
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             color: #e1bee7;
-            overflow: hidden;
+            overflow-x: hidden;
+            overflow-y: auto;
             touch-action: none;
             position: relative;
         }
@@ -115,26 +116,27 @@
         
         .score-display {
             position: fixed;
-            top: 20px;
-            right: 20px;
+            top: 10px;
+            right: 10px;
             text-align: right;
             z-index: 10;
-            background: rgba(20, 20, 40, 0.8);
-            padding: 15px 20px;
-            border-radius: 15px;
-            border: 1px solid rgba(126, 87, 194, 0.5);
+            padding: 0;
+            pointer-events: none;
         }
         
         .distance {
             font-size: 1.5em;
-            color: #d1c4e9;
-            font-weight: 600;
+            color: #fff;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+            letter-spacing: 1px;
         }
         
         .record {
-            font-size: 1em;
+            font-size: 0.9em;
             color: #b39ddb;
-            margin-top: 5px;
+            margin-top: 3px;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
         }
         
         .game-over-screen {
@@ -526,20 +528,23 @@
             obstacles.forEach(obs => {
                 obs.x -= config.obstacleSpeed;
                 
-                // Contar puntos
+                // Contar kilómetros
                 if (!obs.passed && obs.x + obs.width < cow.x) {
                     obs.passed = true;
                     gameState.score++;
                     
-                    // Formato 00000
-                    const scoreStr = gameState.score.toString().padStart(5, '0');
-                    distanceEl.textContent = scoreStr;
+                    // Mostrar como kilómetros con 2 decimales: 001.23 km
+                    const km = (gameState.score / 10).toFixed(2);
+                    distanceEl.textContent = km.padStart(6, '0') + ' km';
                     
-                    // Sonido cada 10 puntos
-                    if (gameState.score % 10 === 0) {
-                        playMilestoneSound(gameState.score);
-                        config.obstacleSpeed += 0.3;
+                    // Sonido cada 100 km (10 puntos = 1 km, entonces cada 10 km = 100 km)
+                    const currentKm = Math.floor(gameState.score / 10);
+                    if (currentKm > 0 && currentKm % 10 === 0) {
+                        playMilestoneSound(currentKm * 10);
                     }
+                    
+                    // Aumentar velocidad gradualmente
+                    config.obstacleSpeed += 0.05;
                 }
             });
             
@@ -563,6 +568,7 @@
                 cow.velocityY = config.jumpForce;
                 cow.jumpCount++;
                 cow.isJumping = true;
+                playJumpSound();
             }
         }
         
@@ -633,12 +639,16 @@
             
             playGameOverSound();
             
+            // Calcular kilómetros
+            const kmScore = (gameState.score / 10).toFixed(2);
+            const kmRecord = (gameState.highScore / 10).toFixed(2);
+            
             // Actualizar récord en la pantalla
-            recordEl.textContent = 'Récord: ' + gameState.highScore.toString().padStart(5, '0');
+            recordEl.textContent = 'Récord: ' + kmRecord.padStart(6, '0') + ' km';
             
             // Mostrar pantalla de game over
-            finalScoreEl.textContent = gameState.score.toString().padStart(5, '0');
-            finalRecordEl.textContent = gameState.highScore.toString().padStart(5, '0');
+            finalScoreEl.textContent = kmScore.padStart(6, '0') + ' km';
+            finalRecordEl.textContent = kmRecord.padStart(6, '0') + ' km';
             gameOverScreen.classList.add('active');
         }
         
@@ -686,7 +696,7 @@
             gameState.playing = true;
             gameState.paused = false;
             gameState.score = 0;
-            distanceEl.textContent = '00000';
+            distanceEl.textContent = '000.00 km';
             gameOverScreen.classList.remove('active');
             
             cow.y = groundY - cow.height;
@@ -786,17 +796,41 @@
         document.body.style.userSelect = 'none';
         document.body.style.webkitUserSelect = 'none';
         
-        // Sonido de hito (cada 10 puntos)
+        // Sonido de hito (cada 100 km)
         let audioCtx = null;
         
-        function playMilestoneSound(score) {
+        function initAudio() {
             if (!audioCtx) {
                 audioCtx = new (window.AudioContext || window.webkitAudioContext)();
             }
+        }
+        
+        // Sonido al saltar
+        function playJumpSound() {
+            initAudio();
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
             
-            // Melodía ascendente según puntaje
-            const baseFreq = 400 + (score / 10) * 50;
-            const notes = [baseFreq, baseFreq * 1.25, baseFreq * 1.5, baseFreq * 2];
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(300, audioCtx.currentTime);
+            osc.frequency.linearRampToValueAtTime(400, audioCtx.currentTime + 0.1);
+            
+            gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
+            
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            
+            osc.start(audioCtx.currentTime);
+            osc.stop(audioCtx.currentTime + 0.15);
+        }
+        
+        function playMilestoneSound(km) {
+            initAudio();
+            
+            // Melodía especial cada 100 km
+            const baseFreq = 500 + (km / 100) * 20;
+            const notes = [baseFreq, baseFreq * 1.33, baseFreq * 1.66, baseFreq * 2];
             
             notes.forEach((freq, i) => {
                 const osc = audioCtx.createOscillator();
@@ -806,7 +840,7 @@
                 osc.frequency.setValueAtTime(freq, audioCtx.currentTime + i * 0.08);
                 
                 gain.gain.setValueAtTime(0, audioCtx.currentTime + i * 0.08);
-                gain.gain.linearRampToValueAtTime(0.1, audioCtx.currentTime + i * 0.08 + 0.03);
+                gain.gain.linearRampToValueAtTime(0.12, audioCtx.currentTime + i * 0.08 + 0.03);
                 gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + i * 0.08 + 0.2);
                 
                 osc.connect(gain);
