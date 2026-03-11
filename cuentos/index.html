@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cuentos - JuegosBYF</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1a0a2e 0%, #2d1b4e 50%, #1a0a2e 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #e1bee7;
+            overflow-x: hidden;
+        }
+
+        #particles-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .content {
+            position: relative;
+            z-index: 1;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .header {
+            text-align: center;
+            margin: 30px 0;
+            padding: 20px;
+        }
+
+        .logo {
+            font-size: 3em;
+            font-weight: bold;
+            background: linear-gradient(90deg, #b39ddb, #7e57c2, #b39ddb);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 3px;
+        }
+
+        .tagline {
+            color: #b39ddb;
+            font-size: 1.1em;
+            margin-top: 10px;
+        }
+
+        .upload-section {
+            background: rgba(30, 30, 60, 0.9);
+            border: 1px solid rgba(126, 87, 194, 0.5);
+            border-radius: 20px;
+            padding: 30px;
+            margin: 20px 0;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .upload-section h2 {
+            color: #d1c4e9;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #b39ddb;
+            font-size: 0.95em;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #7e57c2;
+            border-radius: 10px;
+            background: rgba(20, 20, 40, 0.8);
+            color: #e1bee7;
+            font-family: inherit;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #b39ddb;
+            box-shadow: 0 0 10px rgba(126, 87, 194, 0.3);
+        }
+
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .file-upload {
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .file-upload input[type="file"] {
+            position: absolute;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        .file-upload-label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+            border: 2px dashed #7e57c2;
+            border-radius: 10px;
+            background: rgba(20, 20, 40, 0.5);
+            color: #b39ddb;
+            transition: all 0.3s;
+        }
+
+        .file-upload:hover .file-upload-label {
+            border-color: #b39ddb;
+            background: rgba(20, 20, 40, 0.8);
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #4527a0 0%, #5e35b1 100%);
+            color: white;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            letter-spacing: 1px;
+            transition: all 0.3s;
+            width: 100%;
+        }
+
+        .btn:hover {
+            background: linear-gradient(135deg, #5e35b1 0%, #7e57c2 100%);
+            transform: scale(1.02);
+            box-shadow: 0 5px 20px rgba(126, 87, 194, 0.5);
+        }
+
+        .cuentos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            width: 100%;
+            max-width: 1000px;
+            margin: 20px 0;
+        }
+
+        .cuento-card {
+            background: linear-gradient(145deg, rgba(30, 30, 60, 0.9), rgba(20, 20, 40, 0.95));
+            border: 1px solid rgba(126, 87, 194, 0.5);
+            border-radius: 15px;
+            padding: 20px;
+            transition: all 0.3s;
+        }
+
+        .cuento-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(126, 87, 194, 0.3);
+        }
+
+        .cuento-title {
+            color: #d1c4e9;
+            font-size: 1.2em;
+            margin-bottom: 10px;
+        }
+
+        .cuento-description {
+            color: #b39ddb;
+            font-size: 0.9em;
+            margin-bottom: 15px;
+        }
+
+        .audio-player {
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        audio {
+            width: 100%;
+            height: 40px;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 30px;
+            color: #b39ddb;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .back-link:hover {
+            color: #d1c4e9;
+        }
+
+        @media (max-width: 768px) {
+            .logo {
+                font-size: 2em;
+            }
+            
+            .cuentos-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="particles-canvas"></canvas>
+    
+    <div class="content">
+        <header class="header">
+            <h1 class="logo">CUENTOS</h1>
+            <p class="tagline">🎵 Colección de Cuentos y Audios 🎵</p>
+        </header>
+
+        <div class="upload-section">
+            <h2>Subir Nuevo Cuento</h2>
+            <form id="uploadForm">
+                <div class="form-group">
+                    <label for="titulo">Título del cuento</label>
+                    <input type="text" id="titulo" placeholder="Ej: El cuento de la vaca" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="descripcion">Descripción</label>
+                    <textarea id="descripcion" placeholder="Breve descripción del cuento..."></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label>Audio del cuento</label>
+                    <div class="file-upload">
+                        <input type="file" id="audioFile" accept="audio/*" required>
+                        <div class="file-upload-label" id="fileLabel">
+                            📁 Seleccionar archivo de audio (MP3, WAV, OGG)
+                        </div>
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn">Subir Cuento</button>
+            </form>
+        </div>
+
+        <h2 style="color: #d1c4e9; margin: 20px 0;">Cuentos Disponibles</h2>
+        
+        <div class="cuentos-grid" id="cuentosGrid">
+            <!-- Los cuentos se cargarán dinámicamente aquí -->
+            <div class="cuento-card">
+                <h3 class="cuento-title">Ejemplo: El Viaje de la Vaca</h3>
+                <p class="cuento-description">Un cuento sobre una vaca que viaja por el mundo.</p>
+                <div class="audio-player">
+                    <audio controls>
+                        <source src="" type="audio/mpeg">
+                        Tu navegador no soporta el elemento de audio.
+                    </audio>
+                </div>
+            </div>
+        </div>
+
+        <a href="../index.html" class="back-link">← Volver a JuegosBYF</a>
+    </div>
+
+    <script>
+        // Sistema de partículas
+        const canvas = document.getElementById('particles-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        function initParticles() {
+            particles = [];
+            const particleCount = Math.min(80, Math.floor(window.innerWidth / 15));
+            
+            for (let i = 0; i < particleCount; i++) {
+                particles.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    vx: (Math.random() - 0.5) * 0.4,
+                    vy: (Math.random() - 0.5) * 0.4,
+                    size: Math.random() * 2 + 0.5,
+                    opacity: 0.3 + Math.random() * 0.4
+                });
+            }
+        }
+
+        function updateParticles() {
+            particles.forEach(p => {
+                p.x += p.vx;
+                p.y += p.vy;
+                if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+                if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+            });
+        }
+
+        function drawParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            particles.forEach(p => {
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(179, 157, 219, ${p.opacity})`;
+                ctx.fill();
+            });
+            
+            particles.forEach((p1, i) => {
+                particles.slice(i + 1).forEach(p2 => {
+                    const dx = p1.x - p2.x;
+                    const dy = p1.y - p2.y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    const maxDistance = 150;
+                    
+                    if (distance < maxDistance) {
+                        const opacity = (1 - distance / maxDistance) * 0.15;
+                        ctx.beginPath();
+                        ctx.moveTo(p1.x, p1.y);
+                        ctx.lineTo(p2.x, p2.y);
+                        ctx.strokeStyle = `rgba(126, 87, 194, ${opacity})`;
+                        ctx.lineWidth = 1;
+                        ctx.stroke();
+                    }
+                });
+            });
+        }
+
+        function animate() {
+            updateParticles();
+            drawParticles();
+            requestAnimationFrame(animate);
+        }
+
+        window.addEventListener('resize', () => {
+            resizeCanvas();
+            initParticles();
+        });
+
+        resizeCanvas();
+        initParticles();
+        animate();
+
+        // Manejo del formulario de subida
+        document.getElementById('audioFile').addEventListener('change', function(e) {
+            const label = document.getElementById('fileLabel');
+            if (this.files.length > 0) {
+                label.textContent = '✓ ' + this.files[0].name;
+            } else {
+                label.textContent = '📁 Seleccionar archivo de audio (MP3, WAV, OGG)';
+            }
+        });
+
+        document.getElementById('uploadForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const titulo = document.getElementById('titulo').value;
+            const descripcion = document.getElementById('descripcion').value;
+            const audioFile = document.getElementById('audioFile').files[0];
+            
+            if (audioFile) {
+                // Crear URL temporal para el audio
+                const audioUrl = URL.createObjectURL(audioFile);
+                
+                // Crear nueva tarjeta de cuento
+                const cuentoCard = document.createElement('div');
+                cuentoCard.className = 'cuento-card';
+                cuentoCard.innerHTML = `
+                    <h3 class="cuento-title">${titulo}</h3>
+                    <p class="cuento-description">${descripcion || 'Sin descripción'}</p>
+                    <div class="audio-player">
+                        <audio controls>
+                            <source src="${audioUrl}" type="${audioFile.type}">
+                            Tu navegador no soporta el elemento de audio.
+                        </audio>
+                    </div>
+                `;
+                
+                // Agregar al grid
+                const grid = document.getElementById('cuentosGrid');
+                grid.insertBefore(cuentoCard, grid.firstChild);
+                
+                // Limpiar formulario
+                this.reset();
+                document.getElementById('fileLabel').textContent = '📁 Seleccionar archivo de audio (MP3, WAV, OGG)';
+                
+                alert('¡Cuento subido exitosamente!');
+            }
+        });
+    </script>
+</body>
+</html>
