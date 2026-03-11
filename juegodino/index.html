@@ -88,29 +88,6 @@
         const ctx = canvas.getContext('2d');
         const scoreEl = document.getElementById('score');
         
-        // Configurar tamaño del canvas
-        function resizeCanvas() {
-            const width = window.innerWidth || document.documentElement.clientWidth;
-            const height = window.innerHeight || document.documentElement.clientHeight;
-            canvas.width = width;
-            canvas.height = height;
-            groundY = height - config.groundHeight;
-            cow.y = groundY - cow.height;
-        }
-        
-        // Redimensionar al inicio y al cambiar tamaño
-        resizeCanvas();
-        initGround();
-        window.addEventListener('resize', () => {
-            setTimeout(() => {
-                resizeCanvas();
-                initGround();
-            }, 100);
-        });
-        
-        // Separador para formato 00000 00000 (asumiendo 10 dígitos en dos grupos)
-        // Para un solo grupo de 5 dígitos, lo dejamos simple
-        
         // Configuración del juego
         const config = {
             gravity: 0.6,
@@ -120,14 +97,6 @@
             obstacleGap: 150,
             minObstacleGap: 120,
             maxObstacleGap: 200
-        };
-        
-        // Estado del juego
-        let gameState = {
-            playing: false,
-            paused: false,
-            score: 0,
-            highScore: 0
         };
         
         // Vaca
@@ -142,6 +111,43 @@
             maxJumps: 2
         };
         
+        // Suelo
+        let groundY = 0;
+        
+        // Configurar tamaño del canvas
+        function resizeCanvas() {
+            const width = window.innerWidth || document.documentElement.clientWidth;
+            const height = window.innerHeight || document.documentElement.clientHeight;
+            canvas.width = width;
+            canvas.height = height;
+            groundY = height - config.groundHeight;
+            cow.y = groundY - cow.height;
+        }
+        
+        // Inicializar groundY y posición de la vaca
+        function initGround() {
+            groundY = canvas.height - config.groundHeight;
+            cow.y = groundY - cow.height;
+        }
+        
+        // Redimensionar al inicio y al cambiar tamaño
+        resizeCanvas();
+        initGround();
+        window.addEventListener('resize', () => {
+            setTimeout(() => {
+                resizeCanvas();
+                initGround();
+            }, 100);
+        });
+        
+        // Estado del juego
+        let gameState = {
+            playing: false,
+            paused: false,
+            score: 0,
+            highScore: 0
+        };
+        
         // Cargar imagen de la vaca
         const cowImage = new Image();
         cowImage.src = 'https://i.ibb.co/QFgJ3D0Q/pngegg.png';
@@ -150,15 +156,6 @@
         
         // Fix: Añadir try/catch para prevenir errores de carga
         cowImage.onerror = () => { console.log('Imagen de vaca no disponible, usando fallback'); };
-        
-        // Suelo
-        let groundY = 0;
-        
-        // Inicializar groundY después de resizeCanvas
-        function initGround() {
-            groundY = canvas.height - config.groundHeight;
-            cow.y = groundY - cow.height;
-        }
         
         // Obstáculos (cactus modificados para noche)
         let obstacles = [];
