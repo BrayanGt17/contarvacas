@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JuegosBYF - Colección de Juegos</title>
+    <title>BYFFOREVER💗 - Juegos y más...</title>
     <style>
         * {
             margin: 0;
@@ -48,25 +48,49 @@
         .logo {
             font-size: 3.5em;
             font-weight: bold;
-            background: linear-gradient(90deg, #b39ddb, #7e57c2, #b39ddb);
+            background: linear-gradient(90deg, #ff69b4, #ff1493, #ff69b4);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            text-shadow: 0 0 30px rgba(126, 87, 194, 0.5);
-            letter-spacing: 3px;
+            text-shadow: 0 0 30px rgba(255, 105, 180, 0.5);
+            letter-spacing: 5px;
             animation: glow 2s ease-in-out infinite alternate;
         }
 
         @keyframes glow {
-            from { filter: drop-shadow(0 0 5px rgba(179, 157, 219, 0.5)); }
-            to { filter: drop-shadow(0 0 20px rgba(126, 87, 194, 0.8)); }
+            from { filter: drop-shadow(0 0 5px rgba(255, 105, 180, 0.5)); }
+            to { filter: drop-shadow(0 0 20px rgba(255, 20, 147, 0.8)); }
+        }
+
+        .tagline-container {
+            height: 35px;
+            margin-top: 15px;
+            overflow: hidden;
+            position: relative;
         }
 
         .tagline {
-            color: #b39ddb;
-            font-size: 1.1em;
-            margin-top: 10px;
-            letter-spacing: 1px;
+            color: #d1c4e9;
+            font-size: 1.2em;
+            letter-spacing: 2px;
+            position: absolute;
+            width: 100%;
+            text-align: center;
+            opacity: 0;
+            animation: fadeTagline 10s infinite;
+        }
+
+        .tagline:nth-child(1) { animation-delay: 0s; }
+        .tagline:nth-child(2) { animation-delay: 2.5s; }
+        .tagline:nth-child(3) { animation-delay: 5s; }
+        .tagline:nth-child(4) { animation-delay: 7.5s; }
+
+        @keyframes fadeTagline {
+            0% { opacity: 0; transform: translateY(10px); }
+            5% { opacity: 1; transform: translateY(0); }
+            20% { opacity: 1; transform: translateY(0); }
+            25% { opacity: 0; transform: translateY(-10px); }
+            100% { opacity: 0; transform: translateY(-10px); }
         }
 
         .games-grid {
@@ -220,8 +244,13 @@
     
     <div class="content">
         <header class="header">
-            <h1 class="logo">JUEGOSBYF</h1>
-            <p class="tagline">🎮 Colección de Juegos Diversos 🎮</p>
+            <h1 class="logo">BYFFOREVER💗</h1>
+            <div class="tagline-container">
+                <p class="tagline">🎮 Juegos y más... 🎮</p>
+                <p class="tagline">💕 Regresa conmigo 💕</p>
+                <p class="tagline">🌟 Entretenimiento infinito 🌟</p>
+                <p class="tagline">💖 Diviértete siempre 💖</p>
+            </div>
         </header>
         
         <div class="games-grid">
