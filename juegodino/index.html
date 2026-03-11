@@ -207,6 +207,65 @@
             });
         }
         
+        // Sistema de partículas con conexiones (constelación morada)
+        let particles = [];
+        
+        function initParticles() {
+            particles = [];
+            const particleCount = 40;
+            
+            for (let i = 0; i < particleCount; i++) {
+                particles.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height * 0.7,
+                    vx: (Math.random() - 0.5) * 0.5,
+                    vy: (Math.random() - 0.5) * 0.5,
+                    size: Math.random() * 2 + 1,
+                    color: `hsla(${260 + Math.random() * 40}, 60%, 70%, ${0.3 + Math.random() * 0.4})`
+                });
+            }
+        }
+        
+        function updateParticles() {
+            particles.forEach(p => {
+                p.x += p.vx;
+                p.y += p.vy;
+                
+                if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+                if (p.y < 0 || p.y > canvas.height * 0.7) p.vy *= -1;
+            });
+        }
+        
+        function drawParticles() {
+            // Dibujar partículas
+            particles.forEach(p => {
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+                ctx.fill();
+            });
+            
+            // Dibujar líneas de conexión
+            particles.forEach((p1, i) => {
+                particles.slice(i + 1).forEach(p2 => {
+                    const dx = p1.x - p2.x;
+                    const dy = p1.y - p2.y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    const maxDistance = 120;
+                    
+                    if (distance < maxDistance) {
+                        const opacity = 1 - (distance / maxDistance);
+                        ctx.beginPath();
+                        ctx.moveTo(p1.x, p1.y);
+                        ctx.lineTo(p2.x, p2.y);
+                        ctx.strokeStyle = `rgba(179, 157, 219, ${opacity * 0.3})`;
+                        ctx.lineWidth = 1;
+                        ctx.stroke();
+                    }
+                });
+            });
+        }
+        
         // Dibujar vaca con imagen
         function drawCow() {
             const x = cow.x;
@@ -382,12 +441,39 @@
             return false;
         }
         
+        // Sonido al perder
+        function playGameOverSound() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            
+            const notes = [300, 250, 200, 150];
+            notes.forEach((freq, i) => {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(freq, audioCtx.currentTime + i * 0.15);
+                
+                gain.gain.setValueAtTime(0.1, audioCtx.currentTime + i * 0.15);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + i * 0.15 + 0.3);
+                
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                
+                osc.start(audioCtx.currentTime + i * 0.15);
+                osc.stop(audioCtx.currentTime + i * 0.15 + 0.3);
+            });
+        }
+        
         // Game over
         function gameOver() {
             gameState.playing = false;
             if (gameState.score > gameState.highScore) {
                 gameState.highScore = gameState.score;
             }
+            
+            playGameOverSound();
             
             ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -405,6 +491,10 @@
         function gameLoop() {
             // Limpiar canvas
             ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Actualizar y dibujar partículas (fondo)
+            updateParticles();
+            drawParticles();
             
             // Actualizar y dibujar nubes
             updateClouds();
@@ -450,11 +540,35 @@
             
             initStars();
             initClouds();
+            initParticles();
             
             // Reiniciar bucle de juego si no está corriendo
             if (!gameState.paused) {
                 gameLoop();
             }
+        }
+        
+        // Sonido al pausar
+        function playPauseSound() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(440, audioCtx.currentTime);
+            osc.frequency.setValueAtTime(220, audioCtx.currentTime + 0.1);
+            
+            gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.2);
+            
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            
+            osc.start(audioCtx.currentTime);
+            osc.stop(audioCtx.currentTime + 0.2);
         }
         
         // Pausar/Reanudar
@@ -464,10 +578,12 @@
             gameState.paused = !gameState.paused;
             document.getElementById('pauseBtn').textContent = gameState.paused ? 'Reanudar' : 'Pausar';
             
+            playPauseSound();
+            
             if (!gameState.paused) {
                 gameLoop();
             } else {
-                ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
                 ctx.fillStyle = '#e1bee7';
                 ctx.font = '30px Arial';
@@ -545,19 +661,33 @@
         }
         
         // Dibujar estado inicial
+        initParticles();
         initStars();
         initClouds();
-        drawClouds();
-        drawStars();
-        drawGround();
-        drawCow();
         
-        ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        ctx.fillStyle = '#e1bee7';
-        ctx.font = '30px Arial';
-        ctx.textAlign = 'center';
-        ctx.fillText('Presiona INICIAR o ESPACIO', canvas.width / 2, canvas.height / 2);
+        // Bucle inicial para mostrar partículas
+        function initialLoop() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            updateParticles();
+            drawParticles();
+            drawClouds();
+            drawStars();
+            drawGround();
+            drawCow();
+            
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = '#e1bee7';
+            ctx.font = '30px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('Presiona INICIAR o ESPACIO', canvas.width / 2, canvas.height / 2);
+            
+            if (!gameState.playing) {
+                requestAnimationFrame(initialLoop);
+            }
+        }
+        
+        initialLoop();
         
         console.log('Juego listo. Canvas:', canvas.width, 'x', canvas.height);
     </script>
