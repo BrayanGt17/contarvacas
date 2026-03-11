@@ -17,9 +17,14 @@
             font-family: 'Arial', sans-serif;
             color: #e1bee7;
             overflow: hidden;
+            touch-action: none;
         }
         
         #gameCanvas {
+            width: 100%;
+            max-width: 600px;
+            height: auto;
+            aspect-ratio: 4/1.2;
             border: 3px solid #7e57c2;
             border-radius: 10px;
             background: linear-gradient(to bottom, #1a0a2e 0%, #2d1b4e 100%);
@@ -65,7 +70,7 @@
     </style>
 </head>
 <body>
-    <canvas id="gameCanvas" width="800" height="300"></canvas>
+    <canvas id="gameCanvas" width="600" height="200"></canvas>
     <div class="ui">
         <div class="score">Puntuación: <span id="score">0</span></div>
         <div class="instructions">Presiona ESPACIO o TOCA para saltar</div>
@@ -315,47 +320,13 @@
         function setupTouchControls() {
             canvas.addEventListener('touchstart', (e) => {
                 e.preventDefault();
-                touchStartY = e.touches[0].clientY;
+                e.stopPropagation();
                 if (!gameState.playing) {
                     startGame();
                 } else {
                     jump();
                 }
-            }, { passive: false });
-        }
-        
-        // Actualizar obstáculos
-        function updateObstacles() {
-            if (!gameState.playing || gameState.paused) return;
-            
-            obstacles.forEach(obs => {
-                obs.x -= config.obstacleSpeed;
-                
-                // Contar puntos (solo cuando pasa la vaca)
-                if (!obs.passed && obs.x + obs.width < cow.x) {
-                    obs.passed = true;
-                    gameState.score++;
-                    
-                    // Formato 00000
-                    const scoreStr = gameState.score.toString().padStart(5, '0');
-                    scoreEl.textContent = scoreStr;
-                    
-                    // Sonido cada 10 puntos
-                    if (gameState.score % 10 === 0) {
-                        playMilestoneSound(gameState.score);
-                        config.obstacleSpeed += 0.3;
-                    }
-                }
             });
-            
-            // Eliminar obstáculos fuera de pantalla
-            obstacles = obstacles.filter(obs => obs.x > -100);
-            
-            // Crear nuevos obstáculos
-            while (obstacles.length === 0 || 
-                   obstacles[obstacles.length - 1].x < canvas.width + config.obstacleGap) {
-                obstacles.push(createObstacle());
-            }
         }
         
         // Colisión (arreglada para no tocar falsamente)
