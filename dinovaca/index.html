@@ -32,19 +32,13 @@
             z-index: 0;
             pointer-events: none;
         }
-        
-        .game-wrapper {
-            position: relative;
-            z-index: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            padding: 20px;
-        }
 
         #gameCanvas {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1;
             width: 100%;
             max-width: 800px;
             height: auto;
@@ -119,72 +113,92 @@
             box-shadow: 0 5px 20px rgba(126, 87, 194, 0.5);
         }
         
-        .ui {
-            margin-top: 25px;
-            text-align: center;
-            background: rgba(20, 20, 40, 0.9);
-            padding: 20px 30px;
+        .score-display {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            text-align: right;
+            z-index: 10;
+            background: rgba(20, 20, 40, 0.8);
+            padding: 15px 20px;
             border-radius: 15px;
             border: 1px solid rgba(126, 87, 194, 0.5);
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
         }
         
-        .score {
-            font-size: 1.8em;
+        .distance {
+            font-size: 1.5em;
             color: #d1c4e9;
             font-weight: 600;
-            text-shadow: 0 0 10px rgba(179, 157, 219, 0.5);
         }
         
-        .instructions {
-            margin-top: 10px;
+        .record {
+            font-size: 1em;
             color: #b39ddb;
-            font-size: 0.95em;
-            letter-spacing: 0.5px;
+            margin-top: 5px;
         }
         
-        .controls {
-            margin-top: 20px;
-            display: flex;
-            gap: 12px;
-            justify-content: center;
-            flex-wrap: wrap;
+        .game-over-screen {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(20, 20, 40, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            border: 2px solid #7e57c2;
+            text-align: center;
+            z-index: 100;
+            display: none;
+            box-shadow: 0 0 40px rgba(126, 87, 194, 0.5);
         }
         
-        button {
-            padding: 12px 25px;
+        .game-over-screen.active {
+            display: block;
+        }
+        
+        .game-over-title {
+            font-size: 2.5em;
+            color: #e1bee7;
+            margin-bottom: 20px;
+            text-shadow: 0 0 20px rgba(179, 157, 219, 0.5);
+        }
+        
+        .game-over-stats {
+            margin: 20px 0;
+            color: #d1c4e9;
+            font-size: 1.2em;
+        }
+        
+        .retry-btn {
+            padding: 15px 50px;
             background: linear-gradient(135deg, #4527a0 0%, #5e35b1 100%);
             color: white;
-            border: 1px solid #7e57c2;
-            border-radius: 25px;
+            border: none;
+            border-radius: 30px;
             cursor: pointer;
-            transition: all 0.3s;
+            font-size: 1.2em;
             font-weight: 600;
-            font-size: 0.95em;
-            letter-spacing: 0.5px;
-            position: relative;
-            overflow: hidden;
+            transition: all 0.3s;
+            margin-top: 20px;
         }
         
-        button::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-            transition: left 0.5s;
-        }
-        
-        button:hover::before {
-            left: 100%;
-        }
-        
-        button:hover {
+        .retry-btn:hover {
             background: linear-gradient(135deg, #5e35b1 0%, #7e57c2 100%);
             transform: scale(1.05);
-            box-shadow: 0 5px 15px rgba(126, 87, 194, 0.5);
+            box-shadow: 0 5px 20px rgba(126, 87, 194, 0.5);
+        }
+        
+        .instructions-overlay {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #b39ddb;
+            font-size: 0.9em;
+            z-index: 5;
+            background: rgba(20, 20, 40, 0.7);
+            padding: 10px 20px;
+            border-radius: 20px;
         }
     </style>
 </head>
@@ -198,17 +212,22 @@
         <button class="orientation-btn" onclick="dismissOrientation()">Entendido</button>
     </div>
     
-    <div class="game-wrapper">
-        <canvas id="gameCanvas" width="800" height="300"></canvas>
-        <div class="ui">
-            <div class="score">Puntuación: <span id="score">0</span></div>
-            <div class="instructions">Presiona ESPACIO o TOCA para saltar</div>
-            <div class="controls">
-                <button id="startBtn">Iniciar</button>
-                <button id="pauseBtn">Pausar</button>
-                <button id="restartBtn">Reiniciar</button>
-            </div>
+    <canvas id="gameCanvas" width="800" height="300"></canvas>
+    
+    <div class="score-display">
+        <div class="distance">00000</div>
+        <div class="record">Récord: 00000</div>
+    </div>
+    
+    <div class="instructions-overlay">Presiona ESPACIO o TOCA para saltar</div>
+    
+    <div class="game-over-screen" id="gameOverScreen">
+        <div class="game-over-title">GAME OVER</div>
+        <div class="game-over-stats">
+            <div>Distancia: <span id="finalScore">0</span></div>
+            <div>Récord: <span id="finalRecord">0</span></div>
         </div>
+        <button class="retry-btn" onclick="restartGame()">REINTENTAR</button>
     </div>
     
     <script>
@@ -216,7 +235,11 @@
         const ctx = canvas.getContext('2d');
         const particleCanvas = document.getElementById('particleCanvas');
         const particleCtx = particleCanvas.getContext('2d');
-        const scoreEl = document.getElementById('score');
+        const distanceEl = document.querySelector('.distance');
+        const recordEl = document.querySelector('.record');
+        const gameOverScreen = document.getElementById('gameOverScreen');
+        const finalScoreEl = document.getElementById('finalScore');
+        const finalRecordEl = document.getElementById('finalRecord');
         
         // Separador para formato 00000 00000 (asumiendo 10 dígitos en dos grupos)
         // Para un solo grupo de 5 dígitos, lo dejamos simple
@@ -510,7 +533,7 @@
                     
                     // Formato 00000
                     const scoreStr = gameState.score.toString().padStart(5, '0');
-                    scoreEl.textContent = scoreStr;
+                    distanceEl.textContent = scoreStr;
                     
                     // Sonido cada 10 puntos
                     if (gameState.score % 10 === 0) {
@@ -610,16 +633,17 @@
             
             playGameOverSound();
             
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            // Actualizar récord en la pantalla
+            recordEl.textContent = 'Récord: ' + gameState.highScore.toString().padStart(5, '0');
             
-            ctx.fillStyle = '#e1bee7';
-            ctx.font = '40px Arial';
-            ctx.textAlign = 'center';
-            ctx.fillText('¡GAME OVER!', canvas.width / 2, canvas.height / 2 - 30);
-            ctx.font = '20px Arial';
-            ctx.fillText(`Puntuación: ${gameState.score}`, canvas.width / 2, canvas.height / 2 + 10);
-            ctx.fillText(`Récord: ${gameState.highScore}`, canvas.width / 2, canvas.height / 2 + 40);
+            // Mostrar pantalla de game over
+            finalScoreEl.textContent = gameState.score.toString().padStart(5, '0');
+            finalRecordEl.textContent = gameState.highScore.toString().padStart(5, '0');
+            gameOverScreen.classList.add('active');
+        }
+        
+        function restartGame() {
+            startGame();
         }
         
         // Bucle principal
@@ -662,7 +686,8 @@
             gameState.playing = true;
             gameState.paused = false;
             gameState.score = 0;
-            scoreEl.textContent = '00000';
+            distanceEl.textContent = '00000';
+            gameOverScreen.classList.remove('active');
             
             cow.y = groundY - cow.height;
             cow.velocityY = 0;
@@ -728,9 +753,6 @@
         }
         
         // Event listeners
-        document.getElementById('startBtn').addEventListener('click', startGame);
-        document.getElementById('pauseBtn').addEventListener('click', togglePause);
-        document.getElementById('restartBtn').addEventListener('click', startGame);
         
         document.addEventListener('keydown', (e) => {
             if (e.code === 'Space') {
@@ -843,11 +865,21 @@
             const overlay = document.getElementById('orientationOverlay');
             const isVertical = window.innerHeight > window.innerWidth;
             const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            const isPortrait = window.matchMedia("(orientation: portrait)").matches;
             
-            if (isMobile && isVertical) {
+            // Solo mostrar overlay en móviles en modo vertical
+            if (isMobile && isPortrait) {
                 overlay.classList.add('active');
+                // Pausar el juego si está activo
+                if (gameState.playing) {
+                    gameState.paused = true;
+                }
             } else {
                 overlay.classList.remove('active');
+                // Reanudar si estaba jugando y no estaba pausado manualmente
+                if (gameState.playing && !gameState.paused) {
+                    gameLoop();
+                }
             }
         }
         
@@ -864,6 +896,9 @@
         checkOrientation();
         window.addEventListener('resize', checkOrientation);
         window.addEventListener('orientationchange', checkOrientation);
+        
+        // Hacer la función accesible globalmente
+        window.dismissOrientation = dismissOrientation;
     </script>
 </body>
 </html>
