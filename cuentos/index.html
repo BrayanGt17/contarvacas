@@ -244,7 +244,7 @@
         <div class="upload-section">
             <h2>Subir Nuevo Cuento</h2>
             <p style="color: #b39ddb; text-align: center; margin-bottom: 20px; font-size: 0.9em;">
-                Sube tu audio a Mediafire y pega el enlace aquí
+                Sube tu archivo de audio directamente o usa un enlace externo
             </p>
             <form id="uploadForm">
                 <div class="form-group">
@@ -258,8 +258,22 @@
                 </div>
                 
                 <div class="form-group">
-                    <label for="mediafireLink">Enlace de Mediafire</label>
-                    <input type="url" id="mediafireLink" placeholder="https://www.mediafire.com/file/..." required>
+                    <label>Opción 1: Subir archivo de audio</label>
+                    <div class="file-upload">
+                        <input type="file" id="audioFile" accept="audio/*">
+                        <div class="file-upload-label" id="fileLabel">
+                            📁 Seleccionar archivo de audio (MP3, WAV, OGG)
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group" style="text-align: center; color: #b39ddb;">
+                    O
+                </div>
+                
+                <div class="form-group">
+                    <label for="externalLink">Opción 2: Enlace externo (Mediafire, etc.)</label>
+                    <input type="url" id="externalLink" placeholder="https://www.mediafire.com/file/...">
                 </div>
                 
                 <button type="submit" class="btn">Agregar Cuento</button>
@@ -367,11 +381,11 @@
         animate();
 
         // Función para guardar en localStorage
-        function guardarCuento(titulo, descripcion, mediafireUrl) {
+        function guardarCuento(titulo, descripcion, audioUrl) {
             const cuento = {
                 titulo: titulo,
                 descripcion: descripcion,
-                url: mediafireUrl,
+                url: audioUrl,
                 timestamp: Date.now()
             };
             
@@ -416,19 +430,46 @@
         }
 
         // Manejo del formulario
-        document.getElementById('uploadForm').addEventListener('submit', function(e) {
+        document.getElementById('uploadForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
             const titulo = document.getElementById('titulo').value;
             const descripcion = document.getElementById('descripcion').value;
-            const mediafireUrl = document.getElementById('mediafireLink').value;
+            const audioFile = document.getElementById('audioFile').files[0];
+            const externalLink = document.getElementById('externalLink').value;
             
-            if (mediafireUrl) {
+            let audioUrl = '';
+            
+            if (audioFile) {
+                // Opción 1: Subir archivo a GitHub
+                // NOTA: Esto solo funcionará si el usuario tiene acceso al repo
+                // Para subir archivos a GitHub necesitas usar la API de GitHub o subirlos manualmente
+                
+                // Mostrar alerta informativa
+                alert('Para subir archivos directamente a GitHub necesitas:\n1. Subir el archivo manualmente a la carpeta "cuentos/audios/"\n2. Usar el enlace directo del archivo en GitHub Pages\n\nEjemplo: https://tu-usuario.github.io/contarvacas/cuentos/audios/nombre-archivo.mp3\n\nSe te pedirá el enlace del archivo subido.');
+                
+                // Pedir el enlace del archivo subido
+                const uploadedUrl = prompt('Pega aquí el enlace del archivo subido a GitHub:');
+                if (uploadedUrl) {
+                    audioUrl = uploadedUrl;
+                } else {
+                    return;
+                }
+                
+            } else if (externalLink) {
+                // Opción 2: Usar enlace externo
+                audioUrl = externalLink;
+            } else {
+                alert('Por favor, selecciona un archivo de audio o pega un enlace externo.');
+                return;
+            }
+            
+            if (audioUrl) {
                 // Guardar en localStorage
-                guardarCuento(titulo, descripcion, mediafireUrl);
+                guardarCuento(titulo, descripcion, audioUrl);
                 
                 // Agregar al grid
-                agregarCuentoAlGrid(titulo, descripcion, mediafireUrl);
+                agregarCuentoAlGrid(titulo, descripcion, audioUrl);
                 
                 // Limpiar formulario
                 this.reset();
