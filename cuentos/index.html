@@ -307,6 +307,45 @@
             position: relative;
             overflow: hidden;
             transform-style: preserve-3d;
+        }
+        
+        .cuento-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .btn-delete {
+            background: linear-gradient(135deg, #ff4757 0%, #c62828 100%);
+            border: none;
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 4px 15px rgba(255, 71, 87, 0.4);
+            flex-shrink: 0;
+        }
+        
+        .btn-delete:hover {
+            transform: scale(1.2) rotate(90deg);
+            box-shadow: 0 6px 20px rgba(255, 71, 87, 0.6);
+        }
+        
+        .btn-delete:active {
+            transform: scale(1.1) rotate(90deg);
+        }
+        
+        .btn-delete span {
+            color: white;
+            font-size: 1.4em;
+            font-weight: bold;
+            line-height: 1;
+        }
             box-shadow: 
                 0 15px 35px rgba(0, 0, 0, 0.3),
                 0 0 0 1px rgba(126, 87, 194, 0.1),
@@ -599,66 +638,16 @@
                 </div>
                 
                 <div class="form-group">
-                    <label>Audio</label>
-                    <div style="display: flex; gap: 15px; margin-bottom: 15px;">
-                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
-                            <input type="radio" name="audioType" value="file" checked onchange="toggleAudioInput()">
-                            <span>Subir archivo</span>
-                        </label>
-                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
-                            <input type="radio" name="audioType" value="url" onchange="toggleAudioInput()">
-                            <span>Usar URL</span>
-                        </label>
-                    </div>
-                    
-                    <div id="fileUploadSection">
-                        <div class="file-upload">
-                            <input type="file" id="audioFile" accept="audio/*">
-                            <label for="audioFile" class="file-upload-label">
-                                📁 Seleccionar archivo de audio (MP3, M4A, WAV, OGG)
-                            </label>
-                        </div>
-                    </div>
-                    
-                    <div id="urlUploadSection" style="display: none;">
-                        <input type="url" id="audioLink" placeholder="https://exquisite-choux-095677.netlify.app/cuentos/audios/nombre.mp3">
-                        <small style="color: #9e8ac4; font-size: 0.8em; display: block; margin-top: 8px;">
-                            💡 Usa la URL de tu audio subido a Netlify (carpeta: cuentos/audios/)
-                        </small>
-                    </div>
-                    
-                    <div style="margin-top: 20px; padding: 15px; background: rgba(126, 87, 194, 0.1); border-radius: 10px; border-left: 3px solid var(--secondary);">
-                        <p style="color: #d1c4e9; font-size: 0.9em; margin: 0;">
-                            <strong>📌 Cómo subir audios (sincronizado en todos los dispositivos):</strong><br>
-                            1. Sube tu archivo .mp3, .m4a o .wav a la carpeta <code>cuentos/audios/</code> en tu repositorio de GitHub<br>
-                            2. Copia la URL del archivo en Netlify (ej: https://tu-sitio.netlify.app/cuentos/audios/archivo.mp3)<br>
-                            3. Usa la opción "URL" arriba y pega el enlace<br>
-                            4. ¡Listo! El audio aparecerá en todos tus dispositivos<br><br>
-                            <strong style="color: var(--primary);">✓</strong> Sincronización activa con Google Sheets
-                        </p>
-                    </div>
+                    <label for="audioLink">URL del audio</label>
+                    <input type="url" id="audioLink" placeholder="https://ejemplo.com/audio.mp3" required>
+                    <small style="color: #9e8ac4; font-size: 0.8em; display: block; margin-top: 8px;">
+                        💡 Ingresa la URL de tu archivo de audio
+                    </small>
                 </div>
                 
                 <button type="submit" class="btn">Agregar Cuento</button>
             </form>
             
-            <div style="margin-top: 40px; padding-top: 30px; border-top: 1px solid rgba(126, 87, 194, 0.3); position: relative;">
-                <div style="text-align: center; margin-bottom: 25px;">
-                    <h3 style="color: #d1c4e9; font-size: 1.2em; display: inline-flex; align-items: center; gap: 10px;">
-                        <span style="background: linear-gradient(135deg, #ff4757, #c62828); width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.8em;">🗑️</span>
-                        Eliminar Cuento
-                    </h3>
-                </div>
-                <div class="form-group">
-                    <label for="deleteIndex">Índice del cuento (0, 1, 2...)</label>
-                    <input type="number" id="deleteIndex" placeholder="Ej: 0" min="0">
-                </div>
-                <div style="text-align: center;">
-                    <button type="button" class="btn btn-danger" onclick="eliminarCuento()">
-                        Eliminar Cuento
-                    </button>
-                </div>
-            </div>
         </div>
 
         <div style="text-align: center; margin: 50px 0 30px;">
@@ -838,6 +827,7 @@
             const cuentoCard = document.createElement('div');
             cuentoCard.className = 'cuento-card';
             cuentoCard.style.animationDelay = `${0.1 + (index * 0.1)}s`;
+            cuentoCard.dataset.index = index;
             
             const fileName = url.split('/').pop();
             const encodedUrl = encodeURIComponent(url);
@@ -845,7 +835,12 @@
             
             cuentoCard.innerHTML = `
                 <div class="cuento-content">
-                    <h3 class="cuento-title">🎵 ${titulo}</h3>
+                    <div class="cuento-header">
+                        <h3 class="cuento-title">🎵 ${titulo}</h3>
+                        <button class="btn-delete" onclick="eliminarCuentoPorIndex(${index})" title="Eliminar cuento">
+                            <span>×</span>
+                        </button>
+                    </div>
                     <p class="cuento-description">${descripcion || 'Sin descripción'}</p>
                     <p class="cuento-file">📁 ${fileName}</p>
                     <div class="cuento-actions">
@@ -880,12 +875,15 @@
             }
         }
         
-        // Función para eliminar un cuento
-        async function eliminarCuento() {
-            const index = parseInt(document.getElementById('deleteIndex').value);
-            
+        // Función para eliminar un cuento por índice
+        async function eliminarCuentoPorIndex(index) {
             if (isNaN(index)) {
-                showToast('Por favor, ingresa un número de índice válido.', true);
+                showToast('Error: Índice no válido', true);
+                return;
+            }
+            
+            // Confirmar eliminación
+            if (!confirm('¿Estás seguro de que quieres eliminar este cuento?')) {
                 return;
             }
             
@@ -916,71 +914,30 @@
             }
         }
 
-        // Función para alternar entre subir archivo y usar URL
-        function toggleAudioInput() {
-            const audioType = document.querySelector('input[name="audioType"]:checked').value;
-            const fileSection = document.getElementById('fileUploadSection');
-            const urlSection = document.getElementById('urlUploadSection');
-            
-            if (audioType === 'file') {
-                fileSection.style.display = 'block';
-                urlSection.style.display = 'none';
-            } else {
-                fileSection.style.display = 'none';
-                urlSection.style.display = 'block';
-            }
-        }
-        
         // Manejo del formulario
         document.getElementById('uploadForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
             const titulo = document.getElementById('titulo').value.trim();
             const descripcion = document.getElementById('descripcion').value.trim();
-            const audioType = document.querySelector('input[name="audioType"]:checked').value;
+            const audioUrl = document.getElementById('audioLink').value.trim();
             
             if (!titulo) {
                 showToast('Por favor ingresa un título.', true);
                 return;
             }
             
-            let audioUrl = '';
-            
-            if (audioType === 'file') {
-                const fileInput = document.getElementById('audioFile');
-                const file = fileInput.files[0];
-                
-                if (!file) {
-                    showToast('Por favor selecciona un archivo de audio.', true);
-                    return;
-                }
-                
-                // Validar tipo de archivo
-                if (!file.type.startsWith('audio/')) {
-                    showToast('El archivo debe ser un audio válido.', true);
-                    return;
-                }
-                
-                // Aquí podrías subir el archivo a un servicio como Cloudinary
-                // Por ahora, vamos a usar una simulación y pedir al usuario que suba manualmente
-                showToast('Por favor, sube el archivo a Netlify manualmente y luego usa la opción URL.', true);
+            if (!audioUrl) {
+                showToast('Por favor ingresa una URL de audio.', true);
                 return;
-                
-            } else {
-                audioUrl = document.getElementById('audioLink').value.trim();
-                
-                if (!audioUrl) {
-                    showToast('Por favor ingresa una URL de audio.', true);
-                    return;
-                }
-                
-                // Validar URL
-                try {
-                    new URL(audioUrl);
-                } catch {
-                    showToast('Por favor ingresa una URL válida.', true);
-                    return;
-                }
+            }
+            
+            // Validar URL
+            try {
+                new URL(audioUrl);
+            } catch {
+                showToast('Por favor ingresa una URL válida.', true);
+                return;
             }
             
             showLoading(true);
