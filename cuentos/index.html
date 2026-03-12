@@ -243,15 +243,10 @@
         </header>
 
         <div class="upload-section">
-            <h2>Administrar Cuentos</h2>
+            <h2>Subir Mi Cuento</h2>
             <p style="color: #b39ddb; text-align: center; margin-bottom: 20px; font-size: 0.9em;">
-                Agrega o elimina audios de tu colección
+                Graba tu cuento y súbelo directamente a tu web
             </p>
-            <div style="background: rgba(126, 87, 194, 0.2); padding: 15px; border-radius: 10px; margin-bottom: 20px;">
-                <p style="color: #d1c4e9; font-size: 0.9em; text-align: center;">
-                    <strong>💡 Recomendación:</strong> Usa <strong>SoundCloud</strong> para subir tus audios. Es gratis y no tiene problemas de reproducción.
-                </p>
-            </div>
             <form id="uploadForm">
                 <div class="form-group">
                     <label for="titulo">Título del cuento</label>
@@ -264,14 +259,16 @@
                 </div>
                 
                 <div class="form-group">
-                    <label for="audioLink">Enlace del audio (SoundCloud, MP3, etc.)</label>
-                    <input type="url" id="audioLink" placeholder="https://soundcloud.com/..." required>
-                    <small style="color: #b39ddb; font-size: 0.8em;">
-                        💡 Recomendado: SoundCloud (gratis, sin errores)
-                    </small>
+                    <label>Archivo de audio (MP3, WAV, OGG)</label>
+                    <div class="file-upload">
+                        <input type="file" id="audioFile" accept="audio/*" required>
+                        <div class="file-upload-label" id="fileLabel">
+                            📁 Seleccionar archivo de audio grabado
+                        </div>
+                    </div>
                 </div>
                 
-                <button type="submit" class="btn">Agregar Cuento</button>
+                <button type="submit" class="btn">Subir Cuento</button>
             </form>
             
             <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid rgba(126, 87, 194, 0.3);">
