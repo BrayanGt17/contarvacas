@@ -81,37 +81,13 @@
         const fileName = document.getElementById('fileName');
         
         if (audioUrl) {
+            audioPlayer.src = audioUrl;
             fileName.textContent = title;
             
-            // Cargar audio con fetch para evitar errores CORS
-            fetch(audioUrl)
-                .then(response => {
-                    if (!response.ok) throw new Error('No se pudo cargar el audio');
-                    return response.blob();
-                })
-                .then(blob => {
-                    // Crear URL del blob
-                    const blobUrl = URL.createObjectURL(blob);
-                    audioPlayer.src = blobUrl;
-                    
-                    // Intentar reproducir
-                    audioPlayer.play().catch(e => {
-                        console.log('Error al reproducir:', e);
-                    });
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    fileName.textContent = 'Error al cargar el audio. Intenta descargarlo.';
-                    
-                    // Mostrar enlace de descarga
-                    const downloadLink = document.createElement('a');
-                    downloadLink.href = audioUrl;
-                    downloadLink.textContent = '📥 Descargar audio';
-                    downloadLink.style.color = '#7e57c2';
-                    downloadLink.style.marginTop = '10px';
-                    downloadLink.style.display = 'block';
-                    document.querySelector('.player-container').appendChild(downloadLink);
-                });
+            // Intentar reproducir automáticamente
+            audioPlayer.play().catch(e => {
+                console.log('No se pudo reproducir automáticamente:', e);
+            });
         } else {
             fileName.textContent = 'No se especificó un enlace de audio';
         }

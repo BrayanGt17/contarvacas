@@ -17,9 +17,6 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             color: #e1bee7;
             overflow-x: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
 
         #particles-canvas {
@@ -32,62 +29,185 @@
             pointer-events: none;
         }
 
-        .construction-container {
+        .content {
             position: relative;
-            z-index: 10;
+            z-index: 1;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .header {
             text-align: center;
-            padding: 50px;
-            max-width: 600px;
-            animation: fadeIn 1s ease-out;
+            margin: 30px 0;
+            padding: 20px;
         }
 
-        .gear {
-            font-size: 6rem;
-            display: inline-block;
-            animation: rotate 4s linear infinite;
-            filter: drop-shadow(0 0 20px rgba(126, 87, 194, 0.5));
-        }
-
-        .gear-reverse {
-            animation-direction: reverse;
-            font-size: 4rem;
-            margin-left: -20px;
-            margin-top: 20px;
-        }
-
-        h1 {
-            font-size: 2.5rem;
-            margin: 20px 0;
-            background: linear-gradient(90deg, #ff69b4, #7e57c2, #ff69b4);
+        .logo {
+            font-size: 3em;
+            font-weight: bold;
+            background: linear-gradient(90deg, #b39ddb, #7e57c2, #b39ddb);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            animation: shimmer 2s linear infinite;
-            background-size: 200% auto;
+            letter-spacing: 3px;
         }
 
-        p {
-            font-size: 1.2rem;
+        .tagline {
             color: #b39ddb;
-            margin-bottom: 30px;
-            line-height: 1.6;
+            font-size: 1.1em;
+            margin-top: 10px;
         }
 
-        .progress-bar {
+        .upload-section {
+            background: rgba(30, 30, 60, 0.9);
+            border: 1px solid rgba(126, 87, 194, 0.5);
+            border-radius: 20px;
+            padding: 30px;
+            margin: 20px 0;
             width: 100%;
-            max-width: 300px;
-            height: 6px;
-            background: rgba(126, 87, 194, 0.3);
-            border-radius: 3px;
-            margin: 20px auto;
-            overflow: hidden;
+            max-width: 600px;
         }
 
-        .progress-fill {
+        .upload-section h2 {
+            color: #d1c4e9;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #b39ddb;
+            font-size: 0.95em;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #7e57c2;
+            border-radius: 10px;
+            background: rgba(20, 20, 40, 0.8);
+            color: #e1bee7;
+            font-family: inherit;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #b39ddb;
+            box-shadow: 0 0 10px rgba(126, 87, 194, 0.3);
+        }
+
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .file-upload {
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .file-upload input[type="file"] {
+            position: absolute;
+            opacity: 0;
+            width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, #ff69b4, #7e57c2);
-            border-radius: 3px;
-            animation: progress 2s ease-in-out infinite;
+            cursor: pointer;
+        }
+
+        .file-upload-label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+            border: 2px dashed #7e57c2;
+            border-radius: 10px;
+            background: rgba(20, 20, 40, 0.5);
+            color: #b39ddb;
+            transition: all 0.3s;
+        }
+
+        .file-upload:hover .file-upload-label {
+            border-color: #b39ddb;
+            background: rgba(20, 20, 40, 0.8);
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #4527a0 0%, #5e35b1 100%);
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 0.95em;
+            font-weight: 600;
+            letter-spacing: 1px;
+            transition: all 0.3s;
+            display: inline-block;
+            text-decoration: none;
+        }
+
+        .btn:hover {
+            background: linear-gradient(135deg, #5e35b1 0%, #7e57c2 100%);
+            transform: scale(1.02);
+            box-shadow: 0 5px 20px rgba(126, 87, 194, 0.5);
+        }
+
+        .cuentos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            width: 100%;
+            max-width: 1000px;
+            margin: 20px 0;
+        }
+
+        .cuento-card {
+            background: linear-gradient(145deg, rgba(30, 30, 60, 0.9), rgba(20, 20, 40, 0.95));
+            border: 1px solid rgba(126, 87, 194, 0.5);
+            border-radius: 15px;
+            padding: 20px;
+            transition: all 0.3s;
+        }
+
+        .cuento-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(126, 87, 194, 0.3);
+        }
+
+        .cuento-title {
+            color: #d1c4e9;
+            font-size: 1.2em;
+            margin-bottom: 10px;
+        }
+
+        .cuento-description {
+            color: #b39ddb;
+            font-size: 0.9em;
+            margin-bottom: 15px;
+        }
+
+        .audio-player {
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        audio {
+            width: 100%;
+            height: 40px;
         }
 
         .back-link {
@@ -95,74 +215,90 @@
             margin-top: 30px;
             color: #b39ddb;
             text-decoration: none;
-            padding: 12px 30px;
-            border: 2px solid #7e57c2;
-            border-radius: 25px;
-            transition: all 0.3s;
+            transition: color 0.3s;
         }
 
         .back-link:hover {
-            background: #7e57c2;
-            color: white;
-            transform: scale(1.05);
+            color: #d1c4e9;
         }
 
-        @keyframes rotate {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes shimmer {
-            0% { background-position: -200% center; }
-            100% { background-position: 200% center; }
-        }
-
-        @keyframes progress {
-            0% { width: 0%; }
-            50% { width: 100%; }
-            100% { width: 0%; }
-        }
-
-        .pulse {
-            animation: pulse 2s ease-in-out infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); opacity: 0.7; }
-            50% { transform: scale(1.1); opacity: 1; }
+        @media (max-width: 768px) {
+            .logo {
+                font-size: 2em;
+            }
+            
+            .cuentos-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
     <canvas id="particles-canvas"></canvas>
     
-    <div class="construction-container">
-        <div class="gear">⚙️</div>
-        <div class="gear gear-reverse">⚙️</div>
-        
-        <h1>En Construcción</h1>
-        
-        <p>
-            Estamos trabajando arduamente para traerte la mejor experiencia de audios.<br>
-            Pronto podrás grabar y subir tus propios cuentos directamente aquí.
-        </p>
-        
-        <div class="progress-bar">
-            <div class="progress-fill"></div>
+    <div class="content">
+        <header class="header">
+            <h1 class="logo">CUENTOS</h1>
+            <p class="tagline">🎵 Colección de Cuentos y Audios 🎵</p>
+        </header>
+
+        <div class="upload-section">
+            <h2>Administrar Cuentos</h2>
+            <p style="color: #b39ddb; text-align: center; margin-bottom: 20px; font-size: 0.9em;">
+                Agrega o elimina audios de tu colección
+            </p>
+            <form id="uploadForm">
+                <div class="form-group">
+                    <label for="titulo">Título del cuento</label>
+                    <input type="text" id="titulo" placeholder="Ej: El cuento de la vaca" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="descripcion">Descripción</label>
+                    <textarea id="descripcion" placeholder="Breve descripción del cuento..."></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="audioLink">Enlace del audio (GitHub Pages)</label>
+                    <input type="url" id="audioLink" placeholder="https://brayangt17.github.io/contarvacas/cuentos/audios/nombre.mp3" required>
+                </div>
+                
+                <button type="submit" class="btn">Agregar Cuento</button>
+            </form>
+            
+            <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid rgba(126, 87, 194, 0.3);">
+                <h3 style="color: #d1c4e9; margin-bottom: 15px; text-align: center;">🗑️ Eliminar Cuento</h3>
+                <div class="form-group">
+                    <label for="deleteIndex">Índice del cuento a eliminar (0, 1, 2...)</label>
+                    <input type="number" id="deleteIndex" placeholder="Ej: 0" min="0">
+                </div>
+                <button type="button" class="btn" style="background: linear-gradient(135deg, #c62828 0%, #b71c1c 100%);" onclick="eliminarCuento()">
+                    Eliminar Cuento
+                </button>
+            </div>
         </div>
+
+        <h2 style="color: #d1c4e9; margin: 20px 0;">Cuentos Disponibles</h2>
         
-        <p class="pulse">⏱️ Próximamente...</p>
-        
+        <div class="cuentos-grid" id="cuentosGrid">
+            <!-- Los cuentos se cargarán dinámicamente aquí -->
+            <div class="cuento-card">
+                <h3 class="cuento-title">Ejemplo: El Viaje de la Vaca</h3>
+                <p class="cuento-description">Un cuento sobre una vaca que viaja por el mundo.</p>
+                <div class="audio-player">
+                    <audio controls>
+                        <source src="" type="audio/mpeg">
+                        Tu navegador no soporta el elemento de audio.
+                    </audio>
+                </div>
+            </div>
+        </div>
+
         <a href="../index.html" class="back-link">← Volver a JuegosBYF</a>
     </div>
 
     <script>
-        // Sistema de partículas mejorado
+        // Sistema de partículas
         const canvas = document.getElementById('particles-canvas');
         const ctx = canvas.getContext('2d');
         let particles = [];
@@ -174,17 +310,16 @@
 
         function initParticles() {
             particles = [];
-            const particleCount = Math.min(100, Math.floor(window.innerWidth / 10));
+            const particleCount = Math.min(80, Math.floor(window.innerWidth / 15));
             
             for (let i = 0; i < particleCount; i++) {
                 particles.push({
                     x: Math.random() * canvas.width,
                     y: Math.random() * canvas.height,
-                    vx: (Math.random() - 0.5) * 0.6,
-                    vy: (Math.random() - 0.5) * 0.6,
-                    size: Math.random() * 3 + 1,
-                    opacity: Math.random() * 0.5 + 0.2,
-                    color: Math.random() > 0.5 ? '#7e57c2' : '#ff69b4'
+                    vx: (Math.random() - 0.5) * 0.4,
+                    vy: (Math.random() - 0.5) * 0.4,
+                    size: Math.random() * 2 + 0.5,
+                    opacity: 0.3 + Math.random() * 0.4
                 });
             }
         }
@@ -193,7 +328,6 @@
             particles.forEach(p => {
                 p.x += p.vx;
                 p.y += p.vy;
-                
                 if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
                 if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
             });
@@ -205,24 +339,23 @@
             particles.forEach(p => {
                 ctx.beginPath();
                 ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-                ctx.fillStyle = p.color;
-                ctx.globalAlpha = p.opacity;
+                ctx.fillStyle = `rgba(179, 157, 219, ${p.opacity})`;
                 ctx.fill();
-                ctx.globalAlpha = 1;
             });
             
-            // Draw connections
             particles.forEach((p1, i) => {
                 particles.slice(i + 1).forEach(p2 => {
                     const dx = p1.x - p2.x;
                     const dy = p1.y - p2.y;
                     const distance = Math.sqrt(dx * dx + dy * dy);
+                    const maxDistance = 150;
                     
-                    if (distance < 120) {
+                    if (distance < maxDistance) {
+                        const opacity = (1 - distance / maxDistance) * 0.15;
                         ctx.beginPath();
                         ctx.moveTo(p1.x, p1.y);
                         ctx.lineTo(p2.x, p2.y);
-                        ctx.strokeStyle = `rgba(126, 87, 194, ${0.2 * (1 - distance/120)})`;
+                        ctx.strokeStyle = `rgba(126, 87, 194, ${opacity})`;
                         ctx.lineWidth = 1;
                         ctx.stroke();
                     }
@@ -244,6 +377,117 @@
         resizeCanvas();
         initParticles();
         animate();
+
+        // Función para guardar en localStorage
+        function guardarCuento(titulo, descripcion, audioUrl) {
+            const cuento = {
+                titulo: titulo,
+                descripcion: descripcion,
+                url: audioUrl,
+                timestamp: Date.now()
+            };
+            
+            // Obtener cuentos existentes
+            let cuentos = JSON.parse(localStorage.getItem('cuentos')) || [];
+            cuentos.push(cuento);
+            localStorage.setItem('cuentos', JSON.stringify(cuentos));
+        }
+
+        // Función para cargar cuentos al iniciar
+        function cargarCuentos() {
+            const cuentos = JSON.parse(localStorage.getItem('cuentos')) || [];
+            const grid = document.getElementById('cuentosGrid');
+            
+            // Limpiar solo el ejemplo
+            const ejemplo = grid.querySelector('.cuento-card');
+            if (ejemplo) ejemplo.remove();
+            
+            cuentos.forEach(cuento => {
+                agregarCuentoAlGrid(cuento.titulo, cuento.descripcion, cuento.url);
+            });
+        }
+
+        // Función para agregar un cuento al grid
+        function agregarCuentoAlGrid(titulo, descripcion, url) {
+            const grid = document.getElementById('cuentosGrid');
+            
+            const cuentoCard = document.createElement('div');
+            cuentoCard.className = 'cuento-card';
+            
+            // Extraer nombre del archivo para mostrar
+            const fileName = url.split('/').pop();
+            
+            // Codificar URL para pasarla como parámetro
+            const encodedUrl = encodeURIComponent(url);
+            const encodedTitle = encodeURIComponent(titulo);
+            
+            cuentoCard.innerHTML = `
+                <h3 class="cuento-title">${titulo}</h3>
+                <p class="cuento-description">${descripcion || 'Sin descripción'}</p>
+                <p style="font-size: 0.8em; color: #b39ddb;">
+                    📁 ${fileName}
+                </p>
+                <div style="margin-top: 15px; text-align: center;">
+                    <a href="player.html?url=${encodedUrl}&title=${encodedTitle}" class="btn" style="display: inline-block; text-decoration: none;">
+                        ▶️ Reproducir
+                    </a>
+                    <a href="${url}" download style="display: inline-block; margin-left: 10px; color: #7e57c2; font-size: 0.9em;">
+                        📥 Descargar
+                    </a>
+                </div>
+            `;
+            
+            grid.insertBefore(cuentoCard, grid.firstChild);
+        }
+
+        // Función para eliminar un cuento
+        function eliminarCuento() {
+            const index = parseInt(document.getElementById('deleteIndex').value);
+            
+            if (isNaN(index)) {
+                alert('Por favor, ingresa un número de índice válido.');
+                return;
+            }
+            
+            // Obtener cuentos
+            let cuentos = JSON.parse(localStorage.getItem('cuentos')) || [];
+            
+            if (index >= 0 && index < cuentos.length) {
+                const cuentoEliminado = cuentos[index];
+                cuentos.splice(index, 1);
+                localStorage.setItem('cuentos', JSON.stringify(cuentos));
+                
+                // Recargar la página para actualizar la lista
+                location.reload();
+            } else {
+                alert('Índice no válido. Hay ' + cuentos.length + ' cuentos disponibles.');
+            }
+        }
+
+        // Manejo del formulario
+        document.getElementById('uploadForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const titulo = document.getElementById('titulo').value;
+            const descripcion = document.getElementById('descripcion').value;
+            const audioUrl = document.getElementById('audioLink').value;
+            
+            if (audioUrl) {
+                // Guardar en localStorage
+                guardarCuento(titulo, descripcion, audioUrl);
+                
+                // Agregar al grid
+                agregarCuentoAlGrid(titulo, descripcion, audioUrl);
+                
+                // Limpiar formulario
+                this.reset();
+                
+                alert('¡Cuento agregado exitosamente!');
+            }
+        });
+
+        // Cargar cuentos al iniciar la página
+        document.addEventListener('DOMContentLoaded', cargarCuentos);
     </script>
 </body>
 </html>
