@@ -81,13 +81,39 @@
         const fileName = document.getElementById('fileName');
         
         if (audioUrl) {
-            audioPlayer.src = audioUrl;
             fileName.textContent = title;
             
-            // Intentar reproducir automáticamente
-            audioPlayer.play().catch(e => {
-                console.log('No se pudo reproducir automáticamente:', e);
-            });
+            // Cargar audio usando fetch (evita errores CORS)
+            fetch(audioUrl)
+                .then(response => {
+                    if (!response.ok) throw new Error('No se pudo cargar el audio');
+                    return response.blob();
+                })
+                .then(blob => {
+                    // Crear URL del blob local
+                    const blobUrl = URL.createObjectURL(blob);
+                    audioPlayer.src = blobUrl;
+                    
+                    // Intentar reproducir
+                    audioPlayer.play().catch(e => {
+                        console.log('Error al reproducir:', e);
+                        fileName.textContent = 'Haz clic en el botón de reproducción';
+                    });
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    fileName.textContent = '❌ Error al cargar el audio';
+                    
+                    // Mostrar enlace de descarga como alternativa
+                    const container = document.querySelector('.player-container');
+                    const downloadBtn = document.createElement('a');
+                    downloadBtn.href = audioUrl;
+                    downloadBtn.textContent = '📥 Descargar audio';
+                    downloadBtn.className = 'btn';
+                    downloadBtn.style.marginTop = '15px';
+                    downloadBtn.target = '_blank';
+                    container.appendChild(downloadBtn);
+                });
         } else {
             fileName.textContent = 'No se especificó un enlace de audio';
         }
