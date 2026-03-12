@@ -13,3 +13,7 @@
 /*.ogg
   Access-Control-Allow-Origin: *
   Content-Type: audio/ogg
+
+/*.m4a
+  Access-Control-Allow-Origin: *
+  Content-Type: audio/mp4
