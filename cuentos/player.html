@@ -79,36 +79,39 @@
         
         const audioPlayer = document.getElementById('audioPlayer');
         const fileName = document.getElementById('fileName');
-        const container = document.querySelector('.player-container');
         
         if (audioUrl) {
             fileName.textContent = title;
             
-            // Verificar si es enlace de SoundCloud
-            if (audioUrl.includes('soundcloud.com')) {
-                // Para SoundCloud, mostrar enlace directo
-                container.innerHTML = `
-                    <h1>🎵 ${title}</h1>
-                    <p style="margin: 20px 0;">Reproduce el audio en SoundCloud:</p>
-                    <a href="${audioUrl}" target="_blank" style="color: #ff5500; font-size: 1.2em;">
-                        🔗 Abrir en SoundCloud
-                    </a>
-                    <p style="margin-top: 20px; color: #b39ddb; font-size: 0.9em;">
-                        Copia el enlace de SoundCloud y pégalo en el formulario.
-                    </p>
-                    <a href="../index.html" class="btn" style="margin-top: 20px;">← Volver</a>
-                `;
-            } else {
-                // Para archivos MP3 directos
-                audioPlayer.src = audioUrl;
-                fileName.textContent = title;
-                
-                // Intentar reproducir
-                audioPlayer.play().catch(e => {
-                    console.log('Error al reproducir:', e);
-                    fileName.textContent = 'Error al reproducir. Intenta descargar el audio.';
+            // Cargar audio con fetch para evitar errores CORS
+            fetch(audioUrl)
+                .then(response => {
+                    if (!response.ok) throw new Error('No se pudo cargar el audio');
+                    return response.blob();
+                })
+                .then(blob => {
+                    // Crear URL del blob
+                    const blobUrl = URL.createObjectURL(blob);
+                    audioPlayer.src = blobUrl;
+                    
+                    // Intentar reproducir
+                    audioPlayer.play().catch(e => {
+                        console.log('Error al reproducir:', e);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    fileName.textContent = 'Error al cargar el audio. Intenta descargarlo.';
+                    
+                    // Mostrar enlace de descarga
+                    const downloadLink = document.createElement('a');
+                    downloadLink.href = audioUrl;
+                    downloadLink.textContent = '📥 Descargar audio';
+                    downloadLink.style.color = '#7e57c2';
+                    downloadLink.style.marginTop = '10px';
+                    downloadLink.style.display = 'block';
+                    document.querySelector('.player-container').appendChild(downloadLink);
                 });
-            }
         } else {
             fileName.textContent = 'No se especificó un enlace de audio';
         }
