@@ -79,15 +79,36 @@
         
         const audioPlayer = document.getElementById('audioPlayer');
         const fileName = document.getElementById('fileName');
+        const container = document.querySelector('.player-container');
         
         if (audioUrl) {
-            audioPlayer.src = audioUrl;
             fileName.textContent = title;
             
-            // Intentar reproducir automáticamente
-            audioPlayer.play().catch(e => {
-                console.log('No se pudo reproducir automáticamente:', e);
-            });
+            // Verificar si es enlace de SoundCloud
+            if (audioUrl.includes('soundcloud.com')) {
+                // Para SoundCloud, mostrar enlace directo
+                container.innerHTML = `
+                    <h1>🎵 ${title}</h1>
+                    <p style="margin: 20px 0;">Reproduce el audio en SoundCloud:</p>
+                    <a href="${audioUrl}" target="_blank" style="color: #ff5500; font-size: 1.2em;">
+                        🔗 Abrir en SoundCloud
+                    </a>
+                    <p style="margin-top: 20px; color: #b39ddb; font-size: 0.9em;">
+                        Copia el enlace de SoundCloud y pégalo en el formulario.
+                    </p>
+                    <a href="../index.html" class="btn" style="margin-top: 20px;">← Volver</a>
+                `;
+            } else {
+                // Para archivos MP3 directos
+                audioPlayer.src = audioUrl;
+                fileName.textContent = title;
+                
+                // Intentar reproducir
+                audioPlayer.play().catch(e => {
+                    console.log('Error al reproducir:', e);
+                    fileName.textContent = 'Error al reproducir. Intenta descargar el audio.';
+                });
+            }
         } else {
             fileName.textContent = 'No se especificó un enlace de audio';
         }

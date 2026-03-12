@@ -247,6 +247,11 @@
             <p style="color: #b39ddb; text-align: center; margin-bottom: 20px; font-size: 0.9em;">
                 Agrega o elimina audios de tu colección
             </p>
+            <div style="background: rgba(126, 87, 194, 0.2); padding: 15px; border-radius: 10px; margin-bottom: 20px;">
+                <p style="color: #d1c4e9; font-size: 0.9em; text-align: center;">
+                    <strong>💡 Recomendación:</strong> Usa <strong>SoundCloud</strong> para subir tus audios. Es gratis y no tiene problemas de reproducción.
+                </p>
+            </div>
             <form id="uploadForm">
                 <div class="form-group">
                     <label for="titulo">Título del cuento</label>
@@ -259,8 +264,11 @@
                 </div>
                 
                 <div class="form-group">
-                    <label for="audioLink">Enlace del audio (GitHub Pages)</label>
-                    <input type="url" id="audioLink" placeholder="https://brayangt17.github.io/contarvacas/cuentos/audios/nombre.mp3" required>
+                    <label for="audioLink">Enlace del audio (SoundCloud, MP3, etc.)</label>
+                    <input type="url" id="audioLink" placeholder="https://soundcloud.com/..." required>
+                    <small style="color: #b39ddb; font-size: 0.8em;">
+                        💡 Recomendado: SoundCloud (gratis, sin errores)
+                    </small>
                 </div>
                 
                 <button type="submit" class="btn">Agregar Cuento</button>
@@ -414,8 +422,11 @@
             const cuentoCard = document.createElement('div');
             cuentoCard.className = 'cuento-card';
             
+            // Verificar si es SoundCloud
+            const isSoundCloud = url.includes('soundcloud.com');
+            
             // Extraer nombre del archivo para mostrar
-            const fileName = url.split('/').pop();
+            const fileName = url.split('/').pop() || 'Audio';
             
             // Codificar URL para pasarla como parámetro
             const encodedUrl = encodeURIComponent(url);
@@ -425,15 +436,13 @@
                 <h3 class="cuento-title">${titulo}</h3>
                 <p class="cuento-description">${descripcion || 'Sin descripción'}</p>
                 <p style="font-size: 0.8em; color: #b39ddb;">
-                    📁 ${fileName}
+                    ${isSoundCloud ? '🎵 SoundCloud' : '📁 ' + fileName}
                 </p>
                 <div style="margin-top: 15px; text-align: center;">
                     <a href="player.html?url=${encodedUrl}&title=${encodedTitle}" class="btn" style="display: inline-block; text-decoration: none;">
                         ▶️ Reproducir
                     </a>
-                    <a href="${url}" download style="display: inline-block; margin-left: 10px; color: #7e57c2; font-size: 0.9em;">
-                        📥 Descargar
-                    </a>
+                    ${!isSoundCloud ? `<a href="${url}" download style="display: inline-block; margin-left: 10px; color: #7e57c2; font-size: 0.9em;">📥 Descargar</a>` : ''}
                 </div>
             `;
             
