@@ -765,10 +765,10 @@
         // 2. Ve a Extensions > Apps Script y pega el código de google-apps-script.js
         // 3. Publica como API web (Desplegar > Desplegar como API web)
         // 4. Copia la URL generada y reemplaza 'TU_URL_DE_APPS_SCRIPT_AQUI'
-        const GOOGLE_SHEETS_API_URL = 'TU_URL_DE_APPS_SCRIPT_AQUI';
+        const GOOGLE_SHEETS_API_URL = 'https://script.google.com/macros/s/AKfycbw6VBOn8E_no1xUVpAUf6rVuEq7q67k8LI5ZX6NOoJ2HqPvOqx8irGvhCJf_-BY2Unl5g/exec';
         
         // Si no has configurado Google Sheets, usa localStorage
-        const USE_GOOGLE_SHEETS = GOOGLE_SHEETS_API_URL !== 'TU_URL_DE_APPS_SCRIPT_AQUI';
+        const USE_GOOGLE_SHEETS = GOOGLE_SHEETS_API_URL !== 'https://script.google.com/macros/s/AKfycbw6VBOn8E_no1xUVpAUf6rVuEq7q67k8LI5ZX6NOoJ2HqPvOqx8irGvhCJf_-BY2Unl5g/exec';
         
         // Función para guardar en Google Sheets o localStorage
         async function guardarCuento(titulo, descripcion, audioUrl) {
