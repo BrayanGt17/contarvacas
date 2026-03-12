@@ -148,15 +148,16 @@
         .btn {
             background: linear-gradient(135deg, #4527a0 0%, #5e35b1 100%);
             color: white;
-            padding: 15px 40px;
+            padding: 12px 25px;
             border: none;
-            border-radius: 30px;
+            border-radius: 25px;
             cursor: pointer;
-            font-size: 1em;
+            font-size: 0.95em;
             font-weight: 600;
             letter-spacing: 1px;
             transition: all 0.3s;
-            width: 100%;
+            display: inline-block;
+            text-decoration: none;
         }
 
         .btn:hover {
@@ -416,22 +417,22 @@
             // Extraer nombre del archivo para mostrar
             const fileName = url.split('/').pop();
             
+            // Codificar URL para pasarla como parámetro
+            const encodedUrl = encodeURIComponent(url);
+            const encodedTitle = encodeURIComponent(titulo);
+            
             cuentoCard.innerHTML = `
                 <h3 class="cuento-title">${titulo}</h3>
                 <p class="cuento-description">${descripcion || 'Sin descripción'}</p>
                 <p style="font-size: 0.8em; color: #b39ddb;">
                     📁 ${fileName}
                 </p>
-                <div class="audio-player">
-                    <audio controls style="width: 100%;">
-                        <source src="${url}" type="audio/mpeg">
-                        <source src="${url}" type="audio/mp3">
-                        Tu navegador no soporta el elemento de audio.
-                    </audio>
-                </div>
-                <div style="margin-top: 10px; text-align: center;">
-                    <a href="${url}" download style="color: #7e57c2; font-size: 0.9em;">
-                        📥 Descargar audio
+                <div style="margin-top: 15px; text-align: center;">
+                    <a href="player.html?url=${encodedUrl}&title=${encodedTitle}" class="btn" style="display: inline-block; text-decoration: none;">
+                        ▶️ Reproducir
+                    </a>
+                    <a href="${url}" download style="display: inline-block; margin-left: 10px; color: #7e57c2; font-size: 0.9em;">
+                        📥 Descargar
                     </a>
                 </div>
             `;
