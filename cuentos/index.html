@@ -881,7 +881,7 @@
         }
         
         // Función para eliminar un cuento
-        function eliminarCuento() {
+        async function eliminarCuento() {
             const index = parseInt(document.getElementById('deleteIndex').value);
             
             if (isNaN(index)) {
@@ -892,25 +892,28 @@
             showLoading(true);
             
             // Para eliminar en Google Sheets, necesitamos pasar el índice como parámetro
-            // Modifica tu script de Apps Script para aceptar DELETE requests
             const deleteUrl = GOOGLE_SHEETS_API_URL + '?delete=' + index;
             
-            fetch(deleteUrl, {
-                method: 'GET',
-                mode: 'no-cors'
-            })
-            .then(() => {
-                showLoading(false);
-                showToast('Cuento eliminado exitosamente');
-                setTimeout(() => {
-                    location.reload();
-                }, 1000);
-            })
-            .catch(error => {
+            try {
+                // Usamos fetch sin mode: 'no-cors' para poder leer la respuesta
+                const response = await fetch(deleteUrl);
+                const result = await response.json();
+                
+                if (result.status === 'success') {
+                    showLoading(false);
+                    showToast('Cuento eliminado exitosamente');
+                    setTimeout(() => {
+                        location.reload();
+                    }, 1000);
+                } else {
+                    showLoading(false);
+                    showToast('Error: ' + result.message, true);
+                }
+            } catch (error) {
                 console.error('Error al eliminar:', error);
                 showLoading(false);
                 showToast('Error al eliminar el cuento', true);
-            });
+            }
         }
 
         // Función para alternar entre subir archivo y usar URL
