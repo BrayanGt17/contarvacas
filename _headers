@@ -1,0 +1,15 @@
+/*
+  X-Frame-Options: DENY
+  X-XSS-Protection: 1; mode=block
+
+/*.mp3
+  Access-Control-Allow-Origin: *
+  Content-Type: audio/mpeg
+
+/*.wav
+  Access-Control-Allow-Origin: *
+  Content-Type: audio/wav
+
+/*.ogg
+  Access-Control-Allow-Origin: *
+  Content-Type: audio/ogg
