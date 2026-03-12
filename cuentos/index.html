@@ -634,7 +634,7 @@
                             2. Copia la URL del archivo en Netlify (ej: https://tu-sitio.netlify.app/cuentos/audios/archivo.mp3)<br>
                             3. Usa la opción "URL" arriba y pega el enlace<br>
                             4. ¡Listo! El audio aparecerá en todos tus dispositivos<br><br>
-                            <strong style="color: var(--primary);">⚠️ Nota:</strong> Actualmente usando almacenamiento local. Para sincronizar entre dispositivos, configura Google Sheets (ver instrucciones en el código).
+                            <strong style="color: var(--primary);">✓</strong> Sincronización activa con Google Sheets
                         </p>
                     </div>
                 </div>
@@ -760,57 +760,32 @@
         animate();
 
         // URL de tu API de Google Sheets
-        // INSTRUCCIONES:
-        // 1. Crea una hoja de Google Sheets con encabezados: titulo, descripcion, url, fecha
-        // 2. Ve a Extensions > Apps Script y pega el código de google-apps-script.js
-        // 3. Publica como API web (Desplegar > Desplegar como API web)
-        // 4. Copia la URL generada y reemplaza 'TU_URL_DE_APPS_SCRIPT_AQUI'
-        const GOOGLE_SHEETS_API_URL = 'TU_URL_DE_APPS_SCRIPT_AQUI';
+        const GOOGLE_SHEETS_API_URL = 'https://script.google.com/macros/s/AKfycbw6VBOn8E_no1xUVpAUf6rVuEq7q67k8LI5ZX6NOoJ2HqPvOqx8irGvhCJf_-BY2Unl5g/exec';
         
-        // Si no has configurado Google Sheets, usa localStorage
-        const USE_GOOGLE_SHEETS = GOOGLE_SHEETS_API_URL !== 'TU_URL_DE_APPS_SCRIPT_AQUI';
-        
-        // Función para guardar en Google Sheets o localStorage
+        // Función para guardar en Google Sheets
         async function guardarCuento(titulo, descripcion, audioUrl) {
-            if (USE_GOOGLE_SHEETS) {
-                try {
-                    const response = await fetch(GOOGLE_SHEETS_API_URL, {
-                        method: 'POST',
-                        mode: 'no-cors',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({
-                            titulo: titulo,
-                            descripcion: descripcion,
-                            url: audioUrl
-                        })
-                    });
-                    return true;
-                } catch (error) {
-                    console.error('Error al guardar en Google Sheets:', error);
-                    // Fallback a localStorage si falla
-                    return guardarCuentoLocal(titulo, descripcion, audioUrl);
-                }
-            } else {
-                return guardarCuentoLocal(titulo, descripcion, audioUrl);
+            try {
+                const response = await fetch(GOOGLE_SHEETS_API_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        titulo: titulo,
+                        descripcion: descripcion,
+                        url: audioUrl
+                    })
+                });
+                return true;
+            } catch (error) {
+                console.error('Error al guardar en Google Sheets:', error);
+                showToast('Error al guardar. Verifica la configuración de Google Sheets.', true);
+                return false;
             }
         }
-        
-        function guardarCuentoLocal(titulo, descripcion, audioUrl) {
-            const cuento = {
-                titulo: titulo,
-                descripcion: descripcion,
-                url: audioUrl,
-                timestamp: Date.now()
-            };
-            let cuentos = JSON.parse(localStorage.getItem('cuentos')) || [];
-            cuentos.push(cuento);
-            localStorage.setItem('cuentos', JSON.stringify(cuentos));
-            return true;
-        }
 
-        // Función para cargar cuentos desde Google Sheets o localStorage
+        // Función para cargar cuentos desde Google Sheets
         async function cargarCuentos() {
             const grid = document.getElementById('cuentosGrid');
             
@@ -818,49 +793,42 @@
             const ejemplo = grid.querySelector('.cuento-card');
             if (ejemplo) ejemplo.remove();
             
-            if (USE_GOOGLE_SHEETS) {
-                try {
-                    // Intentar cargar desde Google Sheets
-                    const response = await fetch(GOOGLE_SHEETS_API_URL);
-                    const result = await response.json();
+            try {
+                // Intentar cargar desde Google Sheets
+                const response = await fetch(GOOGLE_SHEETS_API_URL);
+                const result = await response.json();
+                
+                if (result.status === 'success' && result.data && result.data.length > 0) {
+                    // Mostrar cuentos de Google Sheets
+                    result.data.forEach((cuento, index) => {
+                        if (cuento.url) { // Solo mostrar si tiene URL
+                            agregarCuentoAlGrid(cuento.titulo, cuento.descripcion, cuento.url, index);
+                        }
+                    });
                     
-                    if (result.status === 'success' && result.data && result.data.length > 0) {
-                        // Mostrar cuentos de Google Sheets
-                        result.data.forEach((cuento, index) => {
-                            if (cuento.url) { // Solo mostrar si tiene URL
-                                agregarCuentoAlGrid(cuento.titulo, cuento.descripcion, cuento.url, index);
-                            }
-                        });
-                        return;
+                    // Mostrar mensaje si no hay cuentos
+                    if (result.data.length === 0 || result.data.every(c => !c.url)) {
+                        mostrarMensajeVacio();
                     }
-                } catch (error) {
-                    console.error('Error al cargar desde Google Sheets:', error);
+                } else {
+                    mostrarMensajeVacio();
                 }
+            } catch (error) {
+                console.error('Error al cargar desde Google Sheets:', error);
+                mostrarMensajeVacio();
+                showToast('Error al cargar cuentos. Verifica la configuración.', true);
             }
-            
-            // Fallback a localStorage si Google Sheets no está configurado o falla
-            cargarCuentosLocal();
         }
         
-        // Función auxiliar para cargar desde localStorage
-        function cargarCuentosLocal() {
-            const cuentos = JSON.parse(localStorage.getItem('cuentos')) || [];
+        function mostrarMensajeVacio() {
             const grid = document.getElementById('cuentosGrid');
-            
-            cuentos.forEach((cuento, index) => {
-                agregarCuentoAlGrid(cuento.titulo, cuento.descripcion, cuento.url, index);
-            });
-            
-            // Mostrar mensaje si no hay cuentos
-            if (cuentos.length === 0) {
-                const mensaje = document.createElement('div');
-                mensaje.style.cssText = 'text-align: center; color: #9e8ac4; padding: 40px; grid-column: 1 / -1;';
-                mensaje.innerHTML = `
-                    <p style="font-size: 1.1em; margin-bottom: 10px;">📖 No hay cuentos todavía</p>
-                    <p style="font-size: 0.9em;">¡Agrega tu primer cuento usando el formulario de arriba!</p>
-                `;
-                grid.appendChild(mensaje);
-            }
+            const mensaje = document.createElement('div');
+            mensaje.style.cssText = 'text-align: center; color: #9e8ac4; padding: 40px; grid-column: 1 / -1;';
+            mensaje.innerHTML = `
+                <p style="font-size: 1.1em; margin-bottom: 10px;">📖 No hay cuentos todavía</p>
+                <p style="font-size: 0.9em;">¡Agrega tu primer cuento usando el formulario de arriba!</p>
+            `;
+            grid.appendChild(mensaje);
         }
 
         // Función para agregar un cuento al grid
@@ -923,28 +891,26 @@
             
             showLoading(true);
             
-            // Intentar eliminar de Google Sheets primero
-            // Nota: Necesitarás agregar una función delete en tu script de Apps Script
-            // Por ahora, solo eliminaremos de localStorage como fallback
+            // Para eliminar en Google Sheets, necesitamos pasar el índice como parámetro
+            // Modifica tu script de Apps Script para aceptar DELETE requests
+            const deleteUrl = GOOGLE_SHEETS_API_URL + '?delete=' + index;
             
-            setTimeout(() => {
-                let cuentos = JSON.parse(localStorage.getItem('cuentos')) || [];
-                
-                if (index >= 0 && index < cuentos.length) {
-                    cuentos.splice(index, 1);
-                    localStorage.setItem('cuentos', JSON.stringify(cuentos));
-                    
-                    showLoading(false);
-                    showToast('Cuento eliminado exitosamente');
-                    
-                    setTimeout(() => {
-                        location.reload();
-                    }, 800);
-                } else {
-                    showLoading(false);
-                    showToast('Índice no válido. Hay ' + cuentos.length + ' cuentos disponibles.', true);
-                }
-            }, 500);
+            fetch(deleteUrl, {
+                method: 'GET',
+                mode: 'no-cors'
+            })
+            .then(() => {
+                showLoading(false);
+                showToast('Cuento eliminado exitosamente');
+                setTimeout(() => {
+                    location.reload();
+                }, 1000);
+            })
+            .catch(error => {
+                console.error('Error al eliminar:', error);
+                showLoading(false);
+                showToast('Error al eliminar el cuento', true);
+            });
         }
 
         // Función para alternar entre subir archivo y usar URL

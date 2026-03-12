@@ -1,8 +1,15 @@
 // Google Apps Script para Google Sheets como base de datos
 // Copia este código en Extensions > Apps Script de tu hoja de cálculo
 
-function doGet() {
+function doGet(e) {
   try {
+    // Verificar si es una solicitud de eliminación
+    if (e.parameter && e.parameter.delete) {
+      const index = parseInt(e.parameter.delete);
+      return deleteCuento(index);
+    }
+    
+    // Si no, devolver la lista de cuentos
     const data = getData();
     return ContentService.createTextOutput(JSON.stringify({
       status: 'success',
@@ -50,14 +57,26 @@ function deleteCuento(index) {
     const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
     const lastRow = sheet.getLastRow();
     
-    if (index >= 1 && index <= lastRow - 1) {
-      sheet.deleteRow(index + 1); // +1 porque la fila 1 son los encabezados
-      return { success: true, message: 'Cuento eliminado' };
+    if (index >= 0 && index < lastRow - 1) {
+      sheet.deleteRow(index + 2); // +2 porque la fila 1 son los encabezados y index empieza en 0
+      return ContentService.createTextOutput(JSON.stringify({
+        status: 'success',
+        message: 'Cuento eliminado'
+      }))
+      .setMimeType(ContentService.MimeType.JSON);
     } else {
-      return { success: false, message: 'Índice no válido' };
+      return ContentService.createTextOutput(JSON.stringify({
+        status: 'error',
+        message: 'Índice no válido'
+      }))
+      .setMimeType(ContentService.MimeType.JSON);
     }
   } catch (error) {
-    return { success: false, message: error.toString() };
+    return ContentService.createTextOutput(JSON.stringify({
+      status: 'error',
+      message: error.toString()
+    }))
+    .setMimeType(ContentService.MimeType.JSON);
   }
 }
 
