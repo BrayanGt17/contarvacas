@@ -419,7 +419,9 @@
                 <h3 class="cuento-title">${titulo}</h3>
                 <p class="cuento-description">${descripcion || 'Sin descripción'}</p>
                 <div class="audio-player">
-                    <audio controls src="${url}">
+                    <audio controls preload="none">
+                        <source src="${url}" type="audio/mpeg">
+                        <source src="${url}" type="audio/mp3">
                         Tu navegador no soporta el elemento de audio.
                     </audio>
                 </div>
