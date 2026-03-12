@@ -243,6 +243,9 @@
 
         <div class="upload-section">
             <h2>Subir Nuevo Cuento</h2>
+            <p style="color: #b39ddb; text-align: center; margin-bottom: 20px; font-size: 0.9em;">
+                Sube tu audio a Mediafire y pega el enlace aquí
+            </p>
             <form id="uploadForm">
                 <div class="form-group">
                     <label for="titulo">Título del cuento</label>
@@ -255,16 +258,11 @@
                 </div>
                 
                 <div class="form-group">
-                    <label>Audio del cuento</label>
-                    <div class="file-upload">
-                        <input type="file" id="audioFile" accept="audio/*" required>
-                        <div class="file-upload-label" id="fileLabel">
-                            📁 Seleccionar archivo de audio (MP3, WAV, OGG)
-                        </div>
-                    </div>
+                    <label for="mediafireLink">Enlace de Mediafire</label>
+                    <input type="url" id="mediafireLink" placeholder="https://www.mediafire.com/file/..." required>
                 </div>
                 
-                <button type="submit" class="btn">Subir Cuento</button>
+                <button type="submit" class="btn">Agregar Cuento</button>
             </form>
         </div>
 
@@ -368,52 +366,79 @@
         initParticles();
         animate();
 
-        // Manejo del formulario de subida
-        document.getElementById('audioFile').addEventListener('change', function(e) {
-            const label = document.getElementById('fileLabel');
-            if (this.files.length > 0) {
-                label.textContent = '✓ ' + this.files[0].name;
-            } else {
-                label.textContent = '📁 Seleccionar archivo de audio (MP3, WAV, OGG)';
-            }
-        });
+        // Función para guardar en localStorage
+        function guardarCuento(titulo, descripcion, mediafireUrl) {
+            const cuento = {
+                titulo: titulo,
+                descripcion: descripcion,
+                url: mediafireUrl,
+                timestamp: Date.now()
+            };
+            
+            // Obtener cuentos existentes
+            let cuentos = JSON.parse(localStorage.getItem('cuentos')) || [];
+            cuentos.push(cuento);
+            localStorage.setItem('cuentos', JSON.stringify(cuentos));
+        }
 
+        // Función para cargar cuentos al iniciar
+        function cargarCuentos() {
+            const cuentos = JSON.parse(localStorage.getItem('cuentos')) || [];
+            const grid = document.getElementById('cuentosGrid');
+            
+            // Limpiar solo el ejemplo
+            const ejemplo = grid.querySelector('.cuento-card');
+            if (ejemplo) ejemplo.remove();
+            
+            cuentos.forEach(cuento => {
+                agregarCuentoAlGrid(cuento.titulo, cuento.descripcion, cuento.url);
+            });
+        }
+
+        // Función para agregar un cuento al grid
+        function agregarCuentoAlGrid(titulo, descripcion, url) {
+            const grid = document.getElementById('cuentosGrid');
+            
+            const cuentoCard = document.createElement('div');
+            cuentoCard.className = 'cuento-card';
+            cuentoCard.innerHTML = `
+                <h3 class="cuento-title">${titulo}</h3>
+                <p class="cuento-description">${descripcion || 'Sin descripción'}</p>
+                <div class="audio-player">
+                    <audio controls>
+                        <source src="${url}" type="audio/mpeg">
+                        Tu navegador no soporta el elemento de audio.
+                    </audio>
+                </div>
+            `;
+            
+            grid.insertBefore(cuentoCard, grid.firstChild);
+        }
+
+        // Manejo del formulario
         document.getElementById('uploadForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
             const titulo = document.getElementById('titulo').value;
             const descripcion = document.getElementById('descripcion').value;
-            const audioFile = document.getElementById('audioFile').files[0];
+            const mediafireUrl = document.getElementById('mediafireLink').value;
             
-            if (audioFile) {
-                // Crear URL temporal para el audio
-                const audioUrl = URL.createObjectURL(audioFile);
-                
-                // Crear nueva tarjeta de cuento
-                const cuentoCard = document.createElement('div');
-                cuentoCard.className = 'cuento-card';
-                cuentoCard.innerHTML = `
-                    <h3 class="cuento-title">${titulo}</h3>
-                    <p class="cuento-description">${descripcion || 'Sin descripción'}</p>
-                    <div class="audio-player">
-                        <audio controls>
-                            <source src="${audioUrl}" type="${audioFile.type}">
-                            Tu navegador no soporta el elemento de audio.
-                        </audio>
-                    </div>
-                `;
+            if (mediafireUrl) {
+                // Guardar en localStorage
+                guardarCuento(titulo, descripcion, mediafireUrl);
                 
                 // Agregar al grid
-                const grid = document.getElementById('cuentosGrid');
-                grid.insertBefore(cuentoCard, grid.firstChild);
+                agregarCuentoAlGrid(titulo, descripcion, mediafireUrl);
                 
                 // Limpiar formulario
                 this.reset();
-                document.getElementById('fileLabel').textContent = '📁 Seleccionar archivo de audio (MP3, WAV, OGG)';
                 
-                alert('¡Cuento subido exitosamente!');
+                alert('¡Cuento agregado exitosamente!');
             }
         });
+
+        // Cargar cuentos al iniciar la página
+        document.addEventListener('DOMContentLoaded', cargarCuentos);
     </script>
 </body>
 </html>
