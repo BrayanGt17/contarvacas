@@ -599,11 +599,42 @@
                 </div>
                 
                 <div class="form-group">
-                    <label for="audioLink">Enlace del audio</label>
-                    <input type="url" id="audioLink" placeholder="https://exquisite-choux-095677.netlify.app/cuentos/audios/nombre.mp3" required>
-                    <small style="color: #9e8ac4; font-size: 0.8em; display: block; margin-top: 8px;">
-                        💡 Sube tus audios a Netlify en la carpeta: <code style="background: rgba(126,87,194,0.3); padding: 2px 6px; border-radius: 4px;">cuentos/audios/</code>
-                    </small>
+                    <label>Audio</label>
+                    <div style="display: flex; gap: 15px; margin-bottom: 15px;">
+                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                            <input type="radio" name="audioType" value="file" checked onchange="toggleAudioInput()">
+                            <span>Subir archivo</span>
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                            <input type="radio" name="audioType" value="url" onchange="toggleAudioInput()">
+                            <span>Usar URL</span>
+                        </label>
+                    </div>
+                    
+                    <div id="fileUploadSection">
+                        <div class="file-upload">
+                            <input type="file" id="audioFile" accept="audio/*">
+                            <label for="audioFile" class="file-upload-label">
+                                📁 Seleccionar archivo de audio (MP3, M4A, WAV, OGG)
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div id="urlUploadSection" style="display: none;">
+                        <input type="url" id="audioLink" placeholder="https://exquisite-choux-095677.netlify.app/cuentos/audios/nombre.mp3">
+                        <small style="color: #9e8ac4; font-size: 0.8em; display: block; margin-top: 8px;">
+                            💡 Usa la URL de tu audio subido a Netlify (carpeta: cuentos/audios/)
+                        </small>
+                    </div>
+                    
+                    <div style="margin-top: 20px; padding: 15px; background: rgba(126, 87, 194, 0.1); border-radius: 10px; border-left: 3px solid var(--secondary);">
+                        <p style="color: #d1c4e9; font-size: 0.9em; margin: 0;">
+                            <strong>📌 Cómo subir audios fácilmente:</strong><br>
+                            1. Sube tu archivo .mp3, .m4a o .wav a la carpeta <code>cuentos/audios/</code> en tu repositorio de GitHub<br>
+                            2. Usa la opción "URL" arriba y pega el enlace de tu audio en Netlify<br>
+                            3. ¡Listo! El audio aparecerá en tu colección
+                        </p>
+                    </div>
                 </div>
                 
                 <button type="submit" class="btn">Agregar Cuento</button>
@@ -832,25 +863,71 @@
             }
         }
 
+        // Función para alternar entre subir archivo y usar URL
+        function toggleAudioInput() {
+            const audioType = document.querySelector('input[name="audioType"]:checked').value;
+            const fileSection = document.getElementById('fileUploadSection');
+            const urlSection = document.getElementById('urlUploadSection');
+            
+            if (audioType === 'file') {
+                fileSection.style.display = 'block';
+                urlSection.style.display = 'none';
+            } else {
+                fileSection.style.display = 'none';
+                urlSection.style.display = 'block';
+            }
+        }
+        
         // Manejo del formulario
-        document.getElementById('uploadForm').addEventListener('submit', function(e) {
+        document.getElementById('uploadForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
             const titulo = document.getElementById('titulo').value.trim();
             const descripcion = document.getElementById('descripcion').value.trim();
-            const audioUrl = document.getElementById('audioLink').value.trim();
+            const audioType = document.querySelector('input[name="audioType"]:checked').value;
             
-            if (!titulo || !audioUrl) {
-                showToast('Por favor completa todos los campos requeridos.', true);
+            if (!titulo) {
+                showToast('Por favor ingresa un título.', true);
                 return;
             }
             
-            // Validar URL
-            try {
-                new URL(audioUrl);
-            } catch {
-                showToast('Por favor ingresa una URL válida.', true);
+            let audioUrl = '';
+            
+            if (audioType === 'file') {
+                const fileInput = document.getElementById('audioFile');
+                const file = fileInput.files[0];
+                
+                if (!file) {
+                    showToast('Por favor selecciona un archivo de audio.', true);
+                    return;
+                }
+                
+                // Validar tipo de archivo
+                if (!file.type.startsWith('audio/')) {
+                    showToast('El archivo debe ser un audio válido.', true);
+                    return;
+                }
+                
+                // Aquí podrías subir el archivo a un servicio como Cloudinary
+                // Por ahora, vamos a usar una simulación y pedir al usuario que suba manualmente
+                showToast('Por favor, sube el archivo a Netlify manualmente y luego usa la opción URL.', true);
                 return;
+                
+            } else {
+                audioUrl = document.getElementById('audioLink').value.trim();
+                
+                if (!audioUrl) {
+                    showToast('Por favor ingresa una URL de audio.', true);
+                    return;
+                }
+                
+                // Validar URL
+                try {
+                    new URL(audioUrl);
+                } catch {
+                    showToast('Por favor ingresa una URL válida.', true);
+                    return;
+                }
             }
             
             showLoading(true);
