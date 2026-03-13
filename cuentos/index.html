@@ -142,6 +142,21 @@
             margin-top: 8px;
         }
 
+        /* Imagen del cuento en el reproductor */
+        .player-image {
+            width: 180px;
+            height: 180px;
+            border-radius: 20px;
+            object-fit: cover;
+            border: 3px solid rgba(255, 105, 180, 0.5);
+            box-shadow: 
+                0 15px 35px rgba(0, 0, 0, 0.4),
+                0 0 30px rgba(255, 105, 180, 0.2);
+            margin: 0 auto 25px;
+            display: block;
+            animation: fadeIn 1s ease-out, float 3s ease-in-out infinite;
+        }
+
         /* Visualizador de audio */
         .visualizer {
             height: 60px;
@@ -453,6 +468,8 @@
             <!-- Reproductor principal -->
             <div class="player-container">
                 <div class="player-content">
+                    <img src="" alt="" class="player-image" id="playerImage" style="display: none;">
+                    
                     <div class="now-playing">
                         <h3>Reproduciendo ahora</h3>
                         <div class="title" id="currentTitle">Selecciona un cuento</div>
@@ -594,6 +611,7 @@
         const currentTitle = document.getElementById('currentTitle');
         const currentDescription = document.getElementById('currentDescription');
         const visualizer = document.getElementById('visualizer');
+        const playerImage = document.getElementById('playerImage');
 
         const cuentos = [
             {
@@ -649,6 +667,12 @@
             audio.src = cuento.url;
             currentTitle.textContent = cuento.titulo;
             currentDescription.textContent = cuento.descripcion || '';
+            
+            // Actualizar imagen del reproductor
+            const imageUrl = cuento.image || 'https://images.unsplash.com/photo-1478720568477-152d9b164e26?w=200&h=200&fit=crop';
+            playerImage.src = imageUrl;
+            playerImage.alt = cuento.titulo;
+            playerImage.style.display = 'block';
             
             // Actualizar lista
             document.querySelectorAll('.cuento-item').forEach((item, i) => {
