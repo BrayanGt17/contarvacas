@@ -276,7 +276,7 @@
             background: linear-gradient(145deg, rgba(45, 45, 85, 0.9), rgba(25, 25, 55, 0.95));
             border: 1px solid rgba(126, 87, 194, 0.3);
             border-radius: 15px;
-            padding: 18px 20px;
+            padding: 15px;
             margin-bottom: 12px;
             display: flex;
             align-items: center;
@@ -285,6 +285,21 @@
             cursor: pointer;
             position: relative;
             overflow: hidden;
+        }
+
+        .cuento-image {
+            width: 70px;
+            height: 70px;
+            border-radius: 12px;
+            object-fit: cover;
+            border: 2px solid rgba(255, 105, 180, 0.3);
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .cuento-item:hover .cuento-image {
+            transform: scale(1.1);
+            border-color: var(--primary);
         }
 
         .cuento-item::before {
@@ -582,14 +597,16 @@
 
         const cuentos = [
             {
-                titulo: "Cuento 1",
-                descripcion: "Primer cuento de la colección",
-                url: "https://cdn.jsdelivr.net/gh/BrayanGt17/contarvacas@main/azafran/cuentos/Cuento1.m4a"
+                titulo: "La Liebre y la Tortuga",
+                descripcion: "Cuento clásico sobre la perseverancia",
+                url: "https://cdn.jsdelivr.net/gh/BrayanGt17/contarvacas@main/azafran/cuentos/cuento1.mp3",
+                image: "https://images.unsplash.com/photo-1551103782-8ab07afd45c1?w=200&h=200&fit=crop"
             },
             {
-                titulo: "Cuento 2",
-                descripcion: "Segundo cuento de la colección",
-                url: "https://cdn.jsdelivr.net/gh/BrayanGt17/contarvacas@main/azafran/cuentos/cuento2.mp3"
+                titulo: "El León y el Ratón",
+                descripcion: "Historia sobre la amistad y la gratitud",
+                url: "https://cdn.jsdelivr.net/gh/BrayanGt17/contarvacas@main/azafran/cuentos/cuento2.mp3",
+                image: "https://images.unsplash.com/photo-1534447677768-be436bb09401?w=200&h=200&fit=crop"
             }
         ];
 
@@ -609,8 +626,12 @@
                 const item = document.createElement('div');
                 item.className = 'cuento-item';
                 if (index === currentTrack) item.classList.add('active');
+                
+                // Usar imagen personalizada o placeholder
+                const imageUrl = cuento.image || 'https://images.unsplash.com/photo-1478720568477-152d9b164e26?w=200&h=200&fit=crop';
+                
                 item.innerHTML = `
-                    <div class="cuento-number">${index + 1}</div>
+                    <img src="${imageUrl}" alt="${cuento.titulo}" class="cuento-image" onerror="this.src='https://images.unsplash.com/photo-1478720568477-152d9b164e26?w=200&h=200&fit=crop'">
                     <div class="cuento-info">
                         <div class="cuento-title">${cuento.titulo}</div>
                         <div class="cuento-description">${cuento.descripcion || ''}</div>
