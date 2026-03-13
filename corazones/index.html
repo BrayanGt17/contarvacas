@@ -12,7 +12,6 @@
             height: 100%;
             overflow: hidden;
             background-color: #1a0a2e;
-            transition: background-color 1s ease;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
@@ -137,18 +136,6 @@
             border-color: rgba(255, 105, 180, 0.8);
         }
 
-        /* Indicador de modo */
-        .mode-indicator {
-            position: absolute;
-            bottom: 70px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 3;
-            color: rgba(255, 255, 255, 0.6);
-            font-size: 0.9em;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-        }
     </style>
 </head>
 <body>
@@ -159,19 +146,7 @@
 
     <div id="centerText">Mi vida, mi razón</div>
 
-    <div class="mode-indicator" id="modeIndicator">Arcoíris</div>
-
-    <div class="controls">
-        <button class="control-btn" id="prevMode">◀ Modo</button>
-        <button class="control-btn" id="nextMode">Modo ▶</button>
-    </div>
-
     <button id="toggleAudio" aria-label="Alternar música">🔊</button>
-    
-    <!-- Instrucciones para cambiar la música -->
-    <div style="position: absolute; bottom: 10px; right: 10px; z-index: 5; font-size: 0.8em; color: rgba(255,255,255,0.5);">
-        💡 Cambia la música en el código: azafran/canciones/
-    </div>
 
     <!-- Reproductor de fondo - Música de tu carpeta azafran -->
     <audio id="bgAudio" preload="auto" crossorigin="anonymous" loop>
@@ -191,7 +166,6 @@
         let pointsOrigin = [];
         let pointsTarget = [];
         let particles = [];
-        let phase = 0; // 0: Arcoíris, 1: Rosa/Morado, 2: Blanco/Negro, 3: Verde
         let time = 0;
         const startOffset = 0;
         let audioStarted = false;
@@ -243,9 +217,6 @@
                 }
             }
 
-            // Configurar controles
-            setupControls();
-
             // Intentar reproducir audio al iniciar
             tryPlayAudio();
             setupToggleButton();
@@ -260,41 +231,14 @@
         }
 
         function updateStyles() {
-            switch(phase) {
-                case 0: // Arcoíris - fondo oscuro púrpura
-                    document.body.style.backgroundColor = "#1a0a2e";
-                    break;
-                case 1: // Rosa/Morado - fondo más claro
-                    document.body.style.backgroundColor = "#2d1b4e";
-                    break;
-                case 2: // Blanco/Negro
-                    document.body.style.backgroundColor = phase === 2 ? "white" : "black";
-                    break;
-                case 3: // Verde - fondo oscuro
-                    document.body.style.backgroundColor = "#0a2e1a";
-                    break;
-            }
-            updateModeIndicator();
-        }
-
-        function updateModeIndicator() {
-            const modes = ['Arcoíris', 'Rosa/Morado', 'Blanco/Negro', 'Verde Esmeralda'];
-            document.getElementById('modeIndicator').textContent = modes[phase];
+            // Fondo morado oscuro fijo (modo arcoíris)
+            document.body.style.backgroundColor = "#1a0a2e";
         }
 
         function getParticleColor(i) {
             const hueShift = time * 20;
-            switch(phase) {
-                case 0: // Arcoíris
-                    return `hsla(${(i + hueShift) % 360}, 70%, 60%, 0.4)`;
-                case 1: // Rosa/Morado
-                    const pinkPurple = (i * 2 + hueShift) % 60 + 280; // 280-340 (púrpura a rosa)
-                    return `hsla(${pinkPurple}, 70%, 65%, 0.5)`;
-                case 2: // Blanco/Negro
-                    return phase === 2 ? `rgba(0, 0, 0, 0.4)` : `rgba(255, 255, 255, 0.4)`;
-                case 3: // Verde
-                    return `hsla(${140 + Math.sin(time + i) * 20}, 70%, 50%, 0.4)`;
-            }
+            // Arcoíris
+            return `hsla(${(i + hueShift) % 360}, 70%, 60%, 0.4)`;
         }
 
         function updatePulse(kx, ky) {
@@ -308,10 +252,8 @@
 
         function animate() {
             // Fondo con rastro
-            const alpha = phase === 2 ? (phase === 2 ? 0.1 : 0.1) : 0.1;
-            ctx.fillStyle = (phase === 2 && document.body.style.backgroundColor === "white") 
-                ? `rgba(255, 255, 255, ${alpha})` 
-                : `rgba(0, 0, 0, ${alpha})`;
+            const alpha = 0.1;
+            ctx.fillStyle = `rgba(0, 0, 0, ${alpha})`;
             ctx.fillRect(0, 0, width, height);
 
             // Calcular pulso
@@ -363,31 +305,12 @@
             }
 
             // Dibujar destellos en los puntos objetivo
-            const destelloColor = (phase === 2 && document.body.style.backgroundColor === "white") 
-                ? "rgba(0,0,0,0.5)" 
-                : "rgba(255,255,255,0.5)";
-            ctx.fillStyle = destelloColor;
+            ctx.fillStyle = "rgba(255,255,255,0.5)";
             for (let i = 0; i < pointsTarget.length; i += 5) {
                 ctx.fillRect(pointsTarget[i][0], pointsTarget[i][1], 1, 1);
             }
 
             requestAnimationFrame(animate);
-        }
-
-        // Configurar controles de modo
-        function setupControls() {
-            document.getElementById('prevMode').addEventListener('click', () => {
-                phase = (phase - 1 + 4) % 4;
-                updateStyles();
-            });
-            
-            document.getElementById('nextMode').addEventListener('click', () => {
-                phase = (phase + 1) % 4;
-                updateStyles();
-            });
-
-            // Inicializar indicador
-            updateModeIndicator();
         }
 
         window.addEventListener('resize', resize);
@@ -457,16 +380,16 @@
         // Frases románticas que rotan cada 3 segundos
         function setupRotatingPhrases() {
             const phrases = [
-                'Mi vida, mi razón',
-                'Cada día a tu lado es un regalo',
-                'Te quiero más que a las palabras',
-                'Eres mi calma y mi locura hermosa',
-                'Mi corazón late solo por ti',
-                'Contigo todo tiene más color',
-                'Eres mi persona favorita en el mundo',
-                'Gracias por ser mi refugio y mi hogar',
-                'Amarte es mi mejor decisión',
-                'Siempre tuya, siempre mío, siempre nuestro'
+                'Regresa conmigo',
+                'Aun te amo mucho muchote',
+                'Te extraño',
+                'Me haces mucha falta',
+                'Extraño tu vocesita hermosa',
+                'No puedo dejar de pensar en ti',
+                'Mi corazón te pertenece',
+                'Eres mi todo',
+                'Te amo con todo mi ser',
+                'Por favor vuelve'
             ];
 
             const el = document.getElementById('centerText');
