@@ -2,34 +2,38 @@
 
 Esta carpeta contiene tus cuentos y canciones grabadas.
 
-## 📁 Estructura recomendada:
+## 📁 Estructura:
 
 ```
 azafran/
 ├── canciones/          # Tus canciones grabadas
 ├── cuentos/           # Tus cuentos de audio
+├── dondenadiepuedair.mp3  # Tu canción principal
 └── README.md          # Este archivo
 ```
 
 ## 🚀 Cómo subir tus audios:
 
-1. **Ve a GitHub**: https://github.com/BrayanGt17/contarvacas/tree/main/azafran
-2. **Crea las carpetas** (si no existen):
-   - `canciones/`
-   - `cuentos/`
-3. **Sube tus archivos MP3/M4A** a la carpeta correspondiente
+### **1. Para canciones:**
+- Ve a: `https://github.com/BrayanGt17/contarvacas/tree/main/azafran/canciones`
+- Sube tus archivos MP3/M4A
+
+### **2. Para cuentos:**
+- Ve a: `https://github.com/BrayanGt17/contarvacas/tree/main/azafran/cuentos`
+- Sube tus archivos MP3/M4A de cuentos
 
 ## 🌐 URL para jsDelivr:
 
 Una vez subido un archivo, la URL será:
 
 ```
-https://cdn.jsdelivr.net/gh/BrayanGt17/contarvacas@main/azafran/NOMBRE_CARPETA/NOMBRE_ARCHIVO
+https://cdn.jsdelivr.net/gh/BrayanGt17/contarvacas@main/azafran/carpeta/archivo
 ```
 
 **Ejemplos:**
 - Canción: `https://cdn.jsdelivr.net/gh/BrayanGt17/contarvacas@main/azafran/canciones/mi_cancion.mp3`
-- Cuento: `https://cdn.jsdelivr.net/gh/BrayanGt17/contarvacas@main/azafran/cuentos/cuento1.mp3`
+- Cuento: `https://cdn.jsdelivr.net/gh/BrayanGt17/contarvacas@main/azafran/cuentos/mi_cuento.mp3`
+- Principal: `https://cdn.jsdelivr.net/gh/BrayanGt17/contarvacas@main/azafran/dondenadiepuedair.mp3`
 
 ## 💡 Tips:
 
@@ -37,10 +41,7 @@ https://cdn.jsdelivr.net/gh/BrayanGt17/contarvacas@main/azafran/NOMBRE_CARPETA/N
 - Formatos recomendados: MP3, M4A, WAV, OGG
 - Peso máximo por archivo: 100MB (recomendado menos de 10MB para carga rápida)
 
-## 📝 Nota:
+## 📝 Uso:
 
-Esta carpeta es para almacenamiento de audios. Para ver los cuentos, visita:
-- `https://exquisite-choux-095677.netlify.app/cuentos/`
-
-Para crear corazones animados con música:
-- `https://exquisite-choux-095677.netlify.app/corazones/`
+- **Corazones animados**: `https://exquisite-choux-095677.netlify.app/corazones/`
+- **Cuentos**: `https://exquisite-choux-095677.netlify.app/cuentos/`

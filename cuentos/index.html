@@ -11,11 +11,20 @@
             box-sizing: border-box;
         }
 
+        :root {
+            --primary: #ff69b4;
+            --secondary: #7e57c2;
+            --dark: #1a0a2e;
+            --darker: #0d0518;
+            --light: #e1bee7;
+            --accent: #b39ddb;
+        }
+
         body {
             min-height: 100vh;
-            background: linear-gradient(135deg, #1a0a2e 0%, #2d1b4e 50%, #1a0a2e 100%);
+            background: linear-gradient(135deg, var(--darker) 0%, var(--dark) 50%, var(--darker) 100%);
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            color: #e1bee7;
+            color: var(--light);
             overflow-x: hidden;
         }
 
@@ -37,7 +46,6 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
         }
 
         .header {
@@ -50,7 +58,7 @@
         .logo {
             font-size: 3.5em;
             font-weight: 800;
-            background: linear-gradient(90deg, #ff69b4, #7e57c2, #ff69b4);
+            background: linear-gradient(90deg, var(--primary), var(--secondary), var(--primary));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -66,12 +74,12 @@
             animation: fadeIn 1s ease-out 0.3s both;
         }
 
-        /* Sección de "En Construcción" */
-        .construction-section {
+        /* Sección de agregar cuento */
+        .add-section {
             background: linear-gradient(145deg, rgba(40, 40, 80, 0.95), rgba(20, 20, 50, 0.98));
             border: 2px solid rgba(126, 87, 194, 0.4);
             border-radius: 30px;
-            padding: 60px 50px;
+            padding: 40px;
             margin: 20px 0;
             width: 100%;
             max-width: 600px;
@@ -80,27 +88,124 @@
                 0 0 50px rgba(126, 87, 194, 0.2),
                 inset 0 1px 0 rgba(255, 255, 255, 0.1);
             animation: slideUp 0.8s cubic-bezier(0.23, 1, 0.32, 1) 0.2s both;
+        }
+
+        .add-section h2 {
+            color: var(--light);
+            margin-bottom: 25px;
             text-align: center;
+            font-size: 1.8em;
         }
 
-        .construction-icon {
-            font-size: 5em;
+        .form-group {
             margin-bottom: 20px;
-            animation: bounce 2s infinite;
         }
 
-        .construction-title {
-            font-size: 2em;
-            color: #ff69b4;
-            margin-bottom: 15px;
-            letter-spacing: 3px;
-        }
-
-        .construction-text {
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
             color: #b39ddb;
-            font-size: 1.1em;
-            line-height: 1.6;
+            font-size: 0.95em;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 18px;
+            border: 2px solid rgba(126, 87, 194, 0.4);
+            border-radius: 15px;
+            background: rgba(10, 10, 30, 0.8);
+            color: #e1bee7;
+            font-family: inherit;
+            font-size: 1em;
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 15px rgba(255, 105, 180, 0.2);
+        }
+
+        .btn {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 14px 35px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            letter-spacing: 1px;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: inline-block;
+            text-decoration: none;
+            box-shadow: 0 5px 20px rgba(255, 105, 180, 0.4);
+            width: 100%;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 10px 30px rgba(255, 105, 180, 0.6);
+        }
+
+        /* Lista de cuentos */
+        .cuentos-list {
+            width: 100%;
+            max-width: 800px;
+            margin: 30px 0;
+        }
+
+        .cuentos-list h3 {
+            color: var(--light);
             margin-bottom: 20px;
+            text-align: center;
+            font-size: 1.5em;
+        }
+
+        .cuento-item {
+            background: linear-gradient(145deg, rgba(45, 45, 85, 0.9), rgba(25, 25, 55, 0.95));
+            border: 1px solid rgba(126, 87, 194, 0.3);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: all 0.3s;
+        }
+
+        .cuento-item:hover {
+            transform: translateX(5px);
+            border-color: rgba(255, 105, 180, 0.5);
+        }
+
+        .cuento-info {
+            flex: 1;
+        }
+
+        .cuento-title {
+            color: #ffd1dc;
+            font-size: 1.2em;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        .cuento-description {
+            color: #b39ddb;
+            font-size: 0.9em;
+        }
+
+        .cuento-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .cuento-actions .btn {
+            padding: 10px 20px;
+            font-size: 0.85em;
+            width: auto;
         }
 
         /* Back link */
@@ -121,6 +226,30 @@
             color: white;
             transform: scale(1.05);
             box-shadow: 0 5px 20px rgba(126, 87, 194, 0.5);
+        }
+
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: linear-gradient(135deg, rgba(0, 200, 83, 0.95), rgba(0, 150, 36, 0.95));
+            color: white;
+            padding: 15px 30px;
+            border-radius: 30px;
+            font-weight: 500;
+            box-shadow: 0 10px 30px rgba(0, 200, 83, 0.3);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 9999;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .toast.error {
+            background: linear-gradient(135deg, rgba(255, 71, 87, 0.95), rgba(198, 40, 40, 0.95));
         }
 
         /* Animations */
@@ -144,16 +273,11 @@
             100% { background-position: 200% center; }
         }
 
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-
         @media (max-width: 768px) {
             .logo { font-size: 2em; }
-            .construction-section { padding: 40px 30px; }
-            .construction-icon { font-size: 4em; }
-            .construction-title { font-size: 1.5em; }
+            .add-section { padding: 25px; }
+            .cuento-item { flex-direction: column; text-align: center; }
+            .cuento-actions { justify-content: center; }
         }
     </style>
 </head>
@@ -166,20 +290,47 @@
             <p class="tagline">🎵 Colección de Cuentos y Audios 🎵</p>
         </header>
 
-        <div class="construction-section">
-            <div class="construction-icon">🚧</div>
-            <h2 class="construction-title">EN CONSTRUCCIÓN</h2>
-            <p class="construction-text">
-                Estamos trabajando para traerte la mejor experiencia de audios y cuentos.<br>
-                ¡Vuelve pronto para disfrutar de nuestra colección!
-            </p>
+        <!-- Sección para agregar cuentos -->
+        <div class="add-section">
+            <h2>➕ Agregar Nuevo Cuento</h2>
+            <form id="addCuentoForm">
+                <div class="form-group">
+                    <label for="titulo">Título del cuento</label>
+                    <input type="text" id="titulo" placeholder="Ej: La liebre y la tortuga" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="descripcion">Descripción</label>
+                    <textarea id="descripcion" placeholder="Breve descripción del cuento..."></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="audioUrl">URL del audio (jsDelivr)</label>
+                    <input type="url" id="audioUrl" placeholder="https://cdn.jsdelivr.net/gh/..." required>
+                    <small style="color: #9e8ac4; font-size: 0.8em; display: block; margin-top: 8px;">
+                        💡 Sube tu audio a la carpeta azafran/cuentos/ y pega la URL de jsDelivr
+                    </small>
+                </div>
+                
+                <button type="submit" class="btn">Agregar Cuento</button>
+            </form>
+        </div>
+
+        <!-- Lista de cuentos -->
+        <div class="cuentos-list">
+            <h3>📚 Tus Cuentos</h3>
+            <div id="cuentosContainer">
+                <!-- Los cuentos se cargarán aquí -->
+            </div>
         </div>
 
         <a href="../index.html" class="back-link">← Volver a BYFFOREVER💗</a>
     </div>
 
+    <div class="toast" id="toast"></div>
+
     <script>
-        // Sistema de partículas simple
+        // Sistema de partículas
         const canvas = document.getElementById('particles-canvas');
         const ctx = canvas.getContext('2d');
         let particles = [];
@@ -259,6 +410,93 @@
         resizeCanvas();
         initParticles();
         animate();
+
+        // Lógica de la aplicación de cuentos
+        let cuentos = JSON.parse(localStorage.getItem('cuentos')) || [];
+
+        function showToast(message, isError = false) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = 'toast' + (isError ? ' error' : '');
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        function renderCuentos() {
+            const container = document.getElementById('cuentosContainer');
+            container.innerHTML = '';
+            
+            if (cuentos.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: #9e8ac4; padding: 30px;">No hay cuentos todavía. ¡Agrega tu primer cuento!</p>';
+                return;
+            }
+            
+            cuentos.forEach((cuento, index) => {
+                const item = document.createElement('div');
+                item.className = 'cuento-item';
+                item.innerHTML = `
+                    <div class="cuento-info">
+                        <div class="cuento-title">${cuento.titulo}</div>
+                        <div class="cuento-description">${cuento.descripcion || 'Sin descripción'}</div>
+                    </div>
+                    <div class="cuento-actions">
+                        <a href="${cuento.url}" class="btn" target="_blank">▶️ Escuchar</a>
+                        <button class="btn" style="background: linear-gradient(135deg, #ff4757 0%, #c62828 100%);" onclick="eliminarCuento(${index})">🗑️</button>
+                    </div>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        function eliminarCuento(index) {
+            if (confirm('¿Estás seguro de que quieres eliminar este cuento?')) {
+                cuentos.splice(index, 1);
+                localStorage.setItem('cuentos', JSON.stringify(cuentos));
+                renderCuentos();
+                showToast('Cuento eliminado');
+            }
+        }
+
+        document.getElementById('addCuentoForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const titulo = document.getElementById('titulo').value.trim();
+            const descripcion = document.getElementById('descripcion').value.trim();
+            const audioUrl = document.getElementById('audioUrl').value.trim();
+            
+            if (!titulo || !audioUrl) {
+                showToast('Por favor completa todos los campos requeridos', true);
+                return;
+            }
+            
+            // Validar URL
+            try {
+                new URL(audioUrl);
+            } catch {
+                showToast('Por favor ingresa una URL válida', true);
+                return;
+            }
+            
+            // Agregar cuento
+            cuentos.push({
+                titulo: titulo,
+                descripcion: descripcion,
+                url: audioUrl
+            });
+            
+            localStorage.setItem('cuentos', JSON.stringify(cuentos));
+            renderCuentos();
+            
+            // Limpiar formulario
+            this.reset();
+            showToast('¡Cuento agregado exitosamente!');
+        });
+
+        // Cargar cuentos al iniciar
+        renderCuentos();
     </script>
 </body>
 </html>
