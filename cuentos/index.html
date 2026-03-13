@@ -11,22 +11,12 @@
             box-sizing: border-box;
         }
 
-        :root {
-            --primary: #ff69b4;
-            --secondary: #7e57c2;
-            --dark: #1a0a2e;
-            --darker: #0d0518;
-            --light: #e1bee7;
-            --accent: #b39ddb;
-        }
-
         body {
             min-height: 100vh;
-            background: linear-gradient(135deg, var(--darker) 0%, var(--dark) 50%, var(--darker) 100%);
+            background: linear-gradient(135deg, #1a0a2e 0%, #2d1b4e 50%, #1a0a2e 100%);
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            color: var(--light);
+            color: #e1bee7;
             overflow-x: hidden;
-            perspective: 1000px;
         }
 
         #particles-canvas {
@@ -47,6 +37,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: center;
         }
 
         .header {
@@ -59,14 +50,13 @@
         .logo {
             font-size: 3.5em;
             font-weight: 800;
-            background: linear-gradient(90deg, var(--primary), var(--secondary), var(--primary));
+            background: linear-gradient(90deg, #ff69b4, #7e57c2, #ff69b4);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
             letter-spacing: 8px;
-            animation: shimmer 3s linear infinite, glow 2s ease-in-out infinite alternate;
+            animation: shimmer 3s linear infinite;
             background-size: 200% auto;
-            text-shadow: 0 0 30px rgba(255, 105, 180, 0.3);
         }
 
         .tagline {
@@ -76,379 +66,44 @@
             animation: fadeIn 1s ease-out 0.3s both;
         }
 
-        .upload-section {
+        /* Sección de "En Construcción" */
+        .construction-section {
             background: linear-gradient(145deg, rgba(40, 40, 80, 0.95), rgba(20, 20, 50, 0.98));
             border: 2px solid rgba(126, 87, 194, 0.4);
             border-radius: 30px;
-            padding: 50px 40px;
+            padding: 60px 50px;
             margin: 20px 0;
             width: 100%;
-            max-width: 700px;
+            max-width: 600px;
             box-shadow: 
                 0 25px 80px rgba(0, 0, 0, 0.6),
-                0 0 50px rgba(126, 87, 194, 0.1),
+                0 0 50px rgba(126, 87, 194, 0.2),
                 inset 0 1px 0 rgba(255, 255, 255, 0.1);
             animation: slideUp 0.8s cubic-bezier(0.23, 1, 0.32, 1) 0.2s both;
-            position: relative;
-            overflow: hidden;
-            transform-style: preserve-3d;
-        }
-
-        .upload-section::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 500%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 105, 180, 0.05), rgba(126, 87, 194, 0.1), rgba(255, 105, 180, 0.05), transparent);
-            animation: shimmerSlide 8s linear infinite;
-            z-index: 0;
-        }
-        
-        .upload-section::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: radial-gradient(circle at 20% 0%, rgba(126, 87, 194, 0.1) 0%, transparent 50%);
-            pointer-events: none;
-            z-index: 1;
-        }
-
-        .upload-section > * {
-            position: relative;
-            z-index: 1;
-        }
-
-        .upload-section h2 {
-            color: #d1c4e9;
-            margin-bottom: 25px;
             text-align: center;
-            font-size: 1.8em;
-            text-shadow: 0 0 10px rgba(179, 157, 219, 0.5);
         }
 
-        .form-group {
-            margin-bottom: 25px;
-            position: relative;
+        .construction-icon {
+            font-size: 5em;
+            margin-bottom: 20px;
+            animation: bounce 2s infinite;
         }
 
-        .form-group label {
-            display: block;
-            margin-bottom: 10px;
-            color: #b39ddb;
-            font-size: 0.95em;
-            font-weight: 500;
-            transition: color 0.3s;
-        }
-
-        .form-group input,
-        .form-group textarea {
-            width: 100%;
-            padding: 16px 22px;
-            border: 2px solid rgba(126, 87, 194, 0.3);
-            border-radius: 16px;
-            background: rgba(10, 10, 30, 0.85);
-            color: #e1bee7;
-            font-family: inherit;
-            font-size: 1em;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            position: relative;
-        }
-        
-        .form-group input:hover,
-        .form-group textarea:hover {
-            border-color: rgba(126, 87, 194, 0.5);
-        }
-
-        .form-group input:focus,
-        .form-group textarea:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 25px rgba(255, 105, 180, 0.25), 0 0 15px rgba(126, 87, 194, 0.2);
-            background: rgba(15, 15, 40, 0.95);
-            transform: scale(1.01);
-        }
-        
-        .form-group input::placeholder,
-        .form-group textarea::placeholder {
-            color: #8a7a9e;
-            opacity: 0.7;
-        }
-
-        .form-group textarea {
-            min-height: 100px;
-            resize: vertical;
-        }
-
-        .file-upload {
-            position: relative;
-            display: inline-block;
-            cursor: pointer;
-            width: 100%;
-        }
-
-        .file-upload input[type="file"] {
-            position: absolute;
-            opacity: 0;
-            width: 100%;
-            height: 100%;
-            cursor: pointer;
-        }
-
-        .file-upload-label {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            border: 2px dashed rgba(126, 87, 194, 0.5);
-            border-radius: 15px;
-            background: rgba(10, 10, 30, 0.6);
-            color: #b39ddb;
-            transition: all 0.3s;
-            font-size: 0.95em;
-        }
-
-        .file-upload:hover .file-upload-label {
-            border-color: #ff69b4;
-            background: rgba(15, 15, 40, 0.8);
-            transform: scale(1.02);
-            box-shadow: 0 0 15px rgba(255, 105, 180, 0.2);
-        }
-
-        .btn {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            color: white;
-            padding: 14px 35px;
-            border: none;
-            border-radius: 25px;
-            cursor: pointer;
-            font-size: 0.95em;
-            font-weight: 600;
-            letter-spacing: 1.5px;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            display: inline-block;
-            text-decoration: none;
-            text-transform: uppercase;
-            box-shadow: 
-                0 6px 20px rgba(255, 105, 180, 0.4),
-                0 2px 5px rgba(0, 0, 0, 0.2);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            transition: left 0.5s;
-        }
-
-        .btn:hover::before {
-            left: 100%;
-        }
-
-        .btn:hover {
-            background: linear-gradient(135deg, #ff8dc7 0%, #9d6bff 100%);
-            transform: translateY(-4px) scale(1.05);
-            box-shadow: 
-                0 12px 30px rgba(255, 105, 180, 0.6),
-                0 5px 10px rgba(0, 0, 0, 0.3);
-        }
-
-        .btn:active {
-            transform: translateY(-1px) scale(1.02);
-            box-shadow: 0 6px 20px rgba(255, 105, 180, 0.4);
-        }
-
-        .btn-danger {
-            background: linear-gradient(135deg, #ff4757 0%, #c62828 100%);
-            box-shadow: 0 5px 20px rgba(255, 71, 87, 0.4);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
-        .btn-danger:hover {
-            background: linear-gradient(135deg, #ff6b7a 0%, #d32f2f 100%);
-            box-shadow: 
-                0 12px 30px rgba(255, 71, 87, 0.6),
-                0 0 20px rgba(255, 71, 87, 0.3);
-            transform: translateY(-4px) scale(1.05);
-        }
-        
-        .btn-danger:active {
-            transform: translateY(-1px) scale(1.02);
-        }
-
-        .cuentos-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 25px;
-            width: 100%;
-            max-width: 1200px;
-            margin: 30px 0;
-            padding: 0 10px;
-        }
-
-        .cuento-card {
-            background: linear-gradient(145deg, rgba(45, 45, 85, 0.95), rgba(25, 25, 55, 0.98));
-            border: 1px solid rgba(126, 87, 194, 0.3);
-            border-radius: 24px;
-            padding: 30px;
-            transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
-            animation: fadeInUp 0.7s ease-out both, float 6s ease-in-out infinite;
-            animation-delay: 0s, 1s;
-            position: relative;
-            overflow: hidden;
-            transform-style: preserve-3d;
-        }
-        
-        .cuento-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-        
-        .btn-delete {
-            background: linear-gradient(135deg, #ff4757 0%, #c62828 100%);
-            border: none;
-            border-radius: 50%;
-            width: 32px;
-            height: 32px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            box-shadow: 0 4px 15px rgba(255, 71, 87, 0.4);
-            flex-shrink: 0;
-        }
-        
-        .btn-delete:hover {
-            transform: scale(1.2) rotate(90deg);
-            box-shadow: 0 6px 20px rgba(255, 71, 87, 0.6);
-        }
-        
-        .btn-delete:active {
-            transform: scale(1.1) rotate(90deg);
-        }
-        
-        .btn-delete span {
-            color: white;
-            font-size: 1.4em;
-            font-weight: bold;
-            line-height: 1;
-        }
-            box-shadow: 
-                0 15px 35px rgba(0, 0, 0, 0.3),
-                0 0 0 1px rgba(126, 87, 194, 0.1),
-                inset 0 1px 0 rgba(255, 255, 255, 0.05);
-        }
-        
-        .cuento-card:hover {
-            animation: none;
-        }
-
-        .cuento-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, var(--primary), var(--secondary), var(--primary));
-            transform: scaleX(0);
-            transform-origin: left;
-            transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
-            box-shadow: 0 0 15px var(--primary);
-        }
-
-        .cuento-card:hover::before {
-            transform: scaleX(1);
-        }
-        
-        .cuento-card::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: radial-gradient(circle at 80% 20%, rgba(255, 105, 180, 0.08) 0%, transparent 40%);
-            pointer-events: none;
-            z-index: 0;
-        }
-        
-        .cuento-content {
-            position: relative;
-            z-index: 2;
-        }
-
-        .cuento-card:hover {
-            transform: translateY(-12px) scale(1.03) rotateX(5deg);
-            box-shadow: 
-                0 30px 60px rgba(0, 0, 0, 0.4),
-                0 0 40px rgba(255, 105, 180, 0.25),
-                0 0 0 2px rgba(255, 105, 180, 0.3);
-            border-color: rgba(255, 105, 180, 0.5);
-        }
-
-        .cuento-card:hover::before {
-            transform: scaleX(1);
-        }
-
-        .cuento-title {
-            color: #ffd1dc;
-            font-size: 1.3em;
-            margin-bottom: 12px;
-            font-weight: 600;
-            transition: color 0.3s;
-        }
-
-        .cuento-card:hover .cuento-title {
+        .construction-title {
+            font-size: 2em;
             color: #ff69b4;
+            margin-bottom: 15px;
+            letter-spacing: 3px;
         }
 
-        .cuento-description {
+        .construction-text {
             color: #b39ddb;
-            font-size: 0.95em;
-            margin-bottom: 15px;
-            line-height: 1.5;
+            font-size: 1.1em;
+            line-height: 1.6;
+            margin-bottom: 20px;
         }
 
-        .cuento-file {
-            font-size: 0.8em;
-            color: #9e8ac4;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .cuento-actions {
-            display: flex;
-            gap: 10px;
-            margin-top: 15px;
-            justify-content: center;
-        }
-
-        .cuento-actions .btn {
-            padding: 12px 24px;
-            font-size: 0.85em;
-            letter-spacing: 1px;
-        }
-        
-        .cuento-actions .btn:hover {
-            transform: translateY(-3px) scale(1.08);
-        }
-
+        /* Back link */
         .back-link {
             display: inline-block;
             margin: 30px 0;
@@ -462,10 +117,10 @@
         }
 
         .back-link:hover {
-            background: linear-gradient(135deg, var(--secondary) 0%, var(--primary) 100%);
+            background: #7e57c2;
             color: white;
             transform: scale(1.05);
-            box-shadow: 0 8px 25px rgba(126, 87, 194, 0.5);
+            box-shadow: 0 5px 20px rgba(126, 87, 194, 0.5);
         }
 
         /* Animations */
@@ -475,7 +130,7 @@
         }
 
         @keyframes slideUp {
-            from { opacity: 0; transform: translateY(40px); }
+            from { opacity: 0; transform: translateY(30px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
@@ -484,139 +139,26 @@
             to { opacity: 1; }
         }
 
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(30px) scale(0.95); }
-            to { opacity: 1; transform: translateY(0) scale(1); }
-        }
-
         @keyframes shimmer {
             0% { background-position: -200% center; }
             100% { background-position: 200% center; }
         }
 
-        @keyframes shimmerSlide {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(20%); }
-        }
-
-        @keyframes rotate {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-
-        @keyframes glow {
-            from { text-shadow: 0 0 20px rgba(255, 105, 180, 0.4); }
-            to { text-shadow: 0 0 35px rgba(255, 105, 180, 0.6), 0 0 50px rgba(126, 87, 194, 0.4); }
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
             50% { transform: translateY(-10px); }
         }
 
-        /* Staggered animation for cards */
-        .cuento-card:nth-child(1) { animation-delay: 0.1s, 1.1s; }
-        .cuento-card:nth-child(2) { animation-delay: 0.2s, 1.2s; }
-        .cuento-card:nth-child(3) { animation-delay: 0.3s, 1.3s; }
-        .cuento-card:nth-child(4) { animation-delay: 0.4s, 1.4s; }
-        .cuento-card:nth-child(5) { animation-delay: 0.5s, 1.5s; }
-        
-        /* Loading indicator */
-        .loading-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(13, 5, 24, 0.9);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 9999;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s;
-        }
-        
-        .loading-overlay.active {
-            opacity: 1;
-            pointer-events: all;
-        }
-        
-        .loading-spinner {
-            width: 60px;
-            height: 60px;
-            border: 4px solid rgba(255, 105, 180, 0.2);
-            border-top-color: var(--primary);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-        
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-        
-        /* Toast notification */
-        .toast {
-            position: fixed;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%) translateY(100px);
-            background: linear-gradient(135deg, rgba(0, 200, 83, 0.95), rgba(0, 150, 36, 0.95));
-            color: white;
-            padding: 15px 30px;
-            border-radius: 30px;
-            font-weight: 500;
-            box-shadow: 0 10px 30px rgba(0, 200, 83, 0.3);
-            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            z-index: 9998;
-        }
-        
-        .toast.show {
-            transform: translateX(-50%) translateY(0);
-        }
-        
-        .toast.error {
-            background: linear-gradient(135deg, rgba(255, 71, 87, 0.95), rgba(198, 40, 40, 0.95));
-            box-shadow: 0 10px 30px rgba(255, 71, 87, 0.3);
-        }
-
         @media (max-width: 768px) {
-            .logo {
-                font-size: 2em;
-            }
-            
-            .upload-section {
-                padding: 25px;
-                border-radius: 20px;
-            }
-            
-            .cuentos-grid {
-                grid-template-columns: 1fr;
-                padding: 0;
-            }
-            
-            .cuento-actions {
-                flex-direction: column;
-            }
+            .logo { font-size: 2em; }
+            .construction-section { padding: 40px 30px; }
+            .construction-icon { font-size: 4em; }
+            .construction-title { font-size: 1.5em; }
         }
     </style>
 </head>
 <body>
     <canvas id="particles-canvas"></canvas>
-    
-    <!-- Loading Overlay -->
-    <div class="loading-overlay" id="loadingOverlay">
-        <div class="loading-spinner"></div>
-    </div>
-    
-    <!-- Toast Notification -->
-    <div class="toast" id="toast"></div>
     
     <div class="content">
         <header class="header">
@@ -624,48 +166,20 @@
             <p class="tagline">🎵 Colección de Cuentos y Audios 🎵</p>
         </header>
 
-        <div class="upload-section">
-            <h2>✨ Administrar Cuentos</h2>
-            <form id="uploadForm">
-                <div class="form-group">
-                    <label for="titulo">Título del cuento</label>
-                    <input type="text" id="titulo" placeholder="Ej: El cuento de la vaca" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="descripcion">Descripción</label>
-                    <textarea id="descripcion" placeholder="Breve descripción del cuento..."></textarea>
-                </div>
-                
-                <div class="form-group">
-                    <label for="audioLink">URL del audio</label>
-                    <input type="url" id="audioLink" placeholder="https://ejemplo.com/audio.mp3" required>
-                    <small style="color: #9e8ac4; font-size: 0.8em; display: block; margin-top: 8px;">
-                        💡 Ingresa la URL de tu archivo de audio
-                    </small>
-                </div>
-                
-                <button type="submit" class="btn">Agregar Cuento</button>
-            </form>
-            
-        </div>
-
-        <div style="text-align: center; margin: 50px 0 30px;">
-            <h2 style="color: #d1c4e9; font-size: 1.8em; display: inline-block; position: relative; animation: fadeIn 1s ease-out 0.4s both; letter-spacing: 3px;">
-                📚 TUS CUENTOS
-                <span style="position: absolute; bottom: -10px; left: 50%; transform: translateX(-50%); width: 60px; height: 3px; background: linear-gradient(90deg, var(--primary), var(--secondary)); border-radius: 2px;"></span>
-            </h2>
-        </div>
-        
-            <div class="cuentos-grid" id="cuentosGrid">
-            <!-- Los cuentos se cargarán dinámicamente aquí -->
+        <div class="construction-section">
+            <div class="construction-icon">🚧</div>
+            <h2 class="construction-title">EN CONSTRUCCIÓN</h2>
+            <p class="construction-text">
+                Estamos trabajando para traerte la mejor experiencia de audios y cuentos.<br>
+                ¡Vuelve pronto para disfrutar de nuestra colección!
+            </p>
         </div>
 
         <a href="../index.html" class="back-link">← Volver a BYFFOREVER💗</a>
     </div>
 
     <script>
-        // Sistema de partículas mejorado
+        // Sistema de partículas simple
         const canvas = document.getElementById('particles-canvas');
         const ctx = canvas.getContext('2d');
         let particles = [];
@@ -677,17 +191,16 @@
 
         function initParticles() {
             particles = [];
-            const particleCount = Math.min(100, Math.floor(window.innerWidth / 10));
+            const particleCount = Math.min(80, Math.floor(window.innerWidth / 15));
             
             for (let i = 0; i < particleCount; i++) {
                 particles.push({
                     x: Math.random() * canvas.width,
                     y: Math.random() * canvas.height,
-                    vx: (Math.random() - 0.5) * 0.5,
-                    vy: (Math.random() - 0.5) * 0.5,
-                    size: Math.random() * 3 + 1,
-                    opacity: Math.random() * 0.5 + 0.2,
-                    color: Math.random() > 0.5 ? '#7e57c2' : '#ff69b4'
+                    vx: (Math.random() - 0.5) * 0.4,
+                    vy: (Math.random() - 0.5) * 0.4,
+                    size: Math.random() * 2 + 0.5,
+                    opacity: 0.3 + Math.random() * 0.4
                 });
             }
         }
@@ -696,7 +209,6 @@
             particles.forEach(p => {
                 p.x += p.vx;
                 p.y += p.vy;
-                
                 if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
                 if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
             });
@@ -708,10 +220,8 @@
             particles.forEach(p => {
                 ctx.beginPath();
                 ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-                ctx.fillStyle = p.color;
-                ctx.globalAlpha = p.opacity;
+                ctx.fillStyle = `rgba(179, 157, 219, ${p.opacity})`;
                 ctx.fill();
-                ctx.globalAlpha = 1;
             });
             
             // Draw connections
@@ -720,12 +230,14 @@
                     const dx = p1.x - p2.x;
                     const dy = p1.y - p2.y;
                     const distance = Math.sqrt(dx * dx + dy * dy);
+                    const maxDistance = 150;
                     
-                    if (distance < 120) {
+                    if (distance < maxDistance) {
+                        const opacity = (1 - distance / maxDistance) * 0.15;
                         ctx.beginPath();
                         ctx.moveTo(p1.x, p1.y);
                         ctx.lineTo(p2.x, p2.y);
-                        ctx.strokeStyle = `rgba(126, 87, 194, ${0.2 * (1 - distance/120)})`;
+                        ctx.strokeStyle = `rgba(126, 87, 194, ${opacity})`;
                         ctx.lineWidth = 1;
                         ctx.stroke();
                     }
@@ -747,233 +259,6 @@
         resizeCanvas();
         initParticles();
         animate();
-
-        // URL de tu API de Google Sheets
-        const GOOGLE_SHEETS_API_URL = 'https://script.google.com/macros/s/AKfycbw6VBOn8E_no1xUVpAUf6rVuEq7q67k8LI5ZX6NOoJ2HqPvOqx8irGvhCJf_-BY2Unl5g/exec';
-        
-        // Función para guardar en Google Sheets
-        async function guardarCuento(titulo, descripcion, audioUrl) {
-            try {
-                const response = await fetch(GOOGLE_SHEETS_API_URL, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        titulo: titulo,
-                        descripcion: descripcion,
-                        url: audioUrl
-                    })
-                });
-                return true;
-            } catch (error) {
-                console.error('Error al guardar en Google Sheets:', error);
-                showToast('Error al guardar. Verifica la configuración de Google Sheets.', true);
-                return false;
-            }
-        }
-
-        // Función para cargar cuentos desde Google Sheets
-        async function cargarCuentos() {
-            const grid = document.getElementById('cuentosGrid');
-            
-            // Limpiar ejemplo si existe
-            const ejemplo = grid.querySelector('.cuento-card');
-            if (ejemplo) ejemplo.remove();
-            
-            try {
-                // Intentar cargar desde Google Sheets
-                const response = await fetch(GOOGLE_SHEETS_API_URL);
-                const result = await response.json();
-                
-                if (result.status === 'success' && result.data && result.data.length > 0) {
-                    // Mostrar cuentos de Google Sheets
-                    result.data.forEach((cuento, index) => {
-                        if (cuento.url) { // Solo mostrar si tiene URL
-                            agregarCuentoAlGrid(cuento.titulo, cuento.descripcion, cuento.url, index);
-                        }
-                    });
-                    
-                    // Mostrar mensaje si no hay cuentos
-                    if (result.data.length === 0 || result.data.every(c => !c.url)) {
-                        mostrarMensajeVacio();
-                    }
-                } else {
-                    mostrarMensajeVacio();
-                }
-            } catch (error) {
-                console.error('Error al cargar desde Google Sheets:', error);
-                mostrarMensajeVacio();
-                showToast('Error al cargar cuentos. Verifica la configuración.', true);
-            }
-        }
-        
-        function mostrarMensajeVacio() {
-            const grid = document.getElementById('cuentosGrid');
-            const mensaje = document.createElement('div');
-            mensaje.style.cssText = 'text-align: center; color: #9e8ac4; padding: 40px; grid-column: 1 / -1;';
-            mensaje.innerHTML = `
-                <p style="font-size: 1.1em; margin-bottom: 10px;">📖 No hay cuentos todavía</p>
-                <p style="font-size: 0.9em;">¡Agrega tu primer cuento usando el formulario de arriba!</p>
-            `;
-            grid.appendChild(mensaje);
-        }
-
-        // Función para agregar un cuento al grid
-        function agregarCuentoAlGrid(titulo, descripcion, url, index = 0) {
-            const grid = document.getElementById('cuentosGrid');
-            
-            const cuentoCard = document.createElement('div');
-            cuentoCard.className = 'cuento-card';
-            cuentoCard.style.animationDelay = `${0.1 + (index * 0.1)}s`;
-            cuentoCard.dataset.index = index;
-            
-            const fileName = url.split('/').pop();
-            const encodedUrl = encodeURIComponent(url);
-            const encodedTitle = encodeURIComponent(titulo);
-            
-            cuentoCard.innerHTML = `
-                <div class="cuento-content">
-                    <div class="cuento-header">
-                        <h3 class="cuento-title">🎵 ${titulo}</h3>
-                        <button class="btn-delete" onclick="eliminarCuentoPorIndex(${index})" title="Eliminar cuento">
-                            <span>×</span>
-                        </button>
-                    </div>
-                    <p class="cuento-description">${descripcion || 'Sin descripción'}</p>
-                    <p class="cuento-file">📁 ${fileName}</p>
-                    <div class="cuento-actions">
-                        <a href="player.html?url=${encodedUrl}&title=${encodedTitle}" class="btn">▶️ Reproducir</a>
-                        <a href="${url}" download class="btn" style="background: linear-gradient(135deg, #4527a0 0%, #5e35b1 100%);">📥 Descargar</a>
-                    </div>
-                </div>
-            `;
-            
-            grid.insertBefore(cuentoCard, grid.firstChild);
-        }
-
-        // Función para mostrar toast
-        function showToast(message, isError = false) {
-            const toast = document.getElementById('toast');
-            toast.textContent = message;
-            toast.className = 'toast' + (isError ? ' error' : '');
-            toast.classList.add('show');
-            
-            setTimeout(() => {
-                toast.classList.remove('show');
-            }, 3000);
-        }
-        
-        // Función para mostrar/ocultar loading
-        function showLoading(show = true) {
-            const overlay = document.getElementById('loadingOverlay');
-            if (show) {
-                overlay.classList.add('active');
-            } else {
-                overlay.classList.remove('active');
-            }
-        }
-        
-        // Función para eliminar un cuento por índice
-        async function eliminarCuentoPorIndex(index) {
-            if (isNaN(index)) {
-                showToast('Error: Índice no válido', true);
-                return;
-            }
-            
-            // Confirmar eliminación
-            if (!confirm('¿Estás seguro de que quieres eliminar este cuento?')) {
-                return;
-            }
-            
-            showLoading(true);
-            
-            // Para eliminar en Google Sheets, necesitamos pasar el índice como parámetro
-            const deleteUrl = GOOGLE_SHEETS_API_URL + '?delete=' + index;
-            
-            try {
-                // Usamos fetch sin mode: 'no-cors' para poder leer la respuesta
-                const response = await fetch(deleteUrl);
-                const result = await response.json();
-                
-                if (result.status === 'success') {
-                    showLoading(false);
-                    showToast('Cuento eliminado exitosamente');
-                    setTimeout(() => {
-                        location.reload();
-                    }, 1000);
-                } else {
-                    showLoading(false);
-                    showToast('Error: ' + result.message, true);
-                }
-            } catch (error) {
-                console.error('Error al eliminar:', error);
-                showLoading(false);
-                showToast('Error al eliminar el cuento', true);
-            }
-        }
-
-        // Manejo del formulario
-        document.getElementById('uploadForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            const titulo = document.getElementById('titulo').value.trim();
-            const descripcion = document.getElementById('descripcion').value.trim();
-            const audioUrl = document.getElementById('audioLink').value.trim();
-            
-            if (!titulo) {
-                showToast('Por favor ingresa un título.', true);
-                return;
-            }
-            
-            if (!audioUrl) {
-                showToast('Por favor ingresa una URL de audio.', true);
-                return;
-            }
-            
-            // Validar URL
-            try {
-                new URL(audioUrl);
-            } catch {
-                showToast('Por favor ingresa una URL válida.', true);
-                return;
-            }
-            
-            showLoading(true);
-            
-            // Simular un pequeño retraso para la animación de carga
-            setTimeout(() => {
-                guardarCuento(titulo, descripcion, audioUrl);
-                
-                const cuentos = JSON.parse(localStorage.getItem('cuentos')) || [];
-                agregarCuentoAlGrid(titulo, descripcion, audioUrl, cuentos.length - 1);
-                
-                this.reset();
-                showLoading(false);
-                showToast('¡Cuento agregado exitosamente!');
-                
-                // Efecto de confirmación en el botón
-                const btn = this.querySelector('button[type="submit"]');
-                const originalText = btn.textContent;
-                const originalBackground = btn.style.background;
-                
-                btn.textContent = '✓ Agregado';
-                btn.style.background = 'linear-gradient(135deg, #00c853 0%, #009624 100%)';
-                btn.style.transform = 'scale(1.05)';
-                btn.style.boxShadow = '0 8px 25px rgba(0, 200, 83, 0.4)';
-                
-                setTimeout(() => {
-                    btn.textContent = originalText;
-                    btn.style.background = originalBackground;
-                    btn.style.transform = '';
-                    btn.style.boxShadow = '';
-                }, 1800);
-            }, 600);
-        });
-
-        // Cargar cuentos al iniciar
-        document.addEventListener('DOMContentLoaded', cargarCuentos);
     </script>
 </body>
 </html>
