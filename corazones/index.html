@@ -83,31 +83,6 @@
             border-color: rgba(255, 105, 180, 0.8);
         }
 
-        /* Botón de volver */
-        .back-link {
-            position: absolute;
-            top: 18px;
-            left: 18px;
-            z-index: 5;
-            color: #e1bee7;
-            text-decoration: none;
-            padding: 12px 24px;
-            border: 2px solid rgba(139, 0, 255, 0.4);
-            border-radius: 25px;
-            transition: all 0.3s;
-            background: rgba(26, 10, 46, 0.7);
-            backdrop-filter: blur(4px);
-            font-size: 0.9em;
-            letter-spacing: 1px;
-        }
-
-        .back-link:hover {
-            background: rgba(138, 43, 226, 0.5);
-            border-color: rgba(255, 105, 180, 0.8);
-            transform: scale(1.05);
-            box-shadow: 0 0 20px rgba(138, 43, 226, 0.5);
-        }
-
         /* Contenedor de controles */
         .controls {
             position: absolute;
@@ -141,8 +116,6 @@
 <body>
 
     <canvas id="heart"></canvas>
-
-    <a href="../index.html" class="back-link">← Volver a BYFFOREVER💗</a>
 
     <div id="centerText">Mi vida, mi razón</div>
 
@@ -324,6 +297,7 @@
             // Forzar carga y volumen razonable
             try { audio.load(); } catch(e){}
             audio.volume = 0.7;
+            audio.muted = false; // Asegurar que no esté muteado
             ensureStartOffset(audio);
             const playPromise = audio.play();
             if (playPromise !== undefined) {
