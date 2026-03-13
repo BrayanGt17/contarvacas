@@ -74,82 +74,6 @@
             animation: fadeIn 1s ease-out 0.3s both;
         }
 
-        /* Sección de agregar cuento */
-        .add-section {
-            background: linear-gradient(145deg, rgba(40, 40, 80, 0.95), rgba(20, 20, 50, 0.98));
-            border: 2px solid rgba(126, 87, 194, 0.4);
-            border-radius: 30px;
-            padding: 40px;
-            margin: 20px 0;
-            width: 100%;
-            max-width: 600px;
-            box-shadow: 
-                0 25px 80px rgba(0, 0, 0, 0.6),
-                0 0 50px rgba(126, 87, 194, 0.2),
-                inset 0 1px 0 rgba(255, 255, 255, 0.1);
-            animation: slideUp 0.8s cubic-bezier(0.23, 1, 0.32, 1) 0.2s both;
-        }
-
-        .add-section h2 {
-            color: var(--light);
-            margin-bottom: 25px;
-            text-align: center;
-            font-size: 1.8em;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            color: #b39ddb;
-            font-size: 0.95em;
-        }
-
-        .form-group input,
-        .form-group textarea {
-            width: 100%;
-            padding: 12px 18px;
-            border: 2px solid rgba(126, 87, 194, 0.4);
-            border-radius: 15px;
-            background: rgba(10, 10, 30, 0.8);
-            color: #e1bee7;
-            font-family: inherit;
-            font-size: 1em;
-            transition: all 0.3s;
-        }
-
-        .form-group input:focus,
-        .form-group textarea:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 15px rgba(255, 105, 180, 0.2);
-        }
-
-        .btn {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            color: white;
-            padding: 14px 35px;
-            border: none;
-            border-radius: 25px;
-            cursor: pointer;
-            font-size: 1em;
-            font-weight: 600;
-            letter-spacing: 1px;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            display: inline-block;
-            text-decoration: none;
-            box-shadow: 0 5px 20px rgba(255, 105, 180, 0.4);
-            width: 100%;
-        }
-
-        .btn:hover {
-            transform: translateY(-3px) scale(1.02);
-            box-shadow: 0 10px 30px rgba(255, 105, 180, 0.6);
-        }
-
         /* Lista de cuentos */
         .cuentos-list {
             width: 100%;
@@ -202,10 +126,24 @@
             gap: 10px;
         }
 
-        .cuento-actions .btn {
-            padding: 10px 20px;
-            font-size: 0.85em;
-            width: auto;
+        .btn {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9em;
+            font-weight: 600;
+            letter-spacing: 1px;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 5px 20px rgba(255, 105, 180, 0.4);
         }
 
         /* Back link */
@@ -228,38 +166,9 @@
             box-shadow: 0 5px 20px rgba(126, 87, 194, 0.5);
         }
 
-        /* Toast notification */
-        .toast {
-            position: fixed;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%) translateY(100px);
-            background: linear-gradient(135deg, rgba(0, 200, 83, 0.95), rgba(0, 150, 36, 0.95));
-            color: white;
-            padding: 15px 30px;
-            border-radius: 30px;
-            font-weight: 500;
-            box-shadow: 0 10px 30px rgba(0, 200, 83, 0.3);
-            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            z-index: 9999;
-        }
-
-        .toast.show {
-            transform: translateX(-50%) translateY(0);
-        }
-
-        .toast.error {
-            background: linear-gradient(135deg, rgba(255, 71, 87, 0.95), rgba(198, 40, 40, 0.95));
-        }
-
         /* Animations */
         @keyframes slideDown {
             from { opacity: 0; transform: translateY(-30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(30px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
@@ -275,7 +184,6 @@
 
         @media (max-width: 768px) {
             .logo { font-size: 2em; }
-            .add-section { padding: 25px; }
             .cuento-item { flex-direction: column; text-align: center; }
             .cuento-actions { justify-content: center; }
         }
@@ -290,32 +198,6 @@
             <p class="tagline">🎵 Colección de Cuentos y Audios 🎵</p>
         </header>
 
-        <!-- Sección para agregar cuentos -->
-        <div class="add-section">
-            <h2>➕ Agregar Nuevo Cuento</h2>
-            <form id="addCuentoForm">
-                <div class="form-group">
-                    <label for="titulo">Título del cuento</label>
-                    <input type="text" id="titulo" placeholder="Ej: La liebre y la tortuga" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="descripcion">Descripción</label>
-                    <textarea id="descripcion" placeholder="Breve descripción del cuento..."></textarea>
-                </div>
-                
-                <div class="form-group">
-                    <label for="audioUrl">URL del audio (jsDelivr)</label>
-                    <input type="url" id="audioUrl" placeholder="https://cdn.jsdelivr.net/gh/..." required>
-                    <small style="color: #9e8ac4; font-size: 0.8em; display: block; margin-top: 8px;">
-                        💡 Sube tu audio a la carpeta azafran/cuentos/ y pega la URL de jsDelivr
-                    </small>
-                </div>
-                
-                <button type="submit" class="btn">Agregar Cuento</button>
-            </form>
-        </div>
-
         <!-- Lista de cuentos -->
         <div class="cuentos-list">
             <h3>📚 Tus Cuentos</h3>
@@ -326,8 +208,6 @@
 
         <a href="../index.html" class="back-link">← Volver a BYFFOREVER💗</a>
     </div>
-
-    <div class="toast" id="toast"></div>
 
     <script>
         // Sistema de partículas
@@ -411,26 +291,26 @@
         initParticles();
         animate();
 
-        // Lógica de la aplicación de cuentos
-        let cuentos = JSON.parse(localStorage.getItem('cuentos')) || [];
-
-        function showToast(message, isError = false) {
-            const toast = document.getElementById('toast');
-            toast.textContent = message;
-            toast.className = 'toast' + (isError ? ' error' : '');
-            toast.classList.add('show');
-            
-            setTimeout(() => {
-                toast.classList.remove('show');
-            }, 3000);
-        }
+        // Cuentos hardcoded para reproducción
+        const cuentos = [
+            {
+                titulo: "Cuento 1",
+                descripcion: "Primer cuento de la colección",
+                url: "https://cdn.jsdelivr.net/gh/BrayanGt17/contarvacas@main/azafran/cuentos/cuento1.mp3"
+            },
+            {
+                titulo: "Cuento 2",
+                descripcion: "Segundo cuento de la colección",
+                url: "https://cdn.jsdelivr.net/gh/BrayanGt17/contarvacas@main/azafran/cuentos/cuento2.mp3"
+            }
+        ];
 
         function renderCuentos() {
             const container = document.getElementById('cuentosContainer');
             container.innerHTML = '';
             
             if (cuentos.length === 0) {
-                container.innerHTML = '<p style="text-align: center; color: #9e8ac4; padding: 30px;">No hay cuentos todavía. ¡Agrega tu primer cuento!</p>';
+                container.innerHTML = '<p style="text-align: center; color: #9e8ac4; padding: 30px;">No hay cuentos disponibles.</p>';
                 return;
             }
             
@@ -440,60 +320,15 @@
                 item.innerHTML = `
                     <div class="cuento-info">
                         <div class="cuento-title">${cuento.titulo}</div>
-                        <div class="cuento-description">${cuento.descripcion || 'Sin descripción'}</div>
+                        <div class="cuento-description">${cuento.descripcion || ''}</div>
                     </div>
                     <div class="cuento-actions">
                         <a href="${cuento.url}" class="btn" target="_blank">▶️ Escuchar</a>
-                        <button class="btn" style="background: linear-gradient(135deg, #ff4757 0%, #c62828 100%);" onclick="eliminarCuento(${index})">🗑️</button>
                     </div>
                 `;
                 container.appendChild(item);
             });
         }
-
-        function eliminarCuento(index) {
-            if (confirm('¿Estás seguro de que quieres eliminar este cuento?')) {
-                cuentos.splice(index, 1);
-                localStorage.setItem('cuentos', JSON.stringify(cuentos));
-                renderCuentos();
-                showToast('Cuento eliminado');
-            }
-        }
-
-        document.getElementById('addCuentoForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const titulo = document.getElementById('titulo').value.trim();
-            const descripcion = document.getElementById('descripcion').value.trim();
-            const audioUrl = document.getElementById('audioUrl').value.trim();
-            
-            if (!titulo || !audioUrl) {
-                showToast('Por favor completa todos los campos requeridos', true);
-                return;
-            }
-            
-            // Validar URL
-            try {
-                new URL(audioUrl);
-            } catch {
-                showToast('Por favor ingresa una URL válida', true);
-                return;
-            }
-            
-            // Agregar cuento
-            cuentos.push({
-                titulo: titulo,
-                descripcion: descripcion,
-                url: audioUrl
-            });
-            
-            localStorage.setItem('cuentos', JSON.stringify(cuentos));
-            renderCuentos();
-            
-            // Limpiar formulario
-            this.reset();
-            showToast('¡Cuento agregado exitosamente!');
-        });
 
         // Cargar cuentos al iniciar
         renderCuentos();
