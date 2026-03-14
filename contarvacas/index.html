@@ -142,15 +142,52 @@
         }
         
         .instructions {
-            margin-top: 20px;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
             text-align: center;
-            color: #b39ddb;
-            padding: 0 20px;
-            background: rgba(30, 30, 60, 0.7);
-            border-radius: 15px;
-            padding: 15px;
-            border: 1px solid #7e57c2;
-            max-width: 80%;
+            color: #e1bee7;
+            background: rgba(30, 30, 60, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            border: 2px solid #7e57c2;
+            max-width: 90%;
+            width: 400px;
+            z-index: 1000;
+            box-shadow: 0 0 30px rgba(126, 87, 194, 0.5);
+            display: none;
+        }
+        
+        .instructions.show {
+            display: block;
+        }
+        
+        .instructions h2 {
+            color: #ff69b4;
+            margin-bottom: 15px;
+            text-shadow: 0 0 10px rgba(255, 105, 180, 0.5);
+        }
+        
+        .instructions p {
+            margin: 10px 0;
+            font-size: 1.1em;
+        }
+        
+        .instructions .close-btn {
+            margin-top: 20px;
+            padding: 10px 30px;
+            background: linear-gradient(135deg, #7e57c2, #ff69b4);
+            border: none;
+            border-radius: 25px;
+            color: white;
+            font-size: 1em;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        .instructions .close-btn:hover {
+            transform: scale(1.05);
         }
         
         .level-selector {
@@ -476,10 +513,12 @@
         <div class="sound-control" id="soundControl">🔊 Sonido ON</div>
     </div>
     
-    <div class="instructions">
-        <p>Toca las VACAS cerca de la valla para que salten al corral.</p>
-        <p>Los animales aparecerán automáticamente según la dificultad.</p>
-        <p>¡Cuéntalas todas para dormir! 💤</p>
+    <div class="instructions" id="instructions">
+        <h2>📖 Cómo Jugar</h2>
+        <p>🐄 Toca las VACAS cerca de la valla para que salten al corral.</p>
+        <p>🎯 Los animales aparecerán automáticamente según la dificultad.</p>
+        <p>💤 ¡Cuéntalas todas para dormir!</p>
+        <button class="close-btn" onclick="closeInstructions()">¡Entendido!</button>
     </div>
     
     <div class="level-selector">
@@ -1167,11 +1206,19 @@ function createNameStars() {
             resizeCanvas();
         });
         
+        // Función para cerrar las instrucciones
+        function closeInstructions() {
+            document.getElementById('instructions').classList.remove('show');
+        }
+        
         // Inicializar juego
         createStars();
         createNameStars();
         initParticles();
         restartGame();
+        
+        // Mostrar instrucciones al inicio
+        document.getElementById('instructions').classList.add('show');
         
         // Iniciar mensajes superiores después de un pequeño retraso
         setTimeout(() => {
