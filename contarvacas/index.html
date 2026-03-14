@@ -193,40 +193,80 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background: rgba(67, 55, 111, 0.95);
+            background: linear-gradient(145deg, rgba(67, 55, 111, 0.98), rgba(40, 30, 80, 0.98));
             color: white;
-            padding: 30px;
-            border-radius: 20px;
-            font-size: 2em;
+            padding: 40px 50px;
+            border-radius: 30px;
+            font-size: 2.2em;
             text-align: center;
-            box-shadow: 0 0 30px #7e57c2;
+            box-shadow: 
+                0 0 50px rgba(126, 87, 194, 0.6),
+                0 20px 60px rgba(0, 0, 0, 0.5);
             z-index: 100;
             display: none;
-            animation: pulse 2s infinite;
-            border: 2px solid #b39ddb;
+            border: 3px solid rgba(255, 105, 180, 0.5);
+            animation: popInMessage 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            backdrop-filter: blur(10px);
+            min-width: 300px;
         }
         
         .wrong-message {
-            background: rgba(111, 55, 55, 0.95);
-            box-shadow: 0 0 30px #c57e7e;
-            border: 2px solid #ddb3b3;
+            background: linear-gradient(145deg, rgba(111, 55, 55, 0.98), rgba(80, 30, 30, 0.98));
+            box-shadow: 
+                0 0 50px rgba(197, 126, 126, 0.6),
+                0 20px 60px rgba(0, 0, 0, 0.5);
+            border: 3px solid rgba(221, 179, 179, 0.5);
         }
         
-        @keyframes pulse {
-            0% { transform: translate(-50%, -50%) scale(1); }
-            50% { transform: translate(-50%, -50%) scale(1.1); }
-            100% { transform: translate(-50%, -50%) scale(1); }
+        .message-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+            animation: bounce 1s infinite;
+        }
+        
+        @keyframes popInMessage {
+            0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+            70% { transform: translate(-50%, -50%) scale(1.1); }
+            100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
         }
         
         .btn {
             margin-top: 20px;
-            padding: 10px 20px;
-            background: #4527a0;
+            padding: 15px 35px;
+            background: linear-gradient(135deg, #ff69b4 0%, #7e57c2 100%);
             color: white;
             border: none;
-            border-radius: 20px;
+            border-radius: 25px;
             cursor: pointer;
-            font-size: 0.8em;
+            font-size: 0.9em;
+            font-weight: bold;
+            letter-spacing: 1px;
+            box-shadow: 0 5px 20px rgba(255, 105, 180, 0.4);
+            transition: all 0.3s ease;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 10px 30px rgba(255, 105, 180, 0.6);
+        }
+        
+        .btn:active {
+            transform: translateY(-1px) scale(1.02);
+        }
+        
+        .wrong-message .btn {
+            background: linear-gradient(135deg, #ff6b6b 0%, #c0392b 100%);
+            box-shadow: 0 5px 20px rgba(255, 107, 107, 0.4);
+        }
+        
+        .wrong-message .btn:hover {
+            box-shadow: 0 10px 30px rgba(255, 107, 107, 0.6);
+        }
             transition: all 0.3s;
             border: 1px solid #7e57c2;
         }
@@ -385,13 +425,17 @@
     </div>
     
     <div class="message" id="sleepMessage">
-        <div>¡Ya te duermes mi vida! 😴💜</div>
-        <button class="btn" id="restartBtn">Contar más vacas</button>
+        <div class="message-icon">😴💤</div>
+        <div>¡Ya te duermes mi vida! 💜</div>
+        <div style="font-size: 0.6em; margin-top: 15px; opacity: 0.8;">Has contado 50 vacas</div>
+        <button class="btn" id="restartBtn">🔄 Contar más vacas</button>
     </div>
     
     <div class="message wrong-message" id="wrongAnimalMessage">
-        <div>¡Tocaste un animal equivocado!</div>
-        <button class="btn" id="continueBtn">Continuar</button>
+        <div class="message-icon">😢</div>
+        <div>¡Animal equivocado!</div>
+        <div style="font-size: 0.6em; margin-top: 15px; opacity: 0.8;">Solo cuenta las VACAS</div>
+        <button class="btn" id="continueBtn">➡️ Continuar</button>
     </div>
 
     <audio id="cowSound" preload="auto">
@@ -809,10 +853,13 @@ function createNameStars() {
                 const animalX = parseInt(animal.style.left);
                 const animalY = parseInt(animal.style.top);
                 
+                // Reproducir sonido según el tipo de animal
                 if (this.dataset.isTarget === 'true') {
+                    playCowSound();
                     // Mover al corral
                     moveToBarn(animal, animalX, animalY);
                 } else {
+                    playWrongSound();
                     wrongAnimalSelected();
                 }
             });
