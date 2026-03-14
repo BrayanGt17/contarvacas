@@ -198,7 +198,8 @@
             border: 2px solid rgba(255, 105, 180, 0.5);
             background: linear-gradient(145deg, rgba(40, 40, 80, 0.9), rgba(20, 20, 50, 0.95));
             color: white;
-            font-size: 1.5em;
+            font-size: 1em;
+            font-weight: bold;
             cursor: pointer;
             transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             display: flex;
@@ -207,22 +208,13 @@
             box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
         }
 
-        .control-btn:hover {
-            transform: scale(1.1);
-            border-color: var(--primary);
-            box-shadow: 0 0 25px rgba(255, 105, 180, 0.4);
-        }
-
-        .control-btn:active {
-            transform: scale(0.95);
-        }
-
         .control-btn.play {
             width: 80px;
             height: 80px;
-            font-size: 2em;
+            font-size: 1.2em;
             background: linear-gradient(145deg, var(--primary), var(--secondary));
             border-color: var(--primary);
+        }
         }
 
         .control-btn.play:hover {
@@ -390,6 +382,12 @@
             padding: 0 10px;
         }
 
+        .cuento-fecha {
+            color: #7e57c2;
+            font-size: 0.8em;
+            margin-top: 5px;
+        }
+
         /* Back link */
         .back-link {
             display: inline-block;
@@ -488,9 +486,9 @@
                     </div>
 
                     <div class="controls">
-                        <button class="control-btn" id="prevBtn">⏮</button>
+                        <button class="control-btn" id="prevBtn">◀</button>
                         <button class="control-btn play" id="playBtn">▶</button>
-                        <button class="control-btn" id="nextBtn">⏭</button>
+                        <button class="control-btn" id="nextBtn">▶</button>
                     </div>
 
                     <div class="progress-container" id="progressContainer">
@@ -615,14 +613,16 @@
 
         const cuentos = [
             {
-                titulo: "Estrellita De Oro⭐️",
+                titulo: "Estrellita De Oro",
                 descripcion: "Susurrado JAJA",
+                fecha: "14/03/2026",
                 url: "https://cdn.jsdelivr.net/gh/BrayanGt17/contarvacas@main/azafran/cuentos/Cuento1.m4a",
                 image: "https://i.ibb.co/HTcwDqCf/Gemini-Generated-Image-w37ipyw37ipyw37i.png"
             },
             {
-                titulo: "El Principe Rana🐸",
-                descripcion: "+2 Vasitos de agua🤝",
+                titulo: "El Principe Rana",
+                descripcion: "+2 Vasitos de agua",
+                fecha: "14/03/2026",
                 url: "https://cdn.jsdelivr.net/gh/BrayanGt17/contarvacas@main/azafran/cuentos/El%20Principe%20Rana.m4a",
                 image: "https://i.ibb.co/HTcwDqCf/Gemini-Generated-Image-w37ipyw37ipyw37i.png"
             }
@@ -653,6 +653,7 @@
                     <div class="cuento-info">
                         <div class="cuento-title">${cuento.titulo}</div>
                         <div class="cuento-description">${cuento.descripcion || ''}</div>
+                        <div class="cuento-fecha">📅 ${cuento.fecha || ''}</div>
                     </div>
                 `;
                 item.addEventListener('click', () => loadTrack(index));
@@ -691,7 +692,7 @@
                 visualizer.style.opacity = '0.3';
             } else {
                 audio.play();
-                playBtn.textContent = '⏸';
+                playBtn.textContent = '❚❚';
                 visualizer.style.opacity = '1';
             }
             isPlaying = !isPlaying;
