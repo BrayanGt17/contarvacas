@@ -442,7 +442,7 @@
     <div class="header">
         <div class="record" id="record">🏆 Récord: 0</div>
         <h1>¡Cuenta Vacas para Dormir!</h1>
-        <div class="counter" id="counter">Vacas en el corral: 0</div>
+        <div class="counter" id="counter">Vacas: 0</div>
         <div class="message-popup" id="messagePopup"></div>
     </div>
     
@@ -978,7 +978,7 @@ function createNameStars() {
             setTimeout(() => {
                 if (animal.dataset.isTarget === 'true') {
                     cowsInBarn++;
-                    counter.textContent = `Vacas en el corral: ${cowsInBarn}`;
+                    counter.textContent = `Vacas: ${cowsInBarn}`;
                     
                     // Actualizar récord
                     if (cowsInBarn > record) {
