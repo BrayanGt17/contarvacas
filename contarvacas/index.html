@@ -26,6 +26,14 @@
             text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
         }
         
+        .record {
+            font-size: 1.3em;
+            color: #ffd700;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.6);
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        
         .game-container {
             position: relative;
             width: 100%;
@@ -432,6 +440,7 @@
 <body>
     <canvas id="particleCanvas"></canvas>
     <div class="header">
+        <div class="record" id="record">🏆 Récord: 0</div>
         <h1>¡Cuenta Vacas para Dormir!</h1>
         <div class="counter" id="counter">Vacas en el corral: 0</div>
         <div class="message-popup" id="messagePopup"></div>
@@ -491,8 +500,10 @@
         const wrongSound = document.getElementById('wrongSound');
         const messagePopup = document.getElementById('messagePopup');
         const topMessages = document.getElementById('topMessages');
+        const recordDisplay = document.getElementById('record');
         
         let cowsInBarn = 0;
+        let record = 0;
         let gameActive = true;
         
         // Mensajes superiores que aparecerán cada 20 y 30 segundos (10 mensajes en total)
@@ -968,6 +979,12 @@ function createNameStars() {
                 if (animal.dataset.isTarget === 'true') {
                     cowsInBarn++;
                     counter.textContent = `Vacas en el corral: ${cowsInBarn}`;
+                    
+                    // Actualizar récord
+                    if (cowsInBarn > record) {
+                        record = cowsInBarn;
+                        recordDisplay.textContent = `🏆 Récord: ${record}`;
+                    }
                     
                     // Verificar si es múltiplo de 10 (excepto 50)
                     if (cowsInBarn % 10 === 0 && cowsInBarn < 50) {
