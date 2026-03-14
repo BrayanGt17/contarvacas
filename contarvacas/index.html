@@ -165,20 +165,25 @@
             z-index: 50;
             pointer-events: none;
             overflow: hidden;
-            height: 35px;
+            height: 40px;
             margin: 0 auto;
+            background: linear-gradient(to bottom, rgba(45, 27, 78, 0.95), rgba(45, 27, 78, 0.7));
+            border-left: 2px solid rgba(126, 87, 194, 0.5);
+            border-right: 2px solid rgba(126, 87, 194, 0.5);
+            box-sizing: border-box;
         }
         
         .top-message {
             position: absolute;
             left: 100%;
-            top: 8px;
+            top: 10px;
             white-space: nowrap;
-            font-size: 1em;
-            color: #e1bee7;
+            font-size: 1.1em;
+            color: #fff;
             animation: slideLeft 45s linear forwards;
-            text-shadow: 0 0 15px rgba(226, 190, 231, 0.6);
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 0 0 20px rgba(126, 87, 194, 0.8);
             font-weight: bold;
+            padding: 5px 20px;
         }
         
         @keyframes slideLeft {
