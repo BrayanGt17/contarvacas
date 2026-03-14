@@ -796,6 +796,10 @@ function createNameStars() {
             y: gameContainer.offsetHeight * 0.7 - 30
         };
         
+        // Variable para controlar la posición de línea
+        let linePosition = 0;
+        const lineSpacing = 80; // Espacio entre líneas
+        
         // Crear animal
         function createAnimal() {
             if (!gameActive) return;
@@ -817,34 +821,35 @@ function createNameStars() {
             animal.dataset.type = animalData.type;
             animal.dataset.isTarget = animalData.isTarget;
             
-            // Los animales aparecen desde arriba del cielo y caen al pasto
-            const x = Math.random() * (gameContainer.offsetWidth - 100);
+            // Posicionar en línea ordenada (ciclo de 5 líneas)
+            const lineIndex = linePosition % 5;
+            const baseY = -80 - (lineIndex * lineSpacing);
+            
+            // Posición X aleatoria en el ancho del contenedor
+            const x = 50 + Math.random() * (gameContainer.offsetWidth - 150);
             
             animal.style.left = `${x}px`;
-            animal.style.top = '-80px';
+            animal.style.top = `${baseY}px`;
             
-            // Scroll vertical de arriba hacia abajo (usando velocidad del nivel actual)
+            // Incrementar posición de línea para el siguiente animal
+            linePosition++;
+            
+            // Velocidad de caída
             const baseSpeed = levels[currentLevel].animalSpeed;
-            const scrollDuration = baseSpeed + Math.random() * (baseSpeed * 0.6); // Variación aleatoria
+            const scrollDuration = baseSpeed;
             animal.style.transition = `top ${scrollDuration}ms linear`;
             
+            // Mover hacia abajo sin detenerse en el pasto
             setTimeout(() => {
-                animal.style.top = `${gameContainer.offsetHeight + 80}px`;
+                animal.style.top = `${gameContainer.offsetHeight + 100}px`;
             }, 100);
             
-            // Después de pasar, movimiento aleatorio en el pasto
+            // Eliminar animal después de salir de la pantalla
             setTimeout(() => {
-                if (animal.parentNode && gameActive) {
-                    animal.style.transition = '';
-                    const containerHeight = gameContainer.offsetHeight;
-                    animal.style.top = `${containerHeight * 0.7 - 20 + Math.random() * 20}px`;
-                    setTimeout(() => {
-                        if (animal.parentNode && gameActive) {
-                            moveRandomly(animal);
-                        }
-                    }, 500);
+                if (animal.parentNode) {
+                    animal.remove();
                 }
-            }, scrollDuration);
+            }, scrollDuration + 500);
             
             animal.addEventListener('click', function(e) {
                 e.stopPropagation();
@@ -868,37 +873,7 @@ function createNameStars() {
             return animal;
         }
         
-        // Mover animal aleatoriamente en el pasto
-        function moveRandomly(animal) {
-            if (!animal.parentNode || !gameActive) return;
-            
-            const currentX = parseInt(animal.style.left);
-            const currentY = parseInt(animal.style.top);
-            
-            const targetX = Math.max(0, Math.min(
-                gameContainer.offsetWidth - 100, 
-                currentX + (Math.random() * 200 - 100)
-            ));
-            
-            const targetY = Math.max(
-                gameContainer.offsetHeight * 0.7 - 40, 
-                Math.min(
-                    gameContainer.offsetHeight * 0.7, 
-                    currentY + (Math.random() * 40 - 20)
-                )
-            );
-            
-            const duration = 2000 + Math.random() * 3000;
-            
-            animal.style.transition = `left ${duration}ms ease-in-out, top ${duration}ms ease-in-out`;
-            animal.style.left = `${targetX}px`;
-            animal.style.top = `${targetY}px`;
-            
-            if (targetX < currentX) {
-                animal.classList.add('moving-left');
-            } else {
-                animal.classList.remove('moving-left');
-            }
+
             
             setTimeout(() => {
                 if (animal.parentNode && gameActive) {
