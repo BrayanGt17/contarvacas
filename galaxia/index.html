@@ -31,9 +31,6 @@
     .pill{position:fixed;top:10px;left:50%;transform:translateX(-50%);padding:6px 12px;border-radius:999px;
           background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);color:#fff;font:12px -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial}
     .error{position:fixed;inset:auto 10px 70px 10px;background:#260015;color:#ffd9f7;border:1px solid #ff8ae5;border-radius:10px;padding:10px;font:12px system-ui;display:none;}
-    .center-name{position:fixed;top:40%;left:50%;transform:translate(-50%,-50%);font-size:2.5em;font-weight:bold;
-                 color:#fff;text-shadow:0 0 20px #ff69b4,0 0 40px #7e57c2,0 0 60px #ff69b4;pointer-events:none;z-index:10;
-                 font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial;white-space:nowrap}
   </style>
   <!-- Three.js legacy non-module build + OrbitControls (r128, super estable) -->
   <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
@@ -42,7 +39,6 @@
 <body>
 <canvas id="galaxy-canvas"></canvas>
 <div class="pill">Te Amo Muchote Mis Ojitos Brillantes💛</div>
-<div class="center-name">Mi Bebe 💛</div>
 <div class="attribution">Base: tlanex · Adaptación para BYF 💫</div>
 <div id="err" class="error"></div>
 
@@ -138,6 +134,13 @@ const galaxy = new THREE.Group(); scene.add(galaxy);
 const phrases = ["Pinchecha ✨", " Hermosa 💛", "Mi Bebe", "Mi Cielito 🌌", "Hermosota ✨", "Mi Infinita ♾️", "Mi Todo", "Me Encantas 🥰", " Perla 💫", "Te Amo💛", "Mi Canción Favorita 🎶", "Unica 😊", "Mi Reina 👑", "Mi Amor", "Mi Mundo", "Mi Luz 🌠", "Mi Niña", "Mi Tesoro💛", "Mi Paz", "Mi Eterna", "Mi Sueño", "Mi Pensamiento Favorito", "Mi Bombom", "Mi Diosa", "Te Amo Infinitamente ♾️"];
 const phraseCount = Math.max(phrases.length * 6, 180);
 const arms = 5, radius = 82, maxH = 22;
+
+// Nombre central como sprite 3D
+const centerNameTex = makeTextTexture("Mi Bebe 💛", 64);
+const centerNameSpr = new THREE.Sprite(new THREE.SpriteMaterial({ map: centerNameTex, transparent: true, depthWrite: false }));
+centerNameSpr.position.set(0, 8, 0);
+centerNameSpr.scale.set(35, 4, 1);
+galaxy.add(centerNameSpr);
 
 function makeTextTexture(text, size=48){
   const c=document.createElement('canvas'); c.width=1024; c.height=128;
