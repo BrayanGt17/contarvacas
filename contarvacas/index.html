@@ -85,6 +85,36 @@
             z-index: 10;
         }
         
+        .message-popup {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(135deg, #ff69b4 0%, #7e57c2 100%);
+            padding: 20px 40px;
+            border-radius: 25px;
+            font-size: 1.5em;
+            color: white;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            z-index: 100;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            text-align: center;
+            max-width: 80%;
+        }
+        
+        .message-popup.show {
+            opacity: 1;
+            animation: popIn 0.5s ease;
+        }
+        
+        @keyframes popIn {
+            0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+            50% { transform: translate(-50%, -50%) scale(1.1); }
+            100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+        }
+        
         .instructions {
             margin-top: 20px;
             text-align: center;
@@ -330,6 +360,7 @@
     <div class="header">
         <h1>¡Cuenta Vacas para Dormir!</h1>
         <div class="counter" id="counter">Vacas en el corral: 0</div>
+        <div class="message-popup" id="messagePopup"></div>
     </div>
     
     <div class="game-container" id="gameContainer">
@@ -385,9 +416,19 @@
         const ambientSound = document.getElementById('ambientSound');
         const cowSound = document.getElementById('cowSound');
         const wrongSound = document.getElementById('wrongSound');
+        const messagePopup = document.getElementById('messagePopup');
         
         let cowsInBarn = 0;
         let gameActive = true;
+        
+        // Mensajes que aparecerán cada 10 vacas
+        const milestoneMessages = [
+            "¡10 vacas! ¡Vas muy bien! 🐮",
+            "¡20 vacas! ¡Sigue así! 🌟",
+            "¡30 vacas! ¡Casi mitad de camino! 🌙",
+            "¡40 vacas! ¡Ya casi terminas! 💫",
+            "¡45 vacas! ¡Casi dormimos! 😴"
+        ];
         
         // Configuración de niveles
         const levels = {
@@ -402,6 +443,43 @@
         
         // Timer para generación automática de animales
         let spawnInterval = null;
+        
+        // Función para mostrar mensaje popup
+        function showMessage(message) {
+            messagePopup.textContent = message;
+            messagePopup.classList.add('show');
+            
+            // Sonido de mensaje
+            playMessageSound();
+            
+            setTimeout(() => {
+                messagePopup.classList.remove('show');
+            }, 2000);
+        }
+        
+        // Sonido para mensajes
+        function playMessageSound() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(600, audioCtx.currentTime);
+            osc.frequency.setValueAtTime(800, audioCtx.currentTime + 0.1);
+            osc.frequency.setValueAtTime(1000, audioCtx.currentTime + 0.2);
+            
+            gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+            gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.3);
+            
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.3);
+        }
         
         function playCowSound() {
             if (!audioCtx) {
@@ -804,6 +882,14 @@ function createNameStars() {
                 if (animal.dataset.isTarget === 'true') {
                     cowsInBarn++;
                     counter.textContent = `Vacas en el corral: ${cowsInBarn}`;
+                    
+                    // Verificar si es múltiplo de 10 (excepto 50)
+                    if (cowsInBarn % 10 === 0 && cowsInBarn < 50) {
+                        const messageIndex = Math.floor(cowsInBarn / 10) - 1;
+                        if (messageIndex < milestoneMessages.length) {
+                            showMessage(milestoneMessages[messageIndex]);
+                        }
+                    }
                     
                     if (cowsInBarn === 50) {
                         gameActive = false;
