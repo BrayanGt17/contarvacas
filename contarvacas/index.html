@@ -167,10 +167,6 @@
             overflow: hidden;
             height: 40px;
             margin: 0 auto;
-            background: linear-gradient(to bottom, rgba(45, 27, 78, 0.95), rgba(45, 27, 78, 0.7));
-            border-left: 2px solid rgba(126, 87, 194, 0.5);
-            border-right: 2px solid rgba(126, 87, 194, 0.5);
-            box-sizing: border-box;
         }
         
         .top-message {
@@ -536,8 +532,8 @@
         }
         
         // Iniciar mensajes superiores
-        // Secuencia de tiempos: 20, 30, 20, 30, 20, 30, 20, 30, 20, 30 segundos
-        const messageTimes = [20000, 30000, 20000, 30000, 20000, 30000, 20000, 30000, 20000, 30000];
+        // Secuencia de tiempos: 1 minuto, 2 minutos交替
+        const messageTimes = [60000, 120000, 60000, 120000, 60000, 120000, 60000, 120000, 60000, 120000];
         let messageTimer = 0;
         
         function scheduleNextMessage() {
