@@ -157,30 +157,32 @@
         /* Mensajes superiores con animación de derecha a izquierda */
         .top-messages {
             position: fixed;
-            top: 10px;
+            top: 0;
             left: 0;
             right: 0;
             text-align: center;
             z-index: 50;
             pointer-events: none;
             overflow: hidden;
-            height: 30px;
+            height: 40px;
+            background: linear-gradient(to bottom, rgba(26, 10, 46, 0.9), transparent);
         }
         
         .top-message {
             position: absolute;
-            top: 0;
+            top: 12px;
             right: -100%;
             white-space: nowrap;
             font-size: 0.9em;
             color: #b39ddb;
-            animation: slideLeft 8s linear forwards;
+            animation: slideLeft 20s linear forwards;
+            text-shadow: 0 0 10px rgba(179, 157, 219, 0.3);
         }
         
         @keyframes slideLeft {
             0% { right: -100%; }
-            10% { right: 100%; }
-            90% { right: 100%; }
+            15% { right: 10%; }
+            85% { right: 10%; }
             100% { right: -100%; }
         }
         
@@ -517,12 +519,12 @@
             message.textContent = topMessagesList[topMessageIndex];
             topMessages.appendChild(message);
             
-            // Eliminar mensaje después de la animación
+            // Eliminar mensaje después de la animación (20 segundos)
             setTimeout(() => {
                 if (message.parentNode) {
                     message.remove();
                 }
-            }, 8000);
+            }, 20000);
             
             // Siguiente mensaje
             topMessageIndex = (topMessageIndex + 1) % topMessagesList.length;
