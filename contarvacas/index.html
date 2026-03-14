@@ -29,12 +29,14 @@
         .game-container {
             position: relative;
             width: 100%;
+            max-width: 800px;
             height: 60vh;
             overflow: hidden;
             background: linear-gradient(to bottom, #1a0a2e, #2d1b4e);
             cursor: pointer;
             border: 2px solid rgba(126, 87, 194, 0.5);
             border-radius: 10px;
+            margin: 0 auto;
         }
         
         .pasture {
@@ -154,36 +156,33 @@
             color: white;
         }
         
-        /* Mensajes superiores con animación de derecha a izquierda */
+        /* Mensajes superiores exactamente encima del game-container */
         .top-messages {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
+            width: 100%;
+            max-width: 800px;
             text-align: center;
             z-index: 50;
             pointer-events: none;
             overflow: hidden;
-            height: 40px;
-            background: linear-gradient(to bottom, rgba(26, 10, 46, 0.9), transparent);
+            height: 35px;
+            margin: 0 auto;
         }
         
         .top-message {
             position: absolute;
-            top: 12px;
-            right: -100%;
+            left: 100%;
+            top: 8px;
             white-space: nowrap;
-            font-size: 0.9em;
-            color: #b39ddb;
-            animation: slideLeft 20s linear forwards;
-            text-shadow: 0 0 10px rgba(179, 157, 219, 0.3);
+            font-size: 1em;
+            color: #e1bee7;
+            animation: slideLeft 45s linear forwards;
+            text-shadow: 0 0 15px rgba(226, 190, 231, 0.6);
+            font-weight: bold;
         }
         
         @keyframes slideLeft {
-            0% { right: -100%; }
-            15% { right: 10%; }
-            85% { right: 10%; }
-            100% { right: -100%; }
+            0% { left: 100%; }
+            100% { left: -100%; }
         }
         
         @keyframes heart-pulse {
@@ -436,7 +435,7 @@
         <div class="message-popup" id="messagePopup"></div>
     </div>
     
-    <!-- Contenedor de mensajes superiores -->
+    <!-- Mensajes superiores exactamente encima del game-container -->
     <div class="top-messages" id="topMessages"></div>
     
     <div class="game-container" id="gameContainer">
@@ -519,12 +518,12 @@
             message.textContent = topMessagesList[topMessageIndex];
             topMessages.appendChild(message);
             
-            // Eliminar mensaje después de la animación (20 segundos)
+            // Eliminar mensaje después de la animación (30 segundos)
             setTimeout(() => {
                 if (message.parentNode) {
                     message.remove();
                 }
-            }, 20000);
+            }, 30000);
             
             // Siguiente mensaje
             topMessageIndex = (topMessageIndex + 1) % topMessagesList.length;
