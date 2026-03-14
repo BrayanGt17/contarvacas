@@ -873,15 +873,6 @@ function createNameStars() {
             return animal;
         }
         
-
-            
-            setTimeout(() => {
-                if (animal.parentNode && gameActive) {
-                    moveRandomly(animal);
-                }
-            }, duration);
-        }
-        
         // Mover vaca al corral
         function moveToBarn(animal, startX, startY) {
             if (animal.classList.contains('jumping')) return;
