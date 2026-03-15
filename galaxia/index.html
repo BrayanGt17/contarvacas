@@ -23,14 +23,13 @@
     html,body{margin:0;height:100%;background:#000;overflow:hidden}
     #galaxy-canvas{position:fixed;inset:0;width:100%;height:100%;display:block;touch-action:none}
     .attribution{position:fixed;left:10px;bottom:10px;font-size:11px;color:#b9a0ff;opacity:.8;background:rgba(0,0,0,.35);padding:6px 8px;border-radius:8px}
-    .player{position:fixed;left:10px;right:10px;bottom:10px;display:flex;gap:8px;align-items:center;
-             background:rgba(20,15,35,.35);border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:8px;
-             backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);color:#fff;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial}
-    .player button{padding:8px 12px;border-radius:10px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.08);color:#fff}
-    .player input[type=file]{display:none}
     .pill{position:fixed;top:10px;left:50%;transform:translateX(-50%);padding:6px 12px;border-radius:999px;
           background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);color:#fff;font:12px -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial}
     .error{position:fixed;inset:auto 10px 70px 10px;background:#260015;color:#ffd9f7;border:1px solid #ff8ae5;border-radius:10px;padding:10px;font:12px system-ui;display:none;}
+    #toggleAudio{position:fixed;right:18px;top:18px;z-index:5;width:44px;height:44px;border-radius:8px;
+                 border:2px solid rgba(255,105,180,.5);background:rgba(26,10,46,.7);color:#fff;font-size:18px;
+                 display:flex;align-items:center;justify-content:center;cursor:pointer;backdrop-filter:blur(4px)}
+    #toggleAudio:hover{background:rgba(126,87,194,.5)}
   </style>
   <!-- Three.js legacy non-module build + OrbitControls (r128, super estable) -->
   <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
@@ -40,6 +39,7 @@
 <canvas id="galaxy-canvas"></canvas>
 <div class="pill">Te Amo Mucho Muchote Flaca Hermosaaa de Mi Vida💗🥺</div>
 <div class="attribution">Regresamos?🥺 JAJAJ</div>
+<button id="toggleAudio" aria-label="Alternar música">🔊</button>
 <div id="err" class="error"></div>
 
 <!-- Audio con autoplay -->
@@ -54,16 +54,36 @@
 const err = document.getElementById('err');
 function showError(msg){ err.textContent = msg; err.style.display='block'; }
 
-// ====== AUDIO AUTOPLAY ======
+// ====== AUDIO CON MUTE/UNMUTE ======
 const audio = document.getElementById('audio');
-audio.play().catch(() => {
-  // Autoplay bloqueado, mostrar mensaje
-  showError('Acerca y aleja y rota para ambos lados al hacer doble click mira el efecto de corazones');
+const toggleBtn = document.getElementById('toggleAudio');
+let audioStarted = false;
+
+function updateAudioIcon() {
+  toggleBtn.textContent = audio.paused ? '🔇' : '🔊';
+  toggleBtn.title = audio.paused ? 'Reproducir música' : 'Pausar música';
+}
+
+toggleBtn.addEventListener('click', (e) => {
+  e.stopPropagation();
+  if (audio.paused) {
+    audio.play().then(() => {
+      audioStarted = true;
+      updateAudioIcon();
+    }).catch(() => {});
+  } else {
+    audio.pause();
+    updateAudioIcon();
+  }
 });
 
-document.addEventListener('click', () => {
-  audio.play().catch(() => {});
-}, { once: true });
+audio.addEventListener('play', () => { audioStarted = true; updateAudioIcon(); });
+audio.addEventListener('pause', updateAudioIcon);
+
+// Intentar autoplay
+audio.play().catch(() => {
+  showError('Toca el botón 🔊 para reproducir la música');
+});
 
 // ====== WEBGL CHECK ======
 try { 
