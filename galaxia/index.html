@@ -58,7 +58,7 @@ function showError(msg){ err.textContent = msg; err.style.display='block'; }
 const audio = document.getElementById('audio');
 audio.play().catch(() => {
   // Autoplay bloqueado, mostrar mensaje
-  showError('Toca la pantalla para reproducir la música');
+  showError('me desbloqueas de whatsapp shi? jjsjs');
 });
 
 document.addEventListener('click', () => {
@@ -228,7 +228,7 @@ function drawHeart(x,y,size){
   ctx2.bezierCurveTo(.5*s,-.9*s,1.4*s,-.1*s,0,.9*s);
   ctx2.bezierCurveTo(-1.4*s,-.1*s,-.5*s,-.9*s,0,-.25*s);
   const g=ctx2.createRadialGradient(0,0,0,0,0,s);
-  g.addColorStop(0,'rgba(255,190,220,.95)'); g.addColorStop(1,'rgba(255,90,160,0)');
+  g.addColorStop(0,'rgba(200,150,255,.95)'); g.addColorStop(1,'rgba(150,100,200,0)');
   ctx2.fillStyle=g; ctx2.fill(); ctx2.restore();
 }
 let lastTap=0;
