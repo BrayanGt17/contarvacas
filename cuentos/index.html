@@ -697,6 +697,7 @@
         const db = firebase.database();
         const likesRef = db.ref('likes');
         let firebaseLikes = {};
+        let firebaseLoaded = false;
 
         function renderCuentos() {
             const container = document.getElementById('cuentosContainer');
@@ -716,7 +717,7 @@
                 const likedCuentos = JSON.parse(localStorage.getItem('likedCuentos') || '[]');
                 const isLiked = likedCuentos.includes(index);
                 const fbLikes = firebaseLikes[index] || 0;
-                const totalLikes = fbLikes + (isLiked ? 1 : 0);
+                const totalLikes = fbLikes;
                 
                 item.innerHTML = `
                     <img src="${imageUrl}" alt="${cuento.titulo}" class="cuento-image" onerror="this.src='https://images.unsplash.com/photo-1478720568477-152d9b164e26?w=200&h=200&fit=crop'">
@@ -764,16 +765,30 @@
             
             localStorage.setItem('likedCuentos', JSON.stringify(likedCuentos));
             
-            const countSpan = item.querySelector('.cuento-likes span');
-            const isLiked = likedCuentos.includes(index);
-            const fbLikes = firebaseLikes[index] || 0;
-            const totalLikes = fbLikes + (isLiked ? 1 : 0);
-            countSpan.textContent = totalLikes;
+            const countSpan = document.getElementById(`likes-${index}`);
+            if (countSpan) {
+                countSpan.textContent = firebaseLikes[index] || 0;
+            }
         }
 
-        likesRef.on('value', (snapshot) => {
+        // Cargar likes de Firebase
+        likesRef.once('value').then((snapshot) => {
             firebaseLikes = snapshot.val() || {};
+            firebaseLoaded = true;
             renderCuentos();
+            loadTrack(0);
+        });
+
+        // Escuchar cambios en tiempo real
+        likesRef.on('value', (snapshot) => {
+            const newLikes = snapshot.val() || {};
+            // Solo re-renderizar si hay cambios reales (no del usuario actual)
+            if (JSON.stringify(newLikes) !== JSON.stringify(firebaseLikes)) {
+                firebaseLikes = newLikes;
+                if (firebaseLoaded) {
+                    renderCuentos();
+                }
+            }
         });
 
         function loadTrack(index) {
@@ -852,12 +867,6 @@
         audio.addEventListener('timeupdate', updateProgress);
         audio.addEventListener('ended', nextTrack);
         audio.addEventListener('loadedmetadata', updateProgress);
-
-        // Inicializar
-        renderCuentos();
-        if (cuentos.length > 0) {
-            loadTrack(0);
-        }
     </script>
 </body>
 </html>
