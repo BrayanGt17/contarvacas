@@ -1,0 +1,3 @@
+[submodule "nex-up-precios"]
+	path = nex-up-precios
+	url = https://github.com/NEX-UP/nex-up-precios.git
