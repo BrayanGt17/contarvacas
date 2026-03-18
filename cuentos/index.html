@@ -14,6 +14,16 @@
       gtag('config', 'G-MRZTTZBHJH');
     </script>
     
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    <script>
+      const firebaseConfig = {
+        databaseURL: "https://byfforever-9c691-default-rtdb.firebaseio.com"
+      };
+      firebase.initializeApp(firebaseConfig);
+    </script>
+    
     <style>
         * {
             margin: 0;
@@ -684,6 +694,9 @@
 
         let currentTrack = 0;
         let isPlaying = false;
+        const db = firebase.database();
+        const likesRef = db.ref('likes');
+        let firebaseLikes = {};
 
         function renderCuentos() {
             const container = document.getElementById('cuentosContainer');
@@ -702,7 +715,8 @@
                 const imageUrl = cuento.image || 'https://images.unsplash.com/photo-1478720568477-152d9b164e26?w=200&h=200&fit=crop';
                 const likedCuentos = JSON.parse(localStorage.getItem('likedCuentos') || '[]');
                 const isLiked = likedCuentos.includes(index);
-                const totalLikes = (cuento.likes || 0) + (isLiked ? 1 : 0);
+                const fbLikes = firebaseLikes[index] || 0;
+                const totalLikes = fbLikes + (isLiked ? 1 : 0);
                 
                 item.innerHTML = `
                     <img src="${imageUrl}" alt="${cuento.titulo}" class="cuento-image" onerror="this.src='https://images.unsplash.com/photo-1478720568477-152d9b164e26?w=200&h=200&fit=crop'">
@@ -715,7 +729,7 @@
                         <button class="like-btn ${isLiked ? 'liked' : ''}" data-index="${index}">
                             ${isLiked ? '💗' : '🤍'}
                         </button>
-                        <span>${totalLikes}</span>
+                        <span id="likes-${index}">${totalLikes}</span>
                     </div>
                 `;
                 
@@ -738,19 +752,29 @@
                 likedCuentos.splice(itemIndex, 1);
                 btn.classList.remove('liked');
                 btn.textContent = '🤍';
+                firebaseLikes[index] = Math.max(0, (firebaseLikes[index] || 0) - 1);
+                likesRef.update({ [index]: firebaseLikes[index] });
             } else {
                 likedCuentos.push(index);
                 btn.classList.add('liked');
                 btn.textContent = '💗';
+                firebaseLikes[index] = (firebaseLikes[index] || 0) + 1;
+                likesRef.update({ [index]: firebaseLikes[index] });
             }
             
             localStorage.setItem('likedCuentos', JSON.stringify(likedCuentos));
             
             const countSpan = item.querySelector('.cuento-likes span');
             const isLiked = likedCuentos.includes(index);
-            const totalLikes = (cuentos[index].likes || 0) + (isLiked ? 1 : 0);
+            const fbLikes = firebaseLikes[index] || 0;
+            const totalLikes = fbLikes + (isLiked ? 1 : 0);
             countSpan.textContent = totalLikes;
         }
+
+        likesRef.on('value', (snapshot) => {
+            firebaseLikes = snapshot.val() || {};
+            renderCuentos();
+        });
 
         function loadTrack(index) {
             currentTrack = index;
