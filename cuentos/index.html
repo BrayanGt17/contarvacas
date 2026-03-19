@@ -172,6 +172,21 @@
             margin-top: 8px;
         }
 
+        .player-stats {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 10px;
+            font-size: 0.9em;
+            color: #b39ddb;
+        }
+
+        .player-stats span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
         /* Imagen del cuento en el reproductor */
         .player-image {
             width: 180px;
@@ -535,6 +550,10 @@
                         <h3>Reproduciendo ahora</h3>
                         <div class="title" id="currentTitle">Selecciona un cuento</div>
                         <div class="description" id="currentDescription"></div>
+                        <div class="player-stats">
+                            <span>💗 <span id="playerLikes">0</span> likes</span>
+                            <span>▶️ <span id="playerPlays">0</span> reproducciones</span>
+                        </div>
                     </div>
 
                     <div class="visualizer" id="visualizer">
@@ -838,15 +857,14 @@
             currentTitle.textContent = cuento.titulo;
             currentDescription.textContent = cuento.descripcion || '';
             
-            // Incrementar reproducciones
-            firebasePlays[index] = (firebasePlays[index] || 0) + 1;
-            playsRef.update({ [index]: firebasePlays[index] });
-            
             // Actualizar imagen del reproductor
             const imageUrl = cuento.image || 'https://images.unsplash.com/photo-1478720568477-152d9b164e26?w=200&h=200&fit=crop';
             playerImage.src = imageUrl;
             playerImage.alt = cuento.titulo;
             playerImage.style.display = 'block';
+            
+            // Actualizar likes y reproducciones en el reproductor
+            updatePlayerStats(index);
             
             // Actualizar lista
             document.querySelectorAll('.cuento-item').forEach((item, i) => {
@@ -858,6 +876,13 @@
             }
         }
 
+        function updatePlayerStats(index) {
+            const likesCount = document.getElementById('playerLikes');
+            const playsCount = document.getElementById('playerPlays');
+            if (likesCount) likesCount.textContent = firebaseLikes[index] || 0;
+            if (playsCount) playsCount.textContent = firebasePlays[index] || 0;
+        }
+
         function togglePlay() {
             if (isPlaying) {
                 audio.pause();
@@ -867,6 +892,11 @@
                 audio.play();
                 playBtn.textContent = '❚❚';
                 visualizer.style.opacity = '1';
+                // Incrementar reproducciones al dar play
+                firebasePlays[currentTrack] = (firebasePlays[currentTrack] || 0) + 1;
+                playsRef.update({ [currentTrack]: firebasePlays[currentTrack] });
+                updatePlayerStats(currentTrack);
+                renderCuentos();
             }
             isPlaying = !isPlaying;
         }
