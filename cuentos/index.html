@@ -479,8 +479,16 @@
 
         .comments-section h3 {
             color: var(--light);
-            margin-bottom: 15px;
+            margin-bottom: 10px;
             text-align: center;
+        }
+
+        .comment-story {
+            text-align: center;
+            color: var(--primary);
+            font-size: 0.9em;
+            margin-bottom: 15px;
+            font-weight: bold;
         }
 
         .comment-form {
@@ -708,6 +716,7 @@
             <!-- Sección de comentarios -->
             <div class="comments-section" id="commentsSection">
                 <h3>💬 Comentarios</h3>
+                <div class="comment-story" id="commentStory"></div>
                 <div class="comment-form">
                     <input type="text" id="commentName" placeholder="Tu nombre" maxlength="20">
                     <textarea id="commentText" placeholder="Escribe un mensaje bonito..." maxlength="200"></textarea>
@@ -996,6 +1005,10 @@
 
         function renderComments(index) {
             const commentsList = document.getElementById('commentsList');
+            const commentStory = document.getElementById('commentStory');
+            const storyName = cuentos[index]?.titulo || 'Cuento';
+            commentStory.textContent = `Comentando en: ${storyName}`;
+            
             const storyComments = firebaseComments[index] || [];
             const sortedComments = Object.values(storyComments).sort((a, b) => b.timestamp - a.timestamp);
             
