@@ -58,6 +58,16 @@
             pointer-events: none;
         }
 
+        #hearts-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1000;
+            pointer-events: none;
+        }
+
         .content {
             position: relative;
             z-index: 1;
@@ -501,6 +511,7 @@
 </head>
 <body>
     <canvas id="particles-canvas"></canvas>
+    <canvas id="hearts-canvas"></canvas>
     
     <div class="content">
         <header class="header">
@@ -748,6 +759,9 @@
         function toggleLike(index, btn, item) {
             const likedCuentos = JSON.parse(localStorage.getItem('likedCuentos') || '[]');
             const itemIndex = likedCuentos.indexOf(index);
+            const btnRect = btn.getBoundingClientRect();
+            const x = btnRect.left + btnRect.width / 2;
+            const y = btnRect.top;
             
             if (itemIndex > -1) {
                 likedCuentos.splice(itemIndex, 1);
@@ -761,6 +775,7 @@
                 btn.textContent = '💗';
                 firebaseLikes[index] = (firebaseLikes[index] || 0) + 1;
                 likesRef.update({ [index]: firebaseLikes[index] });
+                spawnHearts(x, y, 15);
             }
             
             localStorage.setItem('likedCuentos', JSON.stringify(likedCuentos));
@@ -867,6 +882,68 @@
         audio.addEventListener('timeupdate', updateProgress);
         audio.addEventListener('ended', nextTrack);
         audio.addEventListener('loadedmetadata', updateProgress);
+
+        // ====== CORAZONES EFFECT ======
+        const heartsCanvas = document.getElementById('hearts-canvas');
+        const ctx2 = heartsCanvas.getContext('2d');
+        const hearts = [];
+
+        function resizeHearts() {
+            heartsCanvas.width = Math.floor(innerWidth * Math.min(2, window.devicePixelRatio || 1));
+            heartsCanvas.height = Math.floor(innerHeight * Math.min(2, window.devicePixelRatio || 1));
+            heartsCanvas.style.width = innerWidth + 'px';
+            heartsCanvas.style.height = innerHeight + 'px';
+        }
+        addEventListener('resize', resizeHearts);
+        resizeHearts();
+
+        function spawnHearts(x, y, n = 15) {
+            x *= Math.min(2, window.devicePixelRatio || 1);
+            y *= Math.min(2, window.devicePixelRatio || 1);
+            for (let i = 0; i < n; i++) {
+                const a = Math.random() * Math.PI * 2;
+                hearts.push({
+                    x, y,
+                    vx: Math.cos(a) * (0.6 + Math.random() * 0.8),
+                    vy: -(0.8 + Math.random() * 1.2),
+                    life: 1,
+                    size: 10 + Math.random() * 16
+                });
+            }
+        }
+
+        function drawHeart(x, y, size) {
+            const s = size;
+            ctx2.save();
+            ctx2.translate(x, y);
+            ctx2.beginPath();
+            ctx2.moveTo(0, -0.25 * s);
+            ctx2.bezierCurveTo(.5 * s, -.9 * s, 1.4 * s, -.1 * s, 0, .9 * s);
+            ctx2.bezierCurveTo(-1.4 * s, -.1 * s, -.5 * s, -.9 * s, 0, -0.25 * s);
+            const g = ctx2.createRadialGradient(0, 0, 0, 0, 0, s);
+            g.addColorStop(0, 'rgba(200, 150, 255, .95)');
+            g.addColorStop(1, 'rgba(150, 100, 200, 0)');
+            ctx2.fillStyle = g;
+            ctx2.fill();
+            ctx2.restore();
+        }
+
+        function loopHearts() {
+            ctx2.clearRect(0, 0, heartsCanvas.width, heartsCanvas.height);
+            for (let i = hearts.length - 1; i >= 0; i--) {
+                const h = hearts[i];
+                h.x += h.vx;
+                h.y += h.vy;
+                h.vy -= 0.02;
+                h.life -= 0.015;
+                ctx2.globalAlpha = Math.max(0, h.life);
+                drawHeart(h.x, h.y, h.size);
+                ctx2.globalAlpha = 1;
+                if (h.life <= 0) hearts.splice(i, 1);
+            }
+            requestAnimationFrame(loopHearts);
+        }
+        loopHearts();
     </script>
 </body>
 </html>
