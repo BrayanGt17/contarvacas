@@ -418,6 +418,12 @@
             margin-top: 5px;
         }
 
+        .cuento-plays {
+            color: #9e8ac4;
+            font-size: 0.8em;
+            margin-top: 3px;
+        }
+
         .cuento-likes {
             display: flex;
             align-items: center;
@@ -707,7 +713,9 @@
         let isPlaying = false;
         const db = firebase.database();
         const likesRef = db.ref('likes');
+        const playsRef = db.ref('plays');
         let firebaseLikes = {};
+        let firebasePlays = {};
         let firebaseLoaded = false;
 
         function renderCuentos() {
@@ -728,6 +736,7 @@
                 const likedCuentos = JSON.parse(localStorage.getItem('likedCuentos') || '[]');
                 const isLiked = likedCuentos.includes(index);
                 const fbLikes = firebaseLikes[index] || 0;
+                const fbPlays = firebasePlays[index] || 0;
                 const totalLikes = fbLikes;
                 
                 item.innerHTML = `
@@ -736,6 +745,7 @@
                         <div class="cuento-title">${cuento.titulo}</div>
                         <div class="cuento-description">${cuento.descripcion || ''}</div>
                         <div class="cuento-fecha">📅 ${cuento.fecha || ''}</div>
+                        <div class="cuento-plays">▶️ ${fbPlays} reproducciones</div>
                     </div>
                     <div class="cuento-likes">
                         <button class="like-btn ${isLiked ? 'liked' : ''}" data-index="${index}">
@@ -786,20 +796,34 @@
             }
         }
 
-        // Cargar likes de Firebase
-        likesRef.once('value').then((snapshot) => {
-            firebaseLikes = snapshot.val() || {};
+        // Cargar likes y reproducciones de Firebase
+        Promise.all([
+            likesRef.once('value'),
+            playsRef.once('value')
+        ]).then(([likesSnapshot, playsSnapshot]) => {
+            firebaseLikes = likesSnapshot.val() || {};
+            firebasePlays = playsSnapshot.val() || {};
             firebaseLoaded = true;
             renderCuentos();
             loadTrack(0);
         });
 
-        // Escuchar cambios en tiempo real
+        // Escuchar cambios en tiempo real - likes
         likesRef.on('value', (snapshot) => {
             const newLikes = snapshot.val() || {};
-            // Solo re-renderizar si hay cambios reales (no del usuario actual)
             if (JSON.stringify(newLikes) !== JSON.stringify(firebaseLikes)) {
                 firebaseLikes = newLikes;
+                if (firebaseLoaded) {
+                    renderCuentos();
+                }
+            }
+        });
+
+        // Escuchar cambios en tiempo real - plays
+        playsRef.on('value', (snapshot) => {
+            const newPlays = snapshot.val() || {};
+            if (JSON.stringify(newPlays) !== JSON.stringify(firebasePlays)) {
+                firebasePlays = newPlays;
                 if (firebaseLoaded) {
                     renderCuentos();
                 }
@@ -813,6 +837,10 @@
             audio.src = cuento.url;
             currentTitle.textContent = cuento.titulo;
             currentDescription.textContent = cuento.descripcion || '';
+            
+            // Incrementar reproducciones
+            firebasePlays[index] = (firebasePlays[index] || 0) + 1;
+            playsRef.update({ [index]: firebasePlays[index] });
             
             // Actualizar imagen del reproductor
             const imageUrl = cuento.image || 'https://images.unsplash.com/photo-1478720568477-152d9b164e26?w=200&h=200&fit=crop';
