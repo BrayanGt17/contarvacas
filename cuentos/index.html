@@ -465,6 +465,102 @@
             color: #ff1493;
         }
 
+        /* Comentarios */
+        .comments-section {
+            background: linear-gradient(145deg, rgba(45, 45, 85, 0.95), rgba(25, 25, 55, 0.98));
+            border: 2px solid rgba(126, 87, 194, 0.4);
+            border-radius: 20px;
+            padding: 25px;
+            margin: 20px auto;
+            max-width: 800px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .comments-section h3 {
+            color: var(--light);
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .comment-form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .comment-form input,
+        .comment-form textarea {
+            padding: 12px 15px;
+            border-radius: 12px;
+            border: 1px solid rgba(126, 87, 194, 0.3);
+            background: rgba(30, 30, 60, 0.8);
+            color: #fff;
+            font-size: 1em;
+            font-family: inherit;
+        }
+
+        .comment-form input::placeholder,
+        .comment-form textarea::placeholder {
+            color: #9e8ac4;
+        }
+
+        .comment-form textarea {
+            resize: none;
+            height: 80px;
+        }
+
+        .comment-form button {
+            padding: 12px 25px;
+            border-radius: 25px;
+            border: none;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .comment-form button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(255, 105, 180, 0.4);
+        }
+
+        .comments-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .comment-item {
+            background: rgba(30, 30, 60, 0.6);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-left: 3px solid var(--primary);
+        }
+
+        .comment-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .comment-name {
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        .comment-date {
+            color: #7e57c2;
+            font-size: 0.8em;
+        }
+
+        .comment-text {
+            color: var(--light);
+            line-height: 1.5;
+        }
+
         /* Back link */
         .back-link {
             display: inline-block;
@@ -583,6 +679,17 @@
                         </div>
                     </div>
                 </div>
+            </div>
+
+            <!-- Sección de comentarios -->
+            <div class="comments-section" id="commentsSection">
+                <h3>💬 Comentarios</h3>
+                <div class="comment-form">
+                    <input type="text" id="commentName" placeholder="Tu nombre" maxlength="20">
+                    <textarea id="commentText" placeholder="Escribe un mensaje bonito..." maxlength="200"></textarea>
+                    <button id="sendComment">Enviar 💗</button>
+                </div>
+                <div class="comments-list" id="commentsList"></div>
             </div>
 
             <!-- Lista de cuentos -->
@@ -733,8 +840,10 @@
         const db = firebase.database();
         const likesRef = db.ref('likes');
         const playsRef = db.ref('plays');
+        const commentsRef = db.ref('comments');
         let firebaseLikes = {};
         let firebasePlays = {};
+        let firebaseComments = {};
         let firebaseLoaded = false;
 
         function renderCuentos() {
@@ -849,6 +958,72 @@
             }
         });
 
+        // Escuchar cambios en tiempo real - comments
+        commentsRef.on('value', (snapshot) => {
+            firebaseComments = snapshot.val() || {};
+            renderComments(currentTrack);
+        });
+
+        function renderComments(index) {
+            const commentsList = document.getElementById('commentsList');
+            const storyComments = firebaseComments[index] || [];
+            const sortedComments = Object.values(storyComments).sort((a, b) => b.timestamp - a.timestamp);
+            
+            if (sortedComments.length === 0) {
+                commentsList.innerHTML = '<p style="text-align: center; color: #9e8ac4;">Aún no hay comentarios. ¡Sé el primero!</p>';
+                return;
+            }
+            
+            commentsList.innerHTML = sortedComments.map(comment => `
+                <div class="comment-item">
+                    <div class="comment-header">
+                        <span class="comment-name">${escapeHtml(comment.name)}</span>
+                        <span class="comment-date">${formatDate(comment.timestamp)}</span>
+                    </div>
+                    <div class="comment-text">${escapeHtml(comment.text)}</div>
+                </div>
+            `).join('');
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function formatDate(timestamp) {
+            const date = new Date(timestamp);
+            return date.toLocaleDateString('es-ES', { day: 'numeric', month: 'short' });
+        }
+
+        function addComment(index) {
+            const nameInput = document.getElementById('commentName');
+            const textInput = document.getElementById('commentText');
+            const name = nameInput.value.trim();
+            const text = textInput.value.trim();
+            
+            if (!name || !text) {
+                alert('Por favor completa todos los campos');
+                return;
+            }
+            
+            const newComment = {
+                name: name,
+                text: text,
+                timestamp: Date.now()
+            };
+            
+            const storyComments = firebaseComments[index] || {};
+            const commentKey = db.ref().push().key;
+            storyComments[commentKey] = newComment;
+            commentsRef.child(index).set(storyComments);
+            
+            nameInput.value = '';
+            textInput.value = '';
+        }
+
+        document.getElementById('sendComment').addEventListener('click', () => addComment(currentTrack));
+
         function loadTrack(index) {
             currentTrack = index;
             const cuento = cuentos[index];
@@ -865,6 +1040,9 @@
             
             // Actualizar likes y reproducciones en el reproductor
             updatePlayerStats(index);
+            
+            // Actualizar comentarios
+            renderComments(index);
             
             // Actualizar lista
             document.querySelectorAll('.cuento-item').forEach((item, i) => {
