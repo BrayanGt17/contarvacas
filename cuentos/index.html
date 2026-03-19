@@ -569,6 +569,102 @@
             line-height: 1.5;
         }
 
+        .comment-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .action-btn {
+            background: none;
+            border: none;
+            color: #9e8ac4;
+            cursor: pointer;
+            font-size: 0.85em;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 5px 10px;
+            border-radius: 15px;
+            transition: all 0.2s;
+        }
+
+        .action-btn:hover {
+            background: rgba(126, 87, 194, 0.2);
+            color: #d1c4e9;
+        }
+
+        .action-btn.liked {
+            color: #ff1493;
+        }
+
+        .replies-container {
+            margin-top: 10px;
+            padding-left: 15px;
+            border-left: 2px solid rgba(126, 87, 194, 0.3);
+        }
+
+        .reply-item {
+            background: rgba(30, 30, 60, 0.4);
+            border-radius: 10px;
+            padding: 10px;
+            margin-bottom: 8px;
+        }
+
+        .reply-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+
+        .reply-name {
+            color: #d1c4e9;
+            font-size: 0.85em;
+            font-weight: bold;
+        }
+
+        .reply-date {
+            color: #7e57c2;
+            font-size: 0.75em;
+        }
+
+        .reply-text {
+            color: #b39ddb;
+            font-size: 0.9em;
+        }
+
+        .reply-form {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-top: 10px;
+        }
+
+        .reply-form input {
+            padding: 6px 10px;
+            border-radius: 15px;
+            border: 1px solid rgba(126, 87, 194, 0.3);
+            background: rgba(30, 30, 60, 0.8);
+            color: #fff;
+            font-size: 0.85em;
+            flex: 1;
+            min-width: 80px;
+        }
+
+        .reply-form input::placeholder {
+            color: #9e8ac4;
+        }
+
+        .reply-form .send-reply-btn {
+            padding: 6px 15px;
+            border-radius: 15px;
+            border: none;
+            background: var(--primary);
+            color: white;
+            font-size: 0.85em;
+            cursor: pointer;
+        }
+
         /* Back link */
         .back-link {
             display: inline-block;
@@ -1011,21 +1107,119 @@
             
             const storyComments = firebaseComments[index] || [];
             const sortedComments = Object.values(storyComments).sort((a, b) => b.timestamp - a.timestamp);
+            const likedComments = JSON.parse(localStorage.getItem('likedComments') || '{}');
             
             if (sortedComments.length === 0) {
                 commentsList.innerHTML = '<p style="text-align: center; color: #9e8ac4;">Aún no hay comentarios. ¡Sé el primero!</p>';
                 return;
             }
             
-            commentsList.innerHTML = sortedComments.map(comment => `
-                <div class="comment-item">
-                    <div class="comment-header">
-                        <span class="comment-name">${escapeHtml(comment.name)}</span>
-                        <span class="comment-date">${formatDate(comment.timestamp)}</span>
+            commentsList.innerHTML = sortedComments.map((comment, cIndex) => {
+                const commentKey = Object.keys(storyComments)[cIndex];
+                const isLiked = likedComments[commentKey];
+                const likes = comment.likes || 0;
+                const replies = comment.replies || {};
+                const replyCount = Object.keys(replies).length;
+                
+                const repliesHtml = Object.values(replies).sort((a, b) => a.timestamp - b.timestamp).map(reply => `
+                    <div class="reply-item">
+                        <div class="reply-header">
+                            <span class="reply-name">${escapeHtml(reply.name)}</span>
+                            <span class="reply-date">${formatDate(reply.timestamp)}</span>
+                        </div>
+                        <div class="reply-text">${escapeHtml(reply.text)}</div>
                     </div>
-                    <div class="comment-text">${escapeHtml(comment.text)}</div>
-                </div>
-            `).join('');
+                `).join('');
+                
+                return `
+                    <div class="comment-item">
+                        <div class="comment-header">
+                            <span class="comment-name">${escapeHtml(comment.name)}</span>
+                            <span class="comment-date">${formatDate(comment.timestamp)}</span>
+                        </div>
+                        <div class="comment-text">${escapeHtml(comment.text)}</div>
+                        <div class="comment-actions">
+                            <button class="action-btn like-comment ${isLiked ? 'liked' : ''}" data-key="${commentKey}" data-story="${index}">
+                                💗 <span class="like-count">${likes}</span>
+                            </button>
+                            <button class="action-btn reply-btn" data-key="${commentKey}" data-story="${index}">
+                                💬 ${replyCount}
+                            </button>
+                        </div>
+                        <div class="replies-container" id="replies-${commentKey}">
+                            ${repliesHtml}
+                            <div class="reply-form" id="reply-form-${commentKey}" style="display: none;">
+                                <input type="text" placeholder="Tu nombre" class="reply-name-input" maxlength="15">
+                                <input type="text" placeholder="Responder..." class="reply-text-input" maxlength="100">
+                                <button class="send-reply-btn" data-key="${commentKey}" data-story="${index}">Enviar</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            // Event listeners for like buttons
+            document.querySelectorAll('.like-comment').forEach(btn => {
+                btn.addEventListener('click', () => toggleCommentLike(btn.dataset.story, btn.dataset.key));
+            });
+            
+            // Event listeners for reply buttons
+            document.querySelectorAll('.reply-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const form = document.getElementById(`reply-form-${btn.dataset.key}`);
+                    form.style.display = form.style.display === 'none' ? 'flex' : 'none';
+                });
+            });
+            
+            // Event listeners for send reply buttons
+            document.querySelectorAll('.send-reply-btn').forEach(btn => {
+                btn.addEventListener('click', () => sendReply(btn.dataset.story, btn.dataset.key));
+            });
+        }
+
+        function toggleCommentLike(storyIndex, commentKey) {
+            const storyComments = firebaseComments[storyIndex] || {};
+            if (!storyComments[commentKey]) return;
+            
+            const likedComments = JSON.parse(localStorage.getItem('likedComments') || '{}');
+            
+            if (likedComments[commentKey]) {
+                likedComments[commentKey] = false;
+                storyComments[commentKey].likes = Math.max(0, (storyComments[commentKey].likes || 0) - 1);
+            } else {
+                likedComments[commentKey] = true;
+                storyComments[commentKey].likes = (storyComments[commentKey].likes || 0) + 1;
+            }
+            
+            localStorage.setItem('likedComments', JSON.stringify(likedComments));
+            commentsRef.child(storyIndex).set(storyComments);
+        }
+
+        function sendReply(storyIndex, commentKey) {
+            const form = document.getElementById(`reply-form-${commentKey}`);
+            const nameInput = form.querySelector('.reply-name-input');
+            const textInput = form.querySelector('.reply-text-input');
+            
+            const name = nameInput.value.trim();
+            const text = textInput.value.trim();
+            
+            if (!name || !text) return;
+            
+            const storyComments = firebaseComments[storyIndex] || {};
+            if (!storyComments[commentKey]) return;
+            
+            const replyKey = db.ref().push().key;
+            storyComments[commentKey].replies = storyComments[commentKey].replies || {};
+            storyComments[commentKey].replies[replyKey] = {
+                name: name,
+                text: text,
+                timestamp: Date.now()
+            };
+            
+            commentsRef.child(storyIndex).set(storyComments);
+            nameInput.value = '';
+            textInput.value = '';
+            form.style.display = 'none';
         }
 
         function escapeHtml(text) {
@@ -1036,7 +1230,7 @@
 
         function formatDate(timestamp) {
             const date = new Date(timestamp);
-            return date.toLocaleDateString('es-ES', { day: 'numeric', month: 'short' });
+            return date.toLocaleDateString('es-ES', { day: 'numeric', month: 'short' }) + ' · ' + date.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
         }
 
         function addComment(index) {
