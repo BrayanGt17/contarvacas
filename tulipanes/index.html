@@ -1016,10 +1016,193 @@
         .monte-der {
           margin-right: -30px;
         }
+
+        /* Nombre Fernanda en el cielo */
+        .fernanda-name {
+          position: fixed;
+          top: 8%;
+          left: 50%;
+          transform: translateX(-50%);
+          z-index: 5;
+          font-family: 'Georgia', serif;
+          font-size: 5vmin;
+          font-weight: bold;
+          color: transparent;
+          background: linear-gradient(180deg, #fff9c4 0%, #ffd700 50%, #ffaa00 100%);
+          -webkit-background-clip: text;
+          background-clip: text;
+          text-shadow: none;
+          filter: drop-shadow(0 0 2vmin #ffd700) drop-shadow(0 0 4vmin #ffaa00);
+          animation: shimmer 3s ease-in-out infinite, fadeName 2s ease-out forwards;
+          letter-spacing: 3px;
+        }
+
+        @keyframes shimmer {
+          0%, 100% { filter: drop-shadow(0 0 2vmin #ffd700) drop-shadow(0 0 4vmin #ffaa00); }
+          50% { filter: drop-shadow(0 0 4vmin #ffd700) drop-shadow(0 0 8vmin #fff9c4); }
+        }
+
+        @keyframes fadeName {
+          0% { opacity: 0; transform: translateX(-50%) scale(0.5); }
+          100% { opacity: 1; transform: translateX(-50%) scale(1); }
+        }
+
+        /* Estrellas alrededor del nombre */
+        .fernanda-stars {
+          position: fixed;
+          top: 8%;
+          left: 50%;
+          transform: translateX(-50%);
+          width: 50vmin;
+          height: 15vmin;
+          z-index: 4;
+          pointer-events: none;
+        }
+
+        .fernanda-star {
+          position: absolute;
+          width: 0.5vmin;
+          height: 0.5vmin;
+          background: #fff;
+          border-radius: 50%;
+          box-shadow: 0 0 0.5vmin #ffd700;
+          animation: twinkleStar 1.5s ease-in-out infinite;
+        }
+
+        @keyframes twinkleStar {
+          0%, 100% { opacity: 0.3; transform: scale(1); }
+          50% { opacity: 1; transform: scale(1.3); }
+        }
+
+        /* Mensajes románticos */
+        .romantic-message {
+          position: fixed;
+          bottom: 15%;
+          left: 50%;
+          transform: translateX(-50%);
+          z-index: 15;
+          color: #fff9c4;
+          font-family: 'Georgia', serif;
+          font-size: 2.5vmin;
+          text-align: center;
+          padding: 2vmin 4vmin;
+          background: rgba(0, 0, 0, 0.4);
+          border-radius: 10px;
+          border: 1px solid rgba(255, 215, 0, 0.3);
+          backdrop-filter: blur(4px);
+          opacity: 0;
+          animation: messageAppear 5s ease-in-out forwards;
+          text-shadow: 0 0 1vmin #ffd700;
+        }
+
+        @keyframes messageAppear {
+          0% { opacity: 0; transform: translateX(-50%) translateY(20px); }
+          10% { opacity: 1; transform: translateX(-50%) translateY(0); }
+          80% { opacity: 1; transform: translateX(-50%) translateY(0); }
+          100% { opacity: 0; transform: translateX(-50%) translateY(-20px); }
+        }
+
+        /* Lluvia de pétalos */
+        .petals-rain {
+          position: fixed;
+          inset: 0;
+          pointer-events: none;
+          z-index: 3;
+          overflow: hidden;
+        }
+
+        .petal {
+          position: absolute;
+          width: 1.5vmin;
+          height: 2vmin;
+          background: linear-gradient(135deg, #ffd700 0%, #ffaa00 50%, #ff9900 100%);
+          border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+          opacity: 0.8;
+          animation: fallPetal linear infinite;
+          box-shadow: 0 0 0.5vmin rgba(255, 215, 0, 0.5);
+        }
+
+        @keyframes fallPetal {
+          0% {
+            transform: translateY(-10vh) rotate(0deg) translateX(0);
+            opacity: 0;
+          }
+          10% {
+            opacity: 0.8;
+          }
+          90% {
+            opacity: 0.8;
+          }
+          100% {
+            transform: translateY(110vh) rotate(720deg) translateX(20vw);
+            opacity: 0;
+          }
+        }
+
+        /* Efecto de brillo al pasar estrella fugaz */
+        .glow-flash {
+          position: fixed;
+          inset: 0;
+          background: radial-gradient(ellipse at var(--glow-x, 50%) var(--glow-y, 50%), 
+            rgba(255, 255, 255, 0.3) 0%, 
+            transparent 50%);
+          pointer-events: none;
+          z-index: 6;
+          opacity: 0;
+          transition: opacity 0.1s;
+        }
+
+        .glow-flash.active {
+          animation: glowPulse 0.8s ease-out;
+        }
+
+        @keyframes glowPulse {
+          0% { opacity: 0.8; }
+          100% { opacity: 0; }
+        }
+
+        /* Botón volver */
+        .back-btn {
+          position: fixed;
+          top: 3vmin;
+          left: 3vmin;
+          z-index: 100;
+          background: rgba(255, 215, 0, 0.2);
+          border: 1px solid rgba(255, 215, 0, 0.5);
+          color: #ffd700;
+          padding: 1.5vmin 3vmin;
+          border-radius: 25px;
+          cursor: pointer;
+          font-size: 2vmin;
+          text-decoration: none;
+          backdrop-filter: blur(4px);
+          transition: all 0.3s;
+        }
+
+        .back-btn:hover {
+          background: rgba(255, 215, 0, 0.4);
+          transform: scale(1.05);
+        }
     </style>
 </head>
 <body class="not-loaded">
+  <a href="../" class="back-btn">← Menú</a>
+  
   <div class="night"></div>
+  
+  <div class="glow-flash" id="glowFlash"></div>
+  
+  <!-- Estrellas alrededor del nombre -->
+  <div class="fernanda-stars" id="fernandaStars"></div>
+  
+  <!-- Nombre Fernanda -->
+  <div class="fernanda-name">Fernanda 💛</div>
+  
+  <!-- Lluvia de pétalos -->
+  <div class="petals-rain" id="petalsRain"></div>
+  
+  <!-- Contenedor de mensajes románticos -->
+  <div id="messageContainer"></div>
   
   <div class="special-text">Todos los dias son especiales contigo</div>
 
@@ -1353,9 +1536,101 @@
 
   <script>
     document.body.classList.remove('not-loaded');
+    
     setTimeout(function() {
       document.querySelector('.ramo').classList.add('ramo--visible');
     }, 2500);
+
+    // Crear estrellas alrededor del nombre Fernanda
+    function createFernandaStars() {
+      const container = document.getElementById('fernandaStars');
+      const starCount = 30;
+      
+      for (let i = 0; i < starCount; i++) {
+        const star = document.createElement('div');
+        star.className = 'fernanda-star';
+        star.style.left = Math.random() * 100 + '%';
+        star.style.top = Math.random() * 100 + '%';
+        star.style.animationDelay = Math.random() * 2 + 's';
+        star.style.animationDuration = (1 + Math.random()) + 's';
+        container.appendChild(star);
+      }
+    }
+    
+    // Crear pétalos cayendo
+    function createPetals() {
+      const container = document.getElementById('petalsRain');
+      const petalCount = 25;
+      
+      for (let i = 0; i < petalCount; i++) {
+        const petal = document.createElement('div');
+        petal.className = 'petal';
+        petal.style.left = Math.random() * 100 + '%';
+        petal.style.animationDuration = (8 + Math.random() * 10) + 's';
+        petal.style.animationDelay = Math.random() * 10 + 's';
+        petal.style.width = (1 + Math.random() * 1) + 'vmin';
+        petal.style.height = (1.5 + Math.random() * 1.5) + 'vmin';
+        container.appendChild(petal);
+      }
+    }
+
+    // Mensajes románticos aleatorios
+    const romanticMessages = [
+      "Eres la persona más especial en mi vida 💛",
+      "Cada día contigo es un regalo",
+      "Tu sonrisa ilumina mi mundo",
+      "Te amo más de lo que las palabras pueden decir",
+      "Eres mi lugar favorito en este mundo",
+      "Mi corazón late más fuerte por ti",
+      "Gracias por ser tú, Fernanda 💛",
+      "Eres hermosa por dentro y por fuera",
+      "No puedo dejar de pensar en ti",
+      "Juntos somos infinitos 💫",
+      "Mi mundo es más bonito contigo",
+      "Eres el mejor capítulo de mi vida",
+      "Contigo, todo tiene sentido",
+      "Tu amor me hace la persona más feliz",
+      "Soñar contigo es mi pasatiempo favorito 💛"
+    ];
+
+    let messageIndex = 0;
+    
+    function showRomanticMessage() {
+      const container = document.getElementById('messageContainer');
+      const message = document.createElement('div');
+      message.className = 'romantic-message';
+      message.textContent = romanticMessages[messageIndex];
+      container.appendChild(message);
+      
+      messageIndex = (messageIndex + 1) % romanticMessages.length;
+      
+      setTimeout(() => {
+        message.remove();
+      }, 5000);
+    }
+
+    // Efecto de brillo cuando pasa estrella fugaz
+    function triggerGlowEffect() {
+      const glow = document.getElementById('glowFlash');
+      glow.style.setProperty('--glow-x', (Math.random() * 60 + 20) + '%');
+      glow.style.setProperty('--glow-y', (Math.random() * 40 + 10) + '%');
+      glow.classList.remove('active');
+      void glow.offsetWidth;
+      glow.classList.add('active');
+    }
+
+    // Detectar cuando pasa una estrella fugaz (cada 3 segundos en promedio)
+    setInterval(triggerGlowEffect, 3000);
+
+    // Inicializar
+    createFernandaStars();
+    createPetals();
+    
+    // Mostrar primer mensaje después de 3 segundos, luego cada 8 segundos
+    setTimeout(() => {
+      showRomanticMessage();
+      setInterval(showRomanticMessage, 8000);
+    }, 3000);
   </script>
 </body>
 </html>
