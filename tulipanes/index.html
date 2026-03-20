@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ramo de Tulipanes Amarillos 💛</title>
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-MRZTTZBHJH"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-MRZTTZBHJH');
+    </script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(to bottom, #0a0a2e 0%, #1a1a4e 50%, #2d1b4e 100%);
+            overflow: hidden;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        #stars-canvas, #particles-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .content {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .title {
+            color: #ffeb3b;
+            font-size: 2.5em;
+            text-align: center;
+            margin-bottom: 20px;
+            text-shadow: 0 0 20px rgba(255, 235, 59, 0.5);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 0.9; }
+        }
+
+        .message {
+            color: #fff9c4;
+            font-size: 1.3em;
+            text-align: center;
+            margin-bottom: 30px;
+            opacity: 0;
+            animation: fadeIn 2s ease-out forwards;
+            animation-delay: 1s;
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        .flowers-container {
+            position: relative;
+            width: 300px;
+            height: 400px;
+            opacity: 0;
+            transition: opacity 2s ease-in;
+        }
+
+        .flowers-container.revealed {
+            opacity: 1;
+        }
+
+        .tulip {
+            position: absolute;
+            bottom: 0;
+            transform-origin: bottom center;
+        }
+
+        .tulip-stem {
+            width: 4px;
+            background: linear-gradient(to top, #2e7d32, #4caf50);
+            margin: 0 auto;
+            border-radius: 2px;
+        }
+
+        .tulip-head {
+            width: 30px;
+            height: 40px;
+            position: relative;
+            margin: 0 auto;
+        }
+
+        .tulip-petal {
+            position: absolute;
+            width: 15px;
+            height: 40px;
+            background: linear-gradient(to bottom, #ffeb3b, #ffc107);
+            border-radius: 50% 50% 40% 40%;
+            box-shadow: inset 0 -5px 10px rgba(255, 193, 7, 0.5);
+        }
+
+        .tulip-petal:nth-child(1) { left: 0; transform: rotate(-15deg); }
+        .tulip-petal:nth-child(2) { left: 7px; transform: rotate(0deg); }
+        .tulip-petal:nth-child(3) { left: 14px; transform: rotate(15deg); }
+
+        .leaves {
+            position: absolute;
+            bottom: 0;
+            width: 8px;
+            height: 40px;
+            background: linear-gradient(to right, #4caf50, #81c784);
+            border-radius: 50%;
+        }
+
+        .leaves-left { left: -10px; transform: rotate(-30deg); }
+        .leaves-right { right: -10px; transform: rotate(30deg); }
+
+        .audio-controls {
+            margin-top: 30px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px 25px;
+            border-radius: 30px;
+            backdrop-filter: blur(10px);
+        }
+
+        .play-btn {
+            background: linear-gradient(135deg, #ffeb3b 0%, #ffc107 100%);
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.5em;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(255, 193, 7, 0.4);
+        }
+
+        .play-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(255, 193, 7, 0.6);
+        }
+
+        .audio-info {
+            color: #fff9c4;
+            text-align: center;
+        }
+
+        .audio-title {
+            font-size: 1.1em;
+            font-weight: bold;
+        }
+
+        .mute-btn {
+            background: none;
+            border: none;
+            font-size: 1.5em;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .mute-btn:hover {
+            transform: scale(1.2);
+        }
+
+        .heart-effect {
+            position: fixed;
+            pointer-events: none;
+            font-size: 2em;
+            animation: floatUp 3s ease-out forwards;
+            z-index: 100;
+        }
+
+        @keyframes floatUp {
+            0% { opacity: 1; transform: translateY(0) scale(1); }
+            100% { opacity: 0; transform: translateY(-200px) scale(0.5); }
+        }
+
+        .attribution {
+            position: fixed;
+            bottom: 20px;
+            color: rgba(255, 235, 59, 0.6);
+            font-size: 0.9em;
+            text-align: center;
+            width: 100%;
+        }
+
+        .shooting-star {
+            position: fixed;
+            width: 2px;
+            height: 2px;
+            background: #fff;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #fff, 0 0 20px #ffeb3b;
+            animation: shoot 1s ease-out forwards;
+            z-index: 0;
+        }
+
+        @keyframes shoot {
+            0% { transform: translate(0, 0); opacity: 1; }
+            100% { transform: translate(-200px, 200px); opacity: 0; }
+        }
+
+        .menu-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: #ffeb3b;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            text-decoration: none;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s;
+            z-index: 10;
+        }
+
+        .menu-btn:hover {
+            background: rgba(255, 235, 59, 0.2);
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <a href="../" class="menu-btn">← Menú</a>
+    
+    <canvas id="stars-canvas"></canvas>
+    <canvas id="particles-canvas"></canvas>
+
+    <div class="content">
+        <h1 class="title">🌷 Ramo de Tulipanes Amarillos 🌷</h1>
+        <p class="message">Todos los días son especiales contigo 💛</p>
+
+        <div class="flowers-container" id="flowersContainer"></div>
+
+        <div class="audio-controls">
+            <button class="play-btn" id="playBtn" onclick="toggleAudio()">▶</button>
+            <div class="audio-info">
+                <div class="audio-title">Flores Amarillas</div>
+            </div>
+            <button class="mute-btn" id="muteBtn" onclick="toggleMute()">🔊</button>
+        </div>
+    </div>
+
+    <p class="attribution">Flores para ti 💛</p>
+
+    <audio id="audio" loop>
+        <source src="https://cdn.jsdelivr.net/gh/BrayanGt17/JuegosBYF@main/azafran/flores%20amarillas.m4a" type="audio/mp4">
+    </audio>
+
+    <script>
+        const starsCanvas = document.getElementById('stars-canvas');
+        const starsCtx = starsCanvas.getContext('2d');
+        const particlesCanvas = document.getElementById('particles-canvas');
+        const particlesCtx = particlesCanvas.getContext('2d');
+        const audio = document.getElementById('audio');
+        const playBtn = document.getElementById('playBtn');
+        const muteBtn = document.getElementById('muteBtn');
+        const flowersContainer = document.getElementById('flowersContainer');
+
+        let isPlaying = false;
+        let isMuted = false;
+        let stars = [];
+        let particles = [];
+
+        function resizeCanvases() {
+            starsCanvas.width = window.innerWidth;
+            starsCanvas.height = window.innerHeight;
+            particlesCanvas.width = window.innerWidth;
+            particlesCanvas.height = window.innerHeight;
+            initStars();
+            initParticles();
+        }
+
+        function initStars() {
+            stars = [];
+            const starCount = Math.min(200, Math.floor(window.innerWidth * window.innerHeight / 8000));
+            for (let i = 0; i < starCount; i++) {
+                stars.push({
+                    x: Math.random() * starsCanvas.width,
+                    y: Math.random() * starsCanvas.height,
+                    size: Math.random() * 2 + 0.5,
+                    opacity: Math.random() * 0.5 + 0.5,
+                    twinkle: Math.random() * Math.PI * 2
+                });
+            }
+        }
+
+        function initParticles() {
+            particles = [];
+            const particleCount = Math.min(50, Math.floor(window.innerWidth / 30));
+            for (let i = 0; i < particleCount; i++) {
+                particles.push({
+                    x: Math.random() * particlesCanvas.width,
+                    y: Math.random() * particlesCanvas.height,
+                    size: Math.random() * 3 + 1,
+                    speedY: Math.random() * 0.5 + 0.2,
+                    opacity: Math.random() * 0.5 + 0.3,
+                    wobble: Math.random() * Math.PI * 2
+                });
+            }
+        }
+
+        function drawStars() {
+            starsCtx.clearRect(0, 0, starsCanvas.width, starsCanvas.height);
+            stars.forEach(star => {
+                star.twinkle += 0.02;
+                const currentOpacity = star.opacity * (0.5 + Math.sin(star.twinkle) * 0.5);
+                starsCtx.beginPath();
+                starsCtx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+                starsCtx.fillStyle = `rgba(255, 255, 255, ${currentOpacity})`;
+                starsCtx.fill();
+            });
+        }
+
+        function drawParticles() {
+            particlesCtx.clearRect(0, 0, particlesCanvas.width, particlesCanvas.height);
+            particles.forEach(p => {
+                p.y -= p.speedY;
+                p.wobble += 0.05;
+                p.x += Math.sin(p.wobble) * 0.5;
+                
+                if (p.y < -10) {
+                    p.y = particlesCanvas.height + 10;
+                    p.x = Math.random() * particlesCanvas.width;
+                }
+                
+                particlesCtx.beginPath();
+                particlesCtx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                particlesCtx.fillStyle = `rgba(255, 235, 59, ${p.opacity})`;
+                particlesCtx.fill();
+            });
+        }
+
+        function createShootingStar() {
+            const star = document.createElement('div');
+            star.className = 'shooting-star';
+            star.style.left = Math.random() * window.innerWidth + 'px';
+            star.style.top = Math.random() * (window.innerHeight / 2) + 'px';
+            document.body.appendChild(star);
+            setTimeout(() => star.remove(), 1000);
+        }
+
+        function createTulip(x, height, headSize) {
+            const tulip = document.createElement('div');
+            tulip.className = 'tulip';
+            tulip.style.left = x + 'px';
+            tulip.style.transform = `rotate(${(Math.random() - 0.5) * 10}deg)`;
+            
+            const stem = document.createElement('div');
+            stem.className = 'tulip-stem';
+            stem.style.height = height + 'px';
+            
+            const head = document.createElement('div');
+            head.className = 'tulip-head';
+            head.style.marginBottom = '-5px';
+            
+            for (let i = 0; i < 3; i++) {
+                const petal = document.createElement('div');
+                petal.className = 'tulip-petal';
+                head.appendChild(petal);
+            }
+            
+            const leavesLeft = document.createElement('div');
+            leavesLeft.className = 'leaves leaves-left';
+            leavesLeft.style.height = (height * 0.3) + 'px';
+            
+            const leavesRight = document.createElement('div');
+            leavesRight.className = 'leaves leaves-right';
+            leavesRight.style.height = (height * 0.25) + 'px';
+            
+            tulip.appendChild(head);
+            tulip.appendChild(stem);
+            tulip.appendChild(leavesLeft);
+            tulip.appendChild(leavesRight);
+            
+            return tulip;
+        }
+
+        function revealFlowers() {
+            const containerWidth = 300;
+            const centerX = 150;
+            const positions = [
+                { x: 30, height: 180, size: 35 },
+                { x: 60, height: 220, size: 40 },
+                { x: 90, height: 250, size: 45 },
+                { x: 120, height: 270, size: 50 },
+                { x: 150, height: 290, size: 55 },
+                { x: 180, height: 270, size: 50 },
+                { x: 210, height: 250, size: 45 },
+                { x: 240, height: 220, size: 40 },
+                { x: 270, height: 180, size: 35 }
+            ];
+            
+            positions.forEach((pos, i) => {
+                setTimeout(() => {
+                    const tulip = createTulip(pos.x, pos.height, pos.size);
+                    flowersContainer.appendChild(tulip);
+                }, i * 200);
+            });
+            
+            setTimeout(() => {
+                flowersContainer.classList.add('revealed');
+            }, 300);
+        }
+
+        function toggleAudio() {
+            if (isPlaying) {
+                audio.pause();
+                playBtn.textContent = '▶';
+            } else {
+                audio.play().catch(() => {
+                    alert('me desbloqueas de whatsapp shi? jjsjs 💛');
+                });
+                playBtn.textContent = '❚❚';
+            }
+            isPlaying = !isPlaying;
+        }
+
+        function toggleMute() {
+            isMuted = !isMuted;
+            audio.muted = isMuted;
+            muteBtn.textContent = isMuted ? '🔇' : '🔊';
+        }
+
+        document.addEventListener('dblclick', (e) => {
+            const hearts = ['💛', '🌻', '✨', '💐'];
+            const heart = document.createElement('div');
+            heart.className = 'heart-effect';
+            heart.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+            heart.style.left = e.clientX + 'px';
+            heart.style.top = e.clientY + 'px';
+            document.body.appendChild(heart);
+            setTimeout(() => heart.remove(), 3000);
+        });
+
+        function animate() {
+            drawStars();
+            drawParticles();
+            requestAnimationFrame(animate);
+        }
+
+        window.addEventListener('resize', resizeCanvases);
+        resizeCanvases();
+        animate();
+
+        setInterval(createShootingStar, 3000);
+
+        setTimeout(revealFlowers, 2000);
+    </script>
+</body>
+</html>
