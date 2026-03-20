@@ -767,21 +767,6 @@
           z-index: 100;
         }
 
-        .special-text {
-            position: fixed;
-            top: 5%;
-            left: 50%;
-            transform: translateX(-50%);
-            color: #ffdd00;
-            font-family: 'Arial', sans-serif;
-            font-size: 4vmin;
-            text-shadow: 0 0 1vmin rgba(255, 221, 0, 0.5);
-            z-index: 10;
-            opacity: 0;
-            animation: fadeIn 3s 1s forwards;
-            text-align: center;
-        }
-
         .music-bar {
           position: fixed;
           left: 50%;
@@ -1028,12 +1013,11 @@
           font-size: 5vmin;
           font-weight: bold;
           color: transparent;
-          background: linear-gradient(180deg, #fff9c4 0%, #ffd700 50%, #ffaa00 100%);
+          background: linear-gradient(180deg, #e1bee7 0%, #ce93d8 50%, #9c27b0 100%);
           -webkit-background-clip: text;
           background-clip: text;
           text-shadow: none;
-          filter: drop-shadow(0 0 2vmin #ffd700) drop-shadow(0 0 4vmin #ffaa00);
-          animation: shimmer 3s ease-in-out infinite, fadeName 2s ease-out forwards;
+          filter: drop-shadow(0 0 2vmin #ce93d8) drop-shadow(0 0 4vmin #9c27b0);
           letter-spacing: 3px;
         }
 
@@ -1196,7 +1180,8 @@
   <div class="fernanda-stars" id="fernandaStars"></div>
   
   <!-- Nombre Fernanda -->
-  <div class="fernanda-name">Fernanda 💛</div>
+  <div class="fernanda-name">Fernanda</div>
+  <div class="fernanda-name" style="top: 15%; font-size: 3vmin; opacity: 0; animation: fadeName 2s 0.5s ease-out forwards;">Te amo 💜</div>
   
   <!-- Lluvia de pétalos -->
   <div class="petals-rain" id="petalsRain"></div>
@@ -1576,21 +1561,21 @@
 
     // Mensajes románticos aleatorios
     const romanticMessages = [
-      "Eres la persona más especial en mi vida 💛",
-      "Cada día contigo es un regalo",
-      "Tu sonrisa ilumina mi mundo",
-      "Te amo más de lo que las palabras pueden decir",
-      "Eres mi lugar favorito en este mundo",
-      "Mi corazón late más fuerte por ti",
-      "Gracias por ser tú, Fernanda 💛",
-      "Eres hermosa por dentro y por fuera",
-      "No puedo dejar de pensar en ti",
-      "Juntos somos infinitos 💫",
-      "Mi mundo es más bonito contigo",
-      "Eres el mejor capítulo de mi vida",
-      "Contigo, todo tiene sentido",
-      "Tu amor me hace la persona más feliz",
-      "Soñar contigo es mi pasatiempo favorito 💛"
+      "Eres la mejor",
+      "La mas hermosa",
+      "La mas bella",
+      "La mas inteligente",
+      "La mas enojona ok no jsjs",
+      "Eres el amor de mi vida",
+      "La flaca de mi vida",
+      "La mujer que kiero para mi",
+      "Eres todo para mi",
+      "No puedo dartelas",
+      "En persona pero aunque sea",
+      "Asi, jssj te amo sabias? 🥺",
+      "Mucho muchoteeee",
+      "Mas que ayer mas que antier",
+      "Siempre te amare 💗"
     ];
 
     let messageIndex = 0;
