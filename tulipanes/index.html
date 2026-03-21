@@ -1010,60 +1010,70 @@
           margin-right: -30px;
         }
 
-        /* Nombre Fernanda en el cielo */
-        .fernanda-name {
+        /* Nombre Fernanda formado con estrellas */
+        .fernanda-stars {
           position: fixed;
-          top: 8%;
+          top: 5%;
           left: 50%;
           transform: translateX(-50%);
           z-index: 5;
-          font-family: 'Georgia', serif;
-          font-size: 5vmin;
-          font-weight: bold;
-          color: transparent;
-          background: linear-gradient(180deg, #e1bee7 0%, #ce93d8 50%, #9c27b0 100%);
-          -webkit-background-clip: text;
-          background-clip: text;
-          text-shadow: none;
-          filter: drop-shadow(0 0 2vmin #ce93d8) drop-shadow(0 0 4vmin #9c27b0);
-          letter-spacing: 3px;
-        }
-
-        @keyframes shimmer {
-          0%, 100% { filter: drop-shadow(0 0 2vmin #ffd700) drop-shadow(0 0 4vmin #ffaa00); }
-          50% { filter: drop-shadow(0 0 4vmin #ffd700) drop-shadow(0 0 8vmin #fff9c4); }
-        }
-
-        @keyframes fadeName {
-          0% { opacity: 0; transform: translateX(-50%) scale(0.5); }
-          100% { opacity: 1; transform: translateX(-50%) scale(1); }
-        }
-
-        /* Estrellas alrededor del nombre */
-        .fernanda-stars {
-          position: fixed;
-          top: 8%;
-          left: 50%;
-          transform: translateX(-50%);
-          width: 50vmin;
-          height: 15vmin;
-          z-index: 4;
           pointer-events: none;
         }
 
-        .fernanda-star {
-          position: absolute;
-          width: 0.5vmin;
-          height: 0.5vmin;
+        .star-letter {
+          display: inline-block;
+          margin: 0 1vmin;
+        }
+
+        .star-letter span {
+          display: inline-block;
+          width: 1vmin;
+          height: 1vmin;
           background: #fff;
           border-radius: 50%;
-          box-shadow: 0 0 0.5vmin #ffd700;
+          margin: 0.2vmin;
           animation: twinkleStar 1.5s ease-in-out infinite;
+          box-shadow: 0 0 1vmin #ce93d8, 0 0 2vmin #9c27b0;
         }
 
         @keyframes twinkleStar {
-          0%, 100% { opacity: 0.3; transform: scale(1); }
-          50% { opacity: 1; transform: scale(1.3); }
+          0%, 100% { opacity: 0.4; transform: scale(1); box-shadow: 0 0 1vmin #ce93d8; }
+          50% { opacity: 1; transform: scale(1.5); box-shadow: 0 0 2vmin #e1bee7, 0 0 4vmin #9c27b0; }
+        }
+
+        /* Te amo con estrellas */
+        .te-amo-stars {
+          position: fixed;
+          top: 18%;
+          left: 50%;
+          transform: translateX(-50%);
+          z-index: 5;
+          pointer-events: none;
+        }
+
+        .te-amo-stars .star-letter span {
+          animation-delay: calc(var(--i) * 0.1s);
+        }
+
+        /* Mensajes románticos */
+        .romantic-message {
+          position: fixed;
+          bottom: 15%;
+          left: 50%;
+          transform: translateX(-50%);
+          z-index: 15;
+          color: #fff9c4;
+          font-family: 'Georgia', serif;
+          font-size: 2.5vmin;
+          text-align: center;
+          padding: 2vmin 4vmin;
+          background: rgba(0, 0, 0, 0.4);
+          border-radius: 10px;
+          border: 1px solid rgba(255, 215, 0, 0.3);
+          backdrop-filter: blur(4px);
+          opacity: 0;
+          animation: messageAppear 5s ease-in-out forwards;
+          text-shadow: 0 0 1vmin #ffd700;
         }
 
         /* Mensajes románticos */
@@ -1184,12 +1194,11 @@
   
   <div class="glow-flash" id="glowFlash"></div>
   
-  <!-- Estrellas alrededor del nombre -->
+  <!-- Nombre Fernanda con estrellas -->
   <div class="fernanda-stars" id="fernandaStars"></div>
   
-  <!-- Nombre Fernanda -->
-  <div class="fernanda-name">Fernanda</div>
-  <div class="fernanda-name" style="top: 15%; font-size: 3vmin; opacity: 0; animation: fadeName 2s 0.5s ease-out forwards;">Te amo 💜</div>
+  <!-- Te amo con estrellas -->
+  <div class="te-amo-stars" id="teAmoStars"></div>
   
   <!-- Lluvia de pétalos -->
   <div class="petals-rain" id="petalsRain"></div>
@@ -1533,20 +1542,167 @@
     setTimeout(function() {
       document.querySelector('.ramo').classList.add('ramo--visible');
     }, 2500);
-
-    // Crear estrellas alrededor del nombre Fernanda
+    
+    // Crear nombre Fernanda con estrellas
     function createFernandaStars() {
       const container = document.getElementById('fernandaStars');
-      const starCount = 30;
+      const name = 'FERNANDA';
+      const letterWidth = 5;
+      const letterHeight = 7;
       
-      for (let i = 0; i < starCount; i++) {
-        const star = document.createElement('div');
-        star.className = 'fernanda-star';
-        star.style.left = Math.random() * 100 + '%';
-        star.style.top = Math.random() * 100 + '%';
-        star.style.animationDelay = Math.random() * 2 + 's';
-        star.style.animationDuration = (1 + Math.random()) + 's';
-        container.appendChild(star);
+      // Patrones de cada letra (7x5 grid)
+      const letters = {
+        'F': [
+          [1,1,1,1,1],
+          [1,0,0,0,0],
+          [1,1,1,1,0],
+          [1,0,0,0,0],
+          [1,0,0,0,0],
+          [1,0,0,0,0],
+          [1,0,0,0,0]
+        ],
+        'E': [
+          [1,1,1,1,1],
+          [1,0,0,0,0],
+          [1,0,0,0,0],
+          [1,1,1,1,0],
+          [1,0,0,0,0],
+          [1,0,0,0,0],
+          [1,1,1,1,1]
+        ],
+        'R': [
+          [1,1,1,1,0],
+          [1,0,0,0,1],
+          [1,0,0,0,1],
+          [1,1,1,1,0],
+          [1,0,1,0,0],
+          [1,0,0,1,0],
+          [1,0,0,0,1]
+        ],
+        'N': [
+          [1,0,0,0,1],
+          [1,1,0,0,1],
+          [1,0,1,0,1],
+          [1,0,1,0,1],
+          [1,0,0,1,1],
+          [1,0,0,1,1],
+          [1,0,0,0,1]
+        ],
+        'A': [
+          [0,0,1,0,0],
+          [0,1,0,1,0],
+          [1,0,0,0,1],
+          [1,1,1,1,1],
+          [1,0,0,0,1],
+          [1,0,0,0,1],
+          [1,0,0,0,1]
+        ],
+        'D': [
+          [1,1,1,1,0],
+          [1,0,0,0,1],
+          [1,0,0,0,1],
+          [1,0,0,0,1],
+          [1,0,0,0,1],
+          [1,0,0,0,1],
+          [1,1,1,1,0]
+        ]
+      };
+      
+      let delay = 0;
+      for (let l = 0; l < name.length; l++) {
+        const letterDiv = document.createElement('div');
+        letterDiv.className = 'star-letter';
+        letterDiv.style.animationDelay = (delay * 0.1) + 's';
+        
+        const char = name[l];
+        if (letters[char]) {
+          for (let row = 0; row < letters[char].length; row++) {
+            for (let col = 0; col < letters[char][row].length; col++) {
+              if (letters[char][row][col] === 1) {
+                const star = document.createElement('span');
+                star.style.animationDelay = (delay * 0.05 + row * 0.03) + 's';
+                letterDiv.appendChild(star);
+              }
+            }
+          }
+        }
+        container.appendChild(letterDiv);
+        delay++;
+      }
+    }
+    
+    // Crear Te amo con estrellas
+    function createTeAmoStars() {
+      const container = document.getElementById('teAmoStars');
+      const text = 'TE AMO';
+      const letters = {
+        'T': [
+          [1,1,1,1,1],
+          [0,0,1,0,0],
+          [0,0,1,0,0],
+          [0,0,1,0,0],
+          [0,0,1,0,0],
+          [0,0,1,0,0],
+          [0,0,1,0,0]
+        ],
+        'E': [
+          [1,1,1,1,1],
+          [1,0,0,0,0],
+          [1,0,0,0,0],
+          [1,1,1,1,0],
+          [1,0,0,0,0],
+          [1,0,0,0,0],
+          [1,1,1,1,1]
+        ],
+        'A': [
+          [0,0,1,0,0],
+          [0,1,0,1,0],
+          [1,0,0,0,1],
+          [1,1,1,1,1],
+          [1,0,0,0,1],
+          [1,0,0,0,1],
+          [1,0,0,0,1]
+        ],
+        'M': [
+          [1,0,0,0,1],
+          [1,1,0,1,1],
+          [1,0,1,0,1],
+          [1,0,1,0,1],
+          [1,0,0,0,1],
+          [1,0,0,0,1],
+          [1,0,0,0,1]
+        ],
+        'O': [
+          [0,1,1,1,0],
+          [1,0,0,0,1],
+          [1,0,0,0,1],
+          [1,0,0,0,1],
+          [1,0,0,0,1],
+          [1,0,0,0,1],
+          [0,1,1,1,0]
+        ]
+      };
+      
+      let delay = 0;
+      for (let l = 0; l < text.length; l++) {
+        const letterDiv = document.createElement('div');
+        letterDiv.className = 'star-letter';
+        letterDiv.style.setProperty('--i', delay);
+        
+        const char = text[l];
+        if (letters[char]) {
+          for (let row = 0; row < letters[char].length; row++) {
+            for (let col = 0; col < letters[char][row].length; col++) {
+              if (letters[char][row][col] === 1) {
+                const star = document.createElement('span');
+                star.style.animationDelay = (delay * 0.08 + row * 0.04) + 's';
+                letterDiv.appendChild(star);
+              }
+            }
+          }
+        }
+        container.appendChild(letterDiv);
+        delay++;
       }
     }
     
@@ -1617,6 +1773,7 @@
 
     // Inicializar
     createFernandaStars();
+    createTeAmoStars();
     createPetals();
     
     // Mostrar primer mensaje después de 3 segundos, luego cada 6 segundos
