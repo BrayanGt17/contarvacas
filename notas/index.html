@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notitas 💌</title>
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-MRZTTZBHJH"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-MRZTTZBHJH');
+    </script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1a0a2e 0%, #2d1b4e 50%, #1a0a2e 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 20px;
+            padding-bottom: 100px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .title {
+            font-size: 3em;
+            background: linear-gradient(180deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 30px rgba(255, 154, 158, 0.5);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .subtitle {
+            color: #fecfef;
+            font-size: 1.2em;
+            margin-top: 10px;
+            opacity: 0.8;
+        }
+
+        .back-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 154, 158, 0.5);
+            color: #ff9a9e;
+            padding: 10px 20px;
+            border-radius: 25px;
+            text-decoration: none;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s;
+            z-index: 100;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 154, 158, 0.2);
+            transform: scale(1.05);
+        }
+
+        .notes-container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .note-form {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 154, 158, 0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .note-input {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+            font-size: 1em;
+            resize: none;
+            margin-bottom: 15px;
+            font-family: inherit;
+        }
+
+        .note-input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .note-input:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 15px;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+            color: #1a0a2e;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .submit-btn:hover {
+            transform: scale(1.02);
+            box-shadow: 0 5px 20px rgba(255, 154, 158, 0.5);
+        }
+
+        .notes-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .note-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 20px;
+            border: 1px solid rgba(255, 154, 158, 0.2);
+            backdrop-filter: blur(10px);
+            animation: slideIn 0.5s ease-out;
+            position: relative;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .note-text {
+            color: #fff;
+            font-size: 1.1em;
+            line-height: 1.6;
+            margin-bottom: 15px;
+            word-wrap: break-word;
+        }
+
+        .note-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .note-date {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.85em;
+        }
+
+        .note-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .like-btn {
+            background: rgba(255, 154, 158, 0.2);
+            border: 1px solid rgba(255, 154, 158, 0.5);
+            color: #ff9a9e;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .like-btn:hover {
+            background: rgba(255, 154, 158, 0.4);
+            transform: scale(1.05);
+        }
+
+        .like-btn.liked {
+            background: rgba(255, 154, 158, 0.5);
+        }
+
+        .heart-effect {
+            position: fixed;
+            pointer-events: none;
+            font-size: 2em;
+            animation: floatUp 3s ease-out forwards;
+            z-index: 1000;
+        }
+
+        @keyframes floatUp {
+            0% { opacity: 1; transform: translateY(0) scale(1); }
+            100% { opacity: 0; transform: translateY(-200px) scale(0.5); }
+        }
+
+        .reply-form {
+            margin-top: 15px;
+            display: none;
+        }
+
+        .reply-form.show {
+            display: block;
+        }
+
+        .reply-input {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            font-size: 0.9em;
+            margin-bottom: 10px;
+            font-family: inherit;
+        }
+
+        .reply-input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .reply-btn {
+            background: rgba(255, 154, 158, 0.3);
+            border: none;
+            color: #fff;
+            padding: 8px 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+
+        .reply-btn:hover {
+            background: rgba(255, 154, 158, 0.5);
+        }
+
+        .replies {
+            margin-top: 15px;
+            padding-left: 20px;
+            border-left: 2px solid rgba(255, 154, 158, 0.3);
+        }
+
+        .reply {
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+
+        .reply-text {
+            color: #fff;
+            font-size: 0.95em;
+            margin-bottom: 5px;
+        }
+
+        .reply-date {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.8em;
+        }
+
+        .empty-message {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.6);
+            padding: 40px;
+            font-style: italic;
+        }
+
+        .particles {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            width: 0.5vmin;
+            height: 0.5vmin;
+            background: rgba(255, 154, 158, 0.6);
+            border-radius: 50%;
+            animation: float 10s linear infinite;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        .color-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 100;
+            background: rgba(255, 215, 0, 0.2);
+            border: 1px solid rgba(255, 215, 0, 0.5);
+            color: #ffd700;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s;
+        }
+
+        .color-toggle:hover {
+            background: rgba(255, 215, 0, 0.4);
+        }
+
+        /* Tema morado */
+        body.purple-theme {
+            background: linear-gradient(135deg, #0a0a1a 0%, #1a0a2e 50%, #2d1b4e 100%);
+        }
+
+        body.purple-theme .title {
+            background: linear-gradient(180deg, #e1bee7 0%, #ce93d8 50%, #9c27b0 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+        }
+
+        body.purple-theme .subtitle,
+        body.purple-theme .note-text,
+        body.purple-theme .reply-text {
+            color: #e1bee7;
+        }
+
+        body.purple-theme .note-form,
+        body.purple-theme .note-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(206, 147, 216, 0.3);
+        }
+
+        body.purple-theme .like-btn {
+            background: rgba(156, 39, 176, 0.2);
+            border-color: rgba(156, 39, 176, 0.5);
+            color: #ce93d8;
+        }
+
+        body.purple-theme .color-toggle {
+            background: rgba(156, 39, 176, 0.2);
+            border-color: rgba(156, 39, 176, 0.5);
+            color: #ce93d8;
+        }
+
+        body.purple-theme .particle {
+            background: rgba(156, 39, 176, 0.6);
+        }
+
+        .content {
+            position: relative;
+            z-index: 1;
+        }
+    </style>
+</head>
+<body>
+    <a href="../" class="back-btn">← Menú</a>
+    <button class="color-toggle" onclick="toggleColor()">🟣 Morado</button>
+    
+    <div class="particles" id="particles"></div>
+    
+    <div class="content">
+        <div class="header">
+            <h1 class="title">Notitas 💌</h1>
+            <p class="subtitle">Deja un mensaje de amor para mi</p>
+        </div>
+
+        <div class="notes-container">
+            <div class="note-form">
+                <textarea class="note-input" id="noteInput" placeholder="Escribe tu notita aquí... 💕" rows="4"></textarea>
+                <button class="submit-btn" onclick="submitNote()">Enviar Notita 💌</button>
+            </div>
+
+            <div class="notes-list" id="notesList">
+                <div class="empty-message">Aún no hay notitas... ¡Sé el primero en dejar una! 💕</div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    
+    <script>
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDemo123",
+            authDomain: "byfforever-9c691.firebaseapp.com",
+            databaseURL: "https://byfforever-9c691-default-rtdb.firebaseio.com",
+            projectId: "byfforever-9c691",
+            storageBucket: "byfforever-9c691.appspot.com",
+            messagingSenderId: "123456789",
+            appId: "1:123456789:web:abcdef"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        // Crear partículas
+        function createParticles() {
+            const container = document.getElementById('particles');
+            for (let i = 0; i < 20; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDuration = (5 + Math.random() * 10) + 's';
+                particle.style.animationDelay = Math.random() * 10 + 's';
+                container.appendChild(particle);
+            }
+        }
+        createParticles();
+
+        // Cargar notas
+        function loadNotes() {
+            database.ref('notas').orderByChild('timestamp').on('value', (snapshot) => {
+                const notesList = document.getElementById('notesList');
+                notesList.innerHTML = '';
+                
+                const notes = [];
+                snapshot.forEach((child) => {
+                    notes.push({ id: child.key, ...child.val() });
+                });
+                
+                // Mostrar de más nuevo a más antiguo
+                notes.reverse();
+                
+                if (notes.length === 0) {
+                    notesList.innerHTML = '<div class="empty-message">Aún no hay notitas... ¡Sé el primero en dejar una! 💕</div>';
+                    return;
+                }
+                
+                notes.forEach((note) => {
+                    const noteCard = createNoteCard(note);
+                    notesList.appendChild(noteCard);
+                });
+            });
+        }
+
+        function createNoteCard(note) {
+            const card = document.createElement('div');
+            card.className = 'note-card';
+            card.id = 'note-' + note.id;
+            
+            const date = new Date(note.timestamp);
+            const formattedDate = date.toLocaleDateString('es-ES', {
+                day: 'numeric',
+                month: 'short',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            
+            const likedClass = note.likedBy && note.likedBy.includes(getUserId()) ? 'liked' : '';
+            const likes = note.likes || 0;
+            
+            card.innerHTML = `
+                <div class="note-text">${escapeHtml(note.text)}</div>
+                <div class="note-footer">
+                    <span class="note-date">${formattedDate}</span>
+                    <div class="note-actions">
+                        <button class="like-btn ${likedClass}" onclick="likeNote('${note.id}')">
+                            💗 <span id="likes-${note.id}">${likes}</span>
+                        </button>
+                        <button class="like-btn" onclick="toggleReply('${note.id}')">💬</button>
+                    </div>
+                </div>
+                <div class="reply-form" id="reply-form-${note.id}">
+                    <input type="text" class="reply-input" id="reply-input-${note.id}" placeholder="Escribe una respuesta...">
+                    <button class="reply-btn" onclick="submitReply('${note.id}')">Responder 💕</button>
+                </div>
+                <div class="replies" id="replies-${note.id}"></div>
+            `;
+            
+            // Cargar respuestas
+            loadReplies(note.id, note.replies);
+            
+            return card;
+        }
+
+        function loadReplies(noteId, replies) {
+            const container = document.getElementById('replies-' + noteId);
+            if (!container) return;
+            
+            container.innerHTML = '';
+            
+            if (!replies) return;
+            
+            Object.keys(replies).forEach(replyId => {
+                const reply = replies[replyId];
+                const replyDiv = document.createElement('div');
+                replyDiv.className = 'reply';
+                
+                const replyDate = new Date(reply.timestamp);
+                const formattedDate = replyDate.toLocaleDateString('es-ES', {
+                    day: 'numeric',
+                    month: 'short',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+                
+                replyDiv.innerHTML = `
+                    <div class="reply-text">${escapeHtml(reply.text)}</div>
+                    <div class="reply-date">${formattedDate}</div>
+                `;
+                container.appendChild(replyDiv);
+            });
+        }
+
+        function submitNote() {
+            const input = document.getElementById('noteInput');
+            const text = input.value.trim();
+            
+            if (!text) {
+                alert('Escribe algo primero! 💕');
+                return;
+            }
+            
+            const newNote = {
+                text: text,
+                timestamp: Date.now(),
+                likes: 0,
+                likedBy: {}
+            };
+            
+            database.ref('notas').push(newNote);
+            input.value = '';
+        }
+
+        function likeNote(noteId) {
+            const userId = getUserId();
+            const noteRef = database.ref('notas/' + noteId);
+            
+            noteRef.once('value').then((snapshot) => {
+                const note = snapshot.val();
+                if (!note) return;
+                
+                let likes = note.likes || 0;
+                let likedBy = note.likedBy || {};
+                
+                if (likedBy[userId]) {
+                    delete likedBy[userId];
+                    likes--;
+                } else {
+                    likedBy[userId] = true;
+                    likes++;
+                    createHeartEffect();
+                }
+                
+                noteRef.update({ likes, likedBy });
+            });
+        }
+
+        function toggleReply(noteId) {
+            const form = document.getElementById('reply-form-' + noteId);
+            form.classList.toggle('show');
+        }
+
+        function submitReply(noteId) {
+            const input = document.getElementById('reply-input-' + noteId);
+            const text = input.value.trim();
+            
+            if (!text) {
+                alert('Escribe algo primero! 💕');
+                return;
+            }
+            
+            const reply = {
+                text: text,
+                timestamp: Date.now()
+            };
+            
+            database.ref('notas/' + noteId + '/replies').push(reply);
+            input.value = '';
+            document.getElementById('reply-form-' + noteId).classList.remove('show');
+        }
+
+        function getUserId() {
+            let userId = localStorage.getItem('notasUserId');
+            if (!userId) {
+                userId = 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                localStorage.setItem('notasUserId', userId);
+            }
+            return userId;
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function createHeartEffect() {
+            const hearts = ['💗', '💕', '💖', '💘', '💝'];
+            const heart = document.createElement('div');
+            heart.className = 'heart-effect';
+            heart.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+            heart.style.left = (Math.random() * 80 + 10) + '%';
+            heart.style.top = (Math.random() * 50 + 30) + '%';
+            document.body.appendChild(heart);
+            setTimeout(() => heart.remove(), 3000);
+        }
+
+        function toggleColor() {
+            document.body.classList.toggle('purple-theme');
+            const btn = document.querySelector('.color-toggle');
+            if (document.body.classList.contains('purple-theme')) {
+                btn.textContent = '💛 Amarillo';
+            } else {
+                btn.textContent = '🟣 Morado';
+            }
+        }
+
+        // Inicializar
+        loadNotes();
+    </script>
+</body>
+</html>
