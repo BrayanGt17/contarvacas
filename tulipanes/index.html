@@ -1624,16 +1624,16 @@
       setInterval(showRomanticMessage, 6000);
     }, 3000);
 
-    // Hacer las flores movibles
+    // Hacer las flores movibles en toda la pantalla
     function makeFlowersDraggable() {
       const flowers = document.querySelectorAll('.flower');
       
       flowers.forEach(flower => {
         let isDragging = false;
-        let startX, startY, initialX, initialY;
+        let offsetX, offsetY;
         
         flower.style.cursor = 'grab';
-        flower.style.position = 'absolute';
+        flower.style.position = 'fixed';
         flower.style.transition = 'none';
         
         flower.addEventListener('mousedown', (e) => {
@@ -1641,36 +1641,26 @@
           flower.style.cursor = 'grabbing';
           flower.style.zIndex = '100';
           
-          startX = e.clientX;
-          startY = e.clientY;
+          offsetX = e.clientX - flower.offsetLeft;
+          offsetY = e.clientY - flower.offsetTop;
           
-          const rect = flower.getBoundingClientRect();
-          const flowersContainer = document.querySelector('.flowers');
-          const containerRect = flowersContainer.getBoundingClientRect();
-          
-          initialX = rect.left - containerRect.left;
-          initialY = rect.top - containerRect.top;
+          flower.style.left = flower.offsetLeft + 'px';
+          flower.style.top = flower.offsetTop + 'px';
+          flower.style.bottom = 'auto';
         });
         
         document.addEventListener('mousemove', (e) => {
           if (!isDragging) return;
           
-          const deltaX = e.clientX - startX;
-          const deltaY = e.clientY - startY;
+          let newX = e.clientX - offsetX;
+          let newY = e.clientY - offsetY;
           
-          const flowersContainer = document.querySelector('.flowers');
-          const containerRect = flowersContainer.getBoundingClientRect();
-          
-          let newX = initialX + deltaX;
-          let newY = initialY + deltaY;
-          
-          // Limitar dentro del contenedor
-          newX = Math.max(0, Math.min(newX, containerRect.width - 50));
-          newY = Math.max(0, Math.min(newY, containerRect.height - 100));
+          // Limitar a la pantalla
+          newX = Math.max(0, Math.min(newX, window.innerWidth - 50));
+          newY = Math.max(0, Math.min(newY, window.innerHeight - 150));
           
           flower.style.left = newX + 'px';
-          flower.style.bottom = 'auto';
-          flower.style.top = (containerRect.height - newY - 50) + 'px';
+          flower.style.top = newY + 'px';
         });
         
         document.addEventListener('mouseup', () => {
@@ -1686,35 +1676,26 @@
           isDragging = true;
           flower.style.zIndex = '100';
           
-          startX = e.touches[0].clientX;
-          startY = e.touches[0].clientY;
+          offsetX = e.touches[0].clientX - flower.offsetLeft;
+          offsetY = e.touches[0].clientY - flower.offsetTop;
           
-          const rect = flower.getBoundingClientRect();
-          const flowersContainer = document.querySelector('.flowers');
-          const containerRect = flowersContainer.getBoundingClientRect();
-          
-          initialX = rect.left - containerRect.left;
-          initialY = rect.top - containerRect.top;
+          flower.style.left = flower.offsetLeft + 'px';
+          flower.style.top = flower.offsetTop + 'px';
+          flower.style.bottom = 'auto';
         });
         
         document.addEventListener('touchmove', (e) => {
           if (!isDragging) return;
+          e.preventDefault();
           
-          const deltaX = e.touches[0].clientX - startX;
-          const deltaY = e.touches[0].clientY - startY;
+          let newX = e.touches[0].clientX - offsetX;
+          let newY = e.touches[0].clientY - offsetY;
           
-          const flowersContainer = document.querySelector('.flowers');
-          const containerRect = flowersContainer.getBoundingClientRect();
-          
-          let newX = initialX + deltaX;
-          let newY = initialY + deltaY;
-          
-          newX = Math.max(0, Math.min(newX, containerRect.width - 50));
-          newY = Math.max(0, Math.min(newY, containerRect.height - 100));
+          newX = Math.max(0, Math.min(newX, window.innerWidth - 50));
+          newY = Math.max(0, Math.min(newY, window.innerHeight - 150));
           
           flower.style.left = newX + 'px';
-          flower.style.bottom = 'auto';
-          flower.style.top = (containerRect.height - newY - 50) + 'px';
+          flower.style.top = newY + 'px';
         });
         
         document.addEventListener('touchend', () => {
