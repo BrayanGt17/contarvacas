@@ -235,19 +235,24 @@
         }
 
         .flowers {
-          position: relative;
-          transform: scale(0.7);
+          position: fixed;
+          bottom: 0;
+          left: 50%;
+          transform: translateX(-50%);
           z-index: 2;
+          width: 80vmin;
         }
 
         .flower {
           position: absolute;
-          bottom: 15vmin;
+          bottom: 10vmin;
           transform-origin: bottom center;
           z-index: 50;
         }
 
         .flower--1 {
+          left: 50%;
+          transform: translateX(-50%);
           animation: moving-flower-1 4s linear infinite;
         }
 
@@ -273,8 +278,8 @@
         }
 
         .flower--2 {
-          left: 50%;
-          transform: rotate(20deg);
+          left: 55%;
+          transform: translateX(-50%) rotate(20deg);
           animation: moving-flower-2 4s linear infinite;
         }
 
@@ -300,8 +305,8 @@
         }
 
         .flower--3 {
-          left: 50%;
-          transform: rotate(-15deg);
+          left: 45%;
+          transform: translateX(-50%) rotate(-15deg);
           animation: moving-flower-3 4s linear infinite;
         }
 
@@ -326,9 +331,9 @@
         }
 
         .flower--4 {
-          left: -25%;
+          left: 30%;
           z-index: -6;
-          transform: rotate(10deg);
+          transform: translateX(-50%) rotate(10deg);
           animation: moving-flower-4 3.5s linear infinite;
         }
 
@@ -354,9 +359,9 @@
         }
 
         .flower--5 {
-          left: 75%;
+          left: 70%;
           z-index: -7;
-          transform: rotate(-25deg);
+          transform: translateX(-50%) rotate(-25deg);
           animation: moving-flower-5 4.5s linear infinite;
         }
 
@@ -1359,7 +1364,7 @@
         <div class="flower__line__leaf flower__line__leaf--4"></div>
       </div>
     </div>
-    <div class="flower flower--6" style="left:20%;transform:rotate(-10deg);z-index:40;">
+    <div class="flower flower--6" style="left:20%;transform:translateX(-50%) rotate(-10deg);z-index:40;">
       <div class="flower__leafs flower__leafs--6">
         <div class="flower__leaf flower__leaf--1"></div>
         <div class="flower__leaf flower__leaf--2"></div>
@@ -1371,7 +1376,7 @@
       </div>
       <div class="flower__line"></div>
     </div>
-    <div class="flower flower--7" style="left:80%;transform:rotate(15deg);z-index:40;">
+    <div class="flower flower--7" style="left:80%;transform:translateX(-50%) rotate(15deg);z-index:40;">
       <div class="flower__leafs flower__leafs--7">
         <div class="flower__leaf flower__leaf--1"></div>
         <div class="flower__leaf flower__leaf--2"></div>
@@ -1383,7 +1388,7 @@
       </div>
       <div class="flower__line"></div>
     </div>
-    <div class="flower flower--8" style="left:35%;transform:rotate(-25deg);z-index:30;">
+    <div class="flower flower--8" style="left:35%;transform:translateX(-50%) rotate(-25deg);z-index:30;">
       <div class="flower__leafs flower__leafs--8">
         <div class="flower__leaf flower__leaf--1"></div>
         <div class="flower__leaf flower__leaf--2"></div>
@@ -1395,7 +1400,7 @@
       </div>
       <div class="flower__line"></div>
     </div>
-    <div class="flower flower--9" style="left:65%;transform:rotate(25deg);z-index:30;">
+    <div class="flower flower--9" style="left:65%;transform:translateX(-50%) rotate(25deg);z-index:30;">
       <div class="flower__leafs flower__leafs--9">
         <div class="flower__leaf flower__leaf--1"></div>
         <div class="flower__leaf flower__leaf--2"></div>
@@ -1408,7 +1413,7 @@
       <div class="flower__line"></div>
     </div>
 
-    <div class="flower flower--10" style="left:12%;transform:rotate(-18deg);z-index:28;">
+    <div class="flower flower--10" style="left:12%;transform:translateX(-50%) rotate(-18deg);z-index:28;">
       <div class="flower__leafs flower__leafs--10">
         <div class="flower__leaf flower__leaf--1"></div>
         <div class="flower__leaf flower__leaf--2"></div>
@@ -1426,7 +1431,7 @@
       </div>
     </div>
 
-    <div class="flower flower--11" style="left:26%;transform:rotate(-30deg);z-index:26;">
+    <div class="flower flower--11" style="left:26%;transform:translateX(-50%) rotate(-30deg);z-index:26;">
       <div class="flower__leafs flower__leafs--11">
         <div class="flower__leaf flower__leaf--1"></div>
         <div class="flower__leaf flower__leaf--2"></div>
@@ -1444,7 +1449,7 @@
       </div>
     </div>
 
-    <div class="flower flower--12" style="left:50%;transform:rotate(0deg);z-index:45;">
+    <div class="flower flower--12" style="left:50%;transform:translateX(-50%) rotate(0deg);z-index:45;">
       <div class="flower__leafs flower__leafs--12">
         <div class="flower__leaf flower__leaf--1"></div>
         <div class="flower__leaf flower__leaf--2"></div>
@@ -1462,7 +1467,7 @@
       </div>
     </div>
 
-    <div class="flower flower--13" style="left:74%;transform:rotate(30deg);z-index:26;">
+    <div class="flower flower--13" style="left:74%;transform:translateX(-50%) rotate(30deg);z-index:26;">
       <div class="flower__leafs flower__leafs--13">
         <div class="flower__leaf flower__leaf--1"></div>
         <div class="flower__leaf flower__leaf--2"></div>
@@ -1480,7 +1485,7 @@
       </div>
     </div>
 
-    <div class="flower flower--14" style="left:88%;transform:rotate(18deg);z-index:28;">
+    <div class="flower flower--14" style="left:88%;transform:translateX(-50%) rotate(18deg);z-index:28;">
       <div class="flower__leafs flower__leafs--14">
         <div class="flower__leaf flower__leaf--1"></div>
         <div class="flower__leaf flower__leaf--2"></div>
@@ -1611,10 +1616,10 @@
     createFernandaStars();
     createPetals();
     
-    // Mostrar primer mensaje después de 3 segundos, luego cada 8 segundos
+    // Mostrar primer mensaje después de 3 segundos, luego cada 6 segundos
     setTimeout(() => {
       showRomanticMessage();
-      setInterval(showRomanticMessage, 8000);
+      setInterval(showRomanticMessage, 6000);
     }, 3000);
   </script>
 </body>
