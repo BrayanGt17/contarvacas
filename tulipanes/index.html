@@ -241,6 +241,7 @@
           transform: translateX(-50%);
           z-index: 2;
           width: 80vmin;
+          height: 80vmin;
         }
 
         .flower {
@@ -248,6 +249,7 @@
           bottom: 10vmin;
           transform-origin: bottom center;
           z-index: 50;
+          transition: transform 0.1s;
         }
 
         .flower--1 {
@@ -1621,6 +1623,111 @@
       showRomanticMessage();
       setInterval(showRomanticMessage, 6000);
     }, 3000);
+
+    // Hacer las flores movibles
+    function makeFlowersDraggable() {
+      const flowers = document.querySelectorAll('.flower');
+      
+      flowers.forEach(flower => {
+        let isDragging = false;
+        let startX, startY, initialX, initialY;
+        
+        flower.style.cursor = 'grab';
+        flower.style.position = 'absolute';
+        flower.style.transition = 'none';
+        
+        flower.addEventListener('mousedown', (e) => {
+          isDragging = true;
+          flower.style.cursor = 'grabbing';
+          flower.style.zIndex = '100';
+          
+          startX = e.clientX;
+          startY = e.clientY;
+          
+          const rect = flower.getBoundingClientRect();
+          const flowersContainer = document.querySelector('.flowers');
+          const containerRect = flowersContainer.getBoundingClientRect();
+          
+          initialX = rect.left - containerRect.left;
+          initialY = rect.top - containerRect.top;
+        });
+        
+        document.addEventListener('mousemove', (e) => {
+          if (!isDragging) return;
+          
+          const deltaX = e.clientX - startX;
+          const deltaY = e.clientY - startY;
+          
+          const flowersContainer = document.querySelector('.flowers');
+          const containerRect = flowersContainer.getBoundingClientRect();
+          
+          let newX = initialX + deltaX;
+          let newY = initialY + deltaY;
+          
+          // Limitar dentro del contenedor
+          newX = Math.max(0, Math.min(newX, containerRect.width - 50));
+          newY = Math.max(0, Math.min(newY, containerRect.height - 100));
+          
+          flower.style.left = newX + 'px';
+          flower.style.bottom = 'auto';
+          flower.style.top = (containerRect.height - newY - 50) + 'px';
+        });
+        
+        document.addEventListener('mouseup', () => {
+          if (isDragging) {
+            isDragging = false;
+            flower.style.cursor = 'grab';
+            flower.style.zIndex = '50';
+          }
+        });
+        
+        // Touch support para móviles
+        flower.addEventListener('touchstart', (e) => {
+          isDragging = true;
+          flower.style.zIndex = '100';
+          
+          startX = e.touches[0].clientX;
+          startY = e.touches[0].clientY;
+          
+          const rect = flower.getBoundingClientRect();
+          const flowersContainer = document.querySelector('.flowers');
+          const containerRect = flowersContainer.getBoundingClientRect();
+          
+          initialX = rect.left - containerRect.left;
+          initialY = rect.top - containerRect.top;
+        });
+        
+        document.addEventListener('touchmove', (e) => {
+          if (!isDragging) return;
+          
+          const deltaX = e.touches[0].clientX - startX;
+          const deltaY = e.touches[0].clientY - startY;
+          
+          const flowersContainer = document.querySelector('.flowers');
+          const containerRect = flowersContainer.getBoundingClientRect();
+          
+          let newX = initialX + deltaX;
+          let newY = initialY + deltaY;
+          
+          newX = Math.max(0, Math.min(newX, containerRect.width - 50));
+          newY = Math.max(0, Math.min(newY, containerRect.height - 100));
+          
+          flower.style.left = newX + 'px';
+          flower.style.bottom = 'auto';
+          flower.style.top = (containerRect.height - newY - 50) + 'px';
+        });
+        
+        document.addEventListener('touchend', () => {
+          if (isDragging) {
+            isDragging = false;
+            flower.style.zIndex = '50';
+          }
+        });
+      });
+    }
+    
+    // Activar después de que carguen las flores
+    setTimeout(makeFlowersDraggable, 500);
   </script>
 </body>
 </html>
