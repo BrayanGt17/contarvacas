@@ -407,6 +407,21 @@
             background: rgba(156, 39, 176, 0.6);
         }
 
+        body.purple-theme .reply-like-btn {
+            background: rgba(156, 39, 176, 0.2);
+            color: #ce93d8;
+        }
+
+        body.purple-theme .reply-btn {
+            background: rgba(156, 39, 176, 0.3);
+            color: #e1bee7;
+        }
+
+        body.purple-theme .reply-input {
+            background: rgba(255, 255, 255, 0.1);
+            color: #e1bee7;
+        }
+
         .content {
             position: relative;
             z-index: 1;
@@ -433,7 +448,7 @@
     <div class="content">
         <div class="header">
             <h1 class="title">Notitas 💌</h1>
-            <p class="subtitle">Deja un mensaje de amor para mi</p>
+            <p class="subtitle">Deja una notita para mi</p>
         </div>
 
         <div class="notes-container">
@@ -541,41 +556,46 @@
                 <div class="replies" id="replies-${note.id}"></div>
             `;
             
-            // Cargar respuestas
-            loadReplies(note.id, note.replies);
+            // Cargar respuestas en tiempo real
+            loadReplies(note.id);
             
             return card;
         }
 
-        function loadReplies(noteId, replies) {
+        function loadReplies(noteId) {
             const container = document.getElementById('replies-' + noteId);
             if (!container) return;
             
-            container.innerHTML = '';
-            
-            if (!replies) return;
-            
-            Object.keys(replies).forEach(replyId => {
-                const reply = replies[replyId];
-                const replyDiv = document.createElement('div');
-                replyDiv.className = 'reply';
+            // Escuchar cambios en tiempo real
+            database.ref('notas/' + noteId + '/replies').on('value', (snapshot) => {
+                container.innerHTML = '';
                 
-                const replyDate = new Date(reply.timestamp);
-                const formattedDate = replyDate.toLocaleDateString('es-ES', {
-                    day: 'numeric',
-                    month: 'short',
-                    hour: '2-digit',
-                    minute: '2-digit'
+                if (!snapshot.exists()) return;
+                
+                snapshot.forEach((child) => {
+                    const reply = child.val();
+                    const replyId = child.key;
+                    
+                    const replyDiv = document.createElement('div');
+                    replyDiv.className = 'reply';
+                    
+                    const replyDate = new Date(reply.timestamp);
+                    const formattedDate = replyDate.toLocaleDateString('es-ES', {
+                        day: 'numeric',
+                        month: 'short',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    });
+                    
+                    replyDiv.innerHTML = `
+                        <div class="reply-text">${escapeHtml(reply.text)}</div>
+                        <div class="reply-date">${formattedDate}</div>
+                        <button class="reply-like-btn" onclick="likeReply('${noteId}', '${replyId}')">
+                            💗 ${reply.likes || 0}
+                        </button>
+                    `;
+                    container.appendChild(replyDiv);
                 });
-                
-                replyDiv.innerHTML = `
-                    <div class="reply-text">${escapeHtml(reply.text)}</div>
-                    <div class="reply-date">${formattedDate}</div>
-                    <button class="reply-like-btn" onclick="likeReply('${noteId}', '${replyId}')">
-                        💗 ${reply.likes || 0}
-                    </button>
-                `;
-                container.appendChild(replyDiv);
             });
         }
 
