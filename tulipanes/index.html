@@ -1021,10 +1021,10 @@
           font-size: 5vmin;
           font-weight: bold;
           color: transparent;
-          background: linear-gradient(180deg, #e1bee7 0%, #ce93d8 50%, #9c27b0 100%);
+          background: linear-gradient(180deg, #fff9c4 0%, #ffd700 50%, #ffaa00 100%);
           -webkit-background-clip: text;
           background-clip: text;
-          filter: drop-shadow(0 0 2vmin #ce93d8) drop-shadow(0 0 4vmin #9c27b0);
+          filter: drop-shadow(0 0 2vmin #ffd700) drop-shadow(0 0 4vmin #ffaa00);
           letter-spacing: 3px;
           animation: fadeName 2s ease-out forwards;
         }
@@ -1045,10 +1045,10 @@
           font-size: 3vmin;
           font-weight: bold;
           color: transparent;
-          background: linear-gradient(180deg, #e1bee7 0%, #ce93d8 50%, #9c27b0 100%);
+          background: linear-gradient(180deg, #fff9c4 0%, #ffd700 50%, #ffaa00 100%);
           -webkit-background-clip: text;
           background-clip: text;
-          filter: drop-shadow(0 0 1vmin #ce93d8) drop-shadow(0 0 2vmin #9c27b0);
+          filter: drop-shadow(0 0 1vmin #ffd700) drop-shadow(0 0 2vmin #ffaa00);
           letter-spacing: 2px;
           animation: fadeTeAmo 2s 0.5s ease-out forwards;
           opacity: 0;
@@ -1077,13 +1077,90 @@
           height: 0.5vmin;
           background: #fff;
           border-radius: 50%;
-          box-shadow: 0 0 0.5vmin #ce93d8;
+          box-shadow: 0 0 0.5vmin #ffd700;
           animation: twinkleStar 1.5s ease-in-out infinite;
         }
 
         @keyframes twinkleStar {
           0%, 100% { opacity: 0.3; transform: scale(1); }
           50% { opacity: 1; transform: scale(1.3); }
+        }
+
+        /* Botón cambiar color */
+        .color-toggle {
+          position: fixed;
+          top: 3vmin;
+          right: 3vmin;
+          z-index: 100;
+          background: rgba(255, 215, 0, 0.2);
+          border: 1px solid rgba(255, 215, 0, 0.5);
+          color: #ffd700;
+          padding: 1.5vmin 3vmin;
+          border-radius: 25px;
+          cursor: pointer;
+          font-size: 2vmin;
+          backdrop-filter: blur(4px);
+          transition: all 0.3s;
+        }
+
+        .color-toggle:hover {
+          background: rgba(255, 215, 0, 0.4);
+          transform: scale(1.05);
+        }
+
+        /* Tema morado */
+        body.purple-theme .fernanda-name,
+        body.purple-theme .te-amo-name {
+          background: linear-gradient(180deg, #e1bee7 0%, #ce93d8 50%, #9c27b0 100%);
+          -webkit-background-clip: text;
+          filter: drop-shadow(0 0 2vmin #ce93d8) drop-shadow(0 0 4vmin #9c27b0);
+        }
+
+        body.purple-theme .fernanda-star {
+          box-shadow: 0 0 0.5vmin #ce93d8;
+        }
+
+        body.purple-theme .color-toggle {
+          background: rgba(206, 147, 216, 0.2);
+          border-color: rgba(206, 147, 216, 0.5);
+          color: #ce93d8;
+        }
+
+        body.purple-theme .flower__leaf {
+          background: linear-gradient(135deg, #e1bee7 0%, #ce93d8 50%, #9c27b0 100%);
+          box-shadow: 0 0 1vmin #e1bee7, 0 0 0.5vmin #9c27b0, inset 0 0 1.5vmin rgba(255, 255, 255, 0.6);
+        }
+
+        body.purple-theme .petal {
+          background: linear-gradient(135deg, #e1bee7 0%, #ce93d8 50%, #9c27b0 100%);
+          box-shadow: 0 0 0.5vmin rgba(206, 147, 216, 0.5);
+        }
+
+        body.purple-theme .yellow-particle {
+          background: radial-gradient(circle, #f3e5f5 0%, #ce93d8 55%, #9c27b0 100%);
+          box-shadow: 0 0 1.2vmin rgba(206, 147, 216, 0.85);
+        }
+
+        body.purple-theme .romantic-message {
+          color: #f3e5f5;
+          border-color: rgba(206, 147, 216, 0.3);
+          text-shadow: 0 0 1vmin #ce93d8;
+        }
+
+        body.purple-theme .music-bar {
+          border-color: #ce93d8;
+          box-shadow: 0 0 0.8vmin rgba(206, 147, 216, 0.95), 0 0 2.4vmin rgba(156, 39, 176, 0.65), inset 0 0 0.8vmin rgba(243, 229, 245, 0.35);
+        }
+
+        body.purple-theme .music-bar audio {
+          background: linear-gradient(90deg, #f3e5f5 0%, #e1bee7 45%, #ce93d8 100%);
+          accent-color: #9c27b0;
+        }
+
+        body.purple-theme .back-btn {
+          background: rgba(206, 147, 216, 0.2);
+          border-color: rgba(206, 147, 216, 0.5);
+          color: #ce93d8;
         }
 
         /* Mensajes románticos */
@@ -1220,6 +1297,7 @@
 </head>
 <body class="not-loaded">
   <a href="../" class="back-btn">← Menú</a>
+  <button class="color-toggle" onclick="toggleColor()">🟣 Morado</button>
   
   <div class="night"></div>
   
@@ -1665,6 +1743,17 @@
       showRomanticMessage();
       setInterval(showRomanticMessage, 6000);
     }, 3000);
+
+    // Cambiar color del tema
+    function toggleColor() {
+      document.body.classList.toggle('purple-theme');
+      const btn = document.querySelector('.color-toggle');
+      if (document.body.classList.contains('purple-theme')) {
+        btn.textContent = '💛 Amarillo';
+      } else {
+        btn.textContent = '🟣 Morado';
+      }
+    }
 
     // Hacer las flores movibles en toda la pantalla
     function makeFlowersDraggable() {
