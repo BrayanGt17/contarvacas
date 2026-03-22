@@ -692,6 +692,52 @@
             margin-bottom: 6px;
         }
 
+        .nested-reply-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 6px;
+            flex-wrap: wrap;
+        }
+
+        .nested-reply-form {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-top: 8px;
+            padding-left: 10px;
+        }
+
+        .nested-reply-form input {
+            padding: 3px 8px;
+            border-radius: 10px;
+            border: 1px solid rgba(126, 87, 194, 0.3);
+            background: rgba(30, 30, 60, 0.8);
+            color: #fff;
+            font-size: 0.75em;
+            flex: 1;
+            min-width: 50px;
+        }
+
+        .nested-reply-form input::placeholder {
+            color: #9e8ac4;
+        }
+
+        .nested-reply-form .send-btn {
+            padding: 3px 10px;
+            border-radius: 10px;
+            border: none;
+            background: var(--secondary);
+            color: white;
+            font-size: 0.75em;
+            cursor: pointer;
+        }
+
+        .nested-replies .nested-replies {
+            margin-top: 8px;
+            padding-left: 12px;
+            border-left: 2px solid rgba(255, 105, 180, 0.2);
+        }
+
         .reply-form input {
             padding: 6px 10px;
             border-radius: 15px;
@@ -1148,6 +1194,52 @@
         // Escuchar cambios en tiempo real - comments
         commentsRef.on('value', (snapshot) => {
             firebaseComments = snapshot.val() || {};
+            
+            // Migrar comentarios existentes para que tengan likes y replies
+            let needsUpdate = false;
+            for (const storyIndex in firebaseComments) {
+                const storyComments = firebaseComments[storyIndex];
+                for (const commentKey in storyComments) {
+                    const comment = storyComments[commentKey];
+                    if (comment.likes === undefined) {
+                        comment.likes = 0;
+                        needsUpdate = true;
+                    }
+                    if (!comment.replies) {
+                        comment.replies = {};
+                        needsUpdate = true;
+                    }
+                    // Migrar replies existentes
+                    for (const replyKey in comment.replies) {
+                        const reply = comment.replies[replyKey];
+                        if (reply.likes === undefined) {
+                            reply.likes = 0;
+                            needsUpdate = true;
+                        }
+                        if (!reply.replies) {
+                            reply.replies = {};
+                            needsUpdate = true;
+                        }
+                        // Migrar respuestas anidadas existentes
+                        for (const nestedKey in reply.replies) {
+                            const nested = reply.replies[nestedKey];
+                            if (nested.likes === undefined) {
+                                nested.likes = 0;
+                                needsUpdate = true;
+                            }
+                            if (!nested.replies) {
+                                nested.replies = {};
+                                needsUpdate = true;
+                            }
+                        }
+                    }
+                }
+            }
+            
+            if (needsUpdate) {
+                commentsRef.set(firebaseComments);
+            }
+            
             renderComments(currentTrack);
         });
 
@@ -1180,16 +1272,47 @@
                     const replyLikes = reply.likes || 0;
                     const nestedReplies = reply.replies || {};
                     
-                    // Renderizar respuestas anidadas
-                    const nestedHtml = Object.values(nestedReplies).sort((a, b) => a.timestamp - b.timestamp).map(nested => `
-                        <div class="nested-reply">
-                            <div class="reply-header">
-                                <span class="reply-name">${escapeHtml(nested.name)}</span>
-                                <span class="reply-date">${formatDate(nested.timestamp)}</span>
-                            </div>
-                            <div class="reply-text">${escapeHtml(nested.text)}</div>
-                        </div>
-                    `).join('');
+                    // Renderizar respuestas anidadas (recursivo)
+                    const likedNestedReplies = JSON.parse(localStorage.getItem('likedNestedReplies') || '{}');
+                    
+                    function renderNestedReplies(nestedObj, parentCommentKey, parentReplyKey, level = 0) {
+                        if (!nestedObj || Object.keys(nestedObj).length === 0) return '';
+                        
+                        return Object.values(nestedObj).sort((a, b) => a.timestamp - b.timestamp).map((nested, nestedIndex) => {
+                            const nestedKey = Object.keys(nestedObj)[nestedIndex];
+                            const likeKey = `${parentCommentKey}_${parentReplyKey}_${nestedKey}`;
+                            const isNestedLiked = likedNestedReplies[likeKey];
+                            const nestedLikes = nested.likes || 0;
+                            const childNested = nested.replies || {};
+                            const childHtml = level < 10 ? renderNestedReplies(childNested, parentCommentKey, parentReplyKey, level + 1) : '';
+                            
+                            return `
+                                <div class="nested-reply">
+                                    <div class="reply-header">
+                                        <span class="reply-name">${escapeHtml(nested.name)}</span>
+                                        <span class="reply-date">${formatDate(nested.timestamp)}</span>
+                                    </div>
+                                    <div class="reply-text">${escapeHtml(nested.text)}</div>
+                                    <div class="nested-reply-actions">
+                                        <button class="action-btn like-nested ${isNestedLiked ? 'liked' : ''}" data-comment="${parentCommentKey}" data-reply="${parentReplyKey}" data-nested="${nestedKey}" data-story="${index}">
+                                            💗 <span>${nestedLikes}</span>
+                                        </button>
+                                        <button class="action-btn reply-nested-btn" data-comment="${parentCommentKey}" data-reply="${parentReplyKey}" data-nested="${nestedKey}" data-story="${index}">
+                                            💬 Responder
+                                        </button>
+                                        <div class="nested-reply-form" id="nested-form-${parentCommentKey}-${parentReplyKey}-${nestedKey}" style="display: none; width: 100%;">
+                                            <input type="text" placeholder="Tu nombre" class="nested-name-input" maxlength="12">
+                                            <input type="text" placeholder="Escribir..." class="nested-text-input" maxlength="60">
+                                            <button class="send-btn" data-comment="${parentCommentKey}" data-reply="${parentReplyKey}" data-nested="${nestedKey}" data-story="${index}">Env</button>
+                                        </div>
+                                    </div>
+                                    ${childHtml ? `<div class="nested-replies">${childHtml}</div>` : ''}
+                                </div>
+                            `;
+                        }).join('');
+                    }
+                    
+                    const nestedHtml = renderNestedReplies(nestedReplies, commentKey, replyKey);
                     
                     return `
                         <div class="reply-item">
@@ -1280,11 +1403,36 @@
             document.querySelectorAll('.send-reply-small').forEach(btn => {
                 btn.addEventListener('click', () => sendReplyToReply(btn.dataset.story, btn.dataset.comment, btn.dataset.reply));
             });
+            
+            // Event listeners for nested like buttons
+            document.querySelectorAll('.like-nested').forEach(btn => {
+                btn.addEventListener('click', () => toggleNestedLike(btn.dataset.story, btn.dataset.comment, btn.dataset.reply, btn.dataset.nested));
+            });
+            
+            // Event listeners for nested reply buttons
+            document.querySelectorAll('.reply-nested-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const commentKey = btn.dataset.comment;
+                    const replyKey = btn.dataset.reply;
+                    const nestedKey = btn.dataset.nested;
+                    const form = document.getElementById(`nested-form-${commentKey}-${replyKey}-${nestedKey}`);
+                    form.style.display = form.style.display === 'none' ? 'flex' : 'none';
+                });
+            });
+            
+            // Event listeners for send nested reply buttons
+            document.querySelectorAll('.nested-reply-form .send-btn').forEach(btn => {
+                btn.addEventListener('click', () => sendNestedReply(btn.dataset.story, btn.dataset.comment, btn.dataset.reply, btn.dataset.nested));
+            });
         }
 
         function toggleReplyLike(storyIndex, commentKey, replyKey) {
             const storyComments = firebaseComments[storyIndex] || {};
             if (!storyComments[commentKey] || !storyComments[commentKey].replies || !storyComments[commentKey].replies[replyKey]) return;
+            
+            if (storyComments[commentKey].replies[replyKey].likes === undefined) {
+                storyComments[commentKey].replies[replyKey].likes = 0;
+            }
             
             const likedReplies = JSON.parse(localStorage.getItem('likedReplies') || '{}');
             const key = `${commentKey}_${replyKey}`;
@@ -1320,7 +1468,65 @@
             storyComments[commentKey].replies[replyKey].replies[replyToReplyKey] = {
                 name: name,
                 text: text,
-                timestamp: Date.now()
+                timestamp: Date.now(),
+                likes: 0,
+                replies: {}
+            };
+            
+            commentsRef.child(storyIndex).set(storyComments);
+            nameInput.value = '';
+            textInput.value = '';
+            form.style.display = 'none';
+        }
+
+        function toggleNestedLike(storyIndex, commentKey, replyKey, nestedKey) {
+            const storyComments = firebaseComments[storyIndex] || {};
+            if (!storyComments[commentKey] || !storyComments[commentKey].replies || !storyComments[commentKey].replies[replyKey] || !storyComments[commentKey].replies[replyKey].replies[nestedKey]) return;
+            
+            if (storyComments[commentKey].replies[replyKey].replies[nestedKey].likes === undefined) {
+                storyComments[commentKey].replies[replyKey].replies[nestedKey].likes = 0;
+            }
+            
+            const likedNestedReplies = JSON.parse(localStorage.getItem('likedNestedReplies') || '{}');
+            const likeKey = `${commentKey}_${replyKey}_${nestedKey}`;
+            
+            if (likedNestedReplies[likeKey]) {
+                likedNestedReplies[likeKey] = false;
+                storyComments[commentKey].replies[replyKey].replies[nestedKey].likes = Math.max(0, (storyComments[commentKey].replies[replyKey].replies[nestedKey].likes || 0) - 1);
+            } else {
+                likedNestedReplies[likeKey] = true;
+                storyComments[commentKey].replies[replyKey].replies[nestedKey].likes = (storyComments[commentKey].replies[replyKey].replies[nestedKey].likes || 0) + 1;
+            }
+            
+            localStorage.setItem('likedNestedReplies', JSON.stringify(likedNestedReplies));
+            commentsRef.child(storyIndex).set(storyComments);
+        }
+
+        function sendNestedReply(storyIndex, commentKey, replyKey, nestedKey) {
+            const form = document.getElementById(`nested-form-${commentKey}-${replyKey}-${nestedKey}`);
+            const nameInput = form.querySelector('.nested-name-input');
+            const textInput = form.querySelector('.nested-text-input');
+            
+            const name = nameInput.value.trim();
+            const text = textInput.value.trim();
+            
+            if (!name || !text) return;
+            
+            const storyComments = firebaseComments[storyIndex] || {};
+            if (!storyComments[commentKey] || !storyComments[commentKey].replies || !storyComments[commentKey].replies[replyKey] || !storyComments[commentKey].replies[replyKey].replies[nestedKey]) return;
+            
+            if (!storyComments[commentKey].replies[replyKey].replies[nestedKey].replies) {
+                storyComments[commentKey].replies[replyKey].replies[nestedKey].replies = {};
+            }
+            
+            // Agregar respuesta anidada
+            const newNestedKey = db.ref().push().key;
+            storyComments[commentKey].replies[replyKey].replies[nestedKey].replies[newNestedKey] = {
+                name: name,
+                text: text,
+                timestamp: Date.now(),
+                likes: 0,
+                replies: {}
             };
             
             commentsRef.child(storyIndex).set(storyComments);
@@ -1332,6 +1538,10 @@
         function toggleCommentLike(storyIndex, commentKey) {
             const storyComments = firebaseComments[storyIndex] || {};
             if (!storyComments[commentKey]) return;
+            
+            if (storyComments[commentKey].likes === undefined) {
+                storyComments[commentKey].likes = 0;
+            }
             
             const likedComments = JSON.parse(localStorage.getItem('likedComments') || '{}');
             
@@ -1365,7 +1575,9 @@
             storyComments[commentKey].replies[replyKey] = {
                 name: name,
                 text: text,
-                timestamp: Date.now()
+                timestamp: Date.now(),
+                likes: 0,
+                replies: {}
             };
             
             commentsRef.child(storyIndex).set(storyComments);
@@ -1399,7 +1611,9 @@
             const newComment = {
                 name: name,
                 text: text,
-                timestamp: Date.now()
+                timestamp: Date.now(),
+                likes: 0,
+                replies: {}
             };
             
             const storyComments = firebaseComments[index] || {};
