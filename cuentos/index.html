@@ -1258,12 +1258,23 @@
                 return;
             }
             
+            function countAllReplies(repliesObj) {
+                let count = 0;
+                for (const key in repliesObj) {
+                    count++;
+                    if (repliesObj[key].replies) {
+                        count += countAllReplies(repliesObj[key].replies);
+                    }
+                }
+                return count;
+            }
+            
             commentsList.innerHTML = sortedComments.map((comment, cIndex) => {
                 const commentKey = Object.keys(storyComments)[cIndex];
                 const isLiked = likedComments[commentKey];
                 const likes = comment.likes || 0;
                 const replies = comment.replies || {};
-                const replyCount = Object.keys(replies).length;
+                const replyCount = countAllReplies(replies);
                 
                 const repliesHtml = Object.values(replies).sort((a, b) => a.timestamp - b.timestamp).map((reply, replyIndex) => {
                     const replyKey = Object.keys(replies)[replyIndex];
