@@ -541,65 +541,38 @@
         }
 
         .comment-item {
-            margin-bottom: 15px;
+            background: rgba(30, 30, 60, 0.6);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-left: 3px solid var(--primary);
         }
 
         .comment-header {
             display: flex;
-            gap: 10px;
-            align-items: flex-start;
-        }
-
-        .comment-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1em;
-            font-weight: bold;
-            color: white;
-            flex-shrink: 0;
-        }
-
-        .comment-content {
-            flex: 1;
-            min-width: 0;
-        }
-
-        .comment-bubble {
-            background: rgba(45, 45, 80, 0.8);
-            border-radius: 18px;
-            padding: 10px 14px;
-            display: inline-block;
-            max-width: 100%;
+            justify-content: space-between;
+            margin-bottom: 8px;
         }
 
         .comment-name {
             color: var(--primary);
-            font-weight: 600;
-            font-size: 0.9em;
-            margin-bottom: 2px;
-        }
-
-        .comment-text {
-            color: #e0e0e0;
-            font-size: 0.95em;
-            line-height: 1.4;
+            font-weight: bold;
         }
 
         .comment-date {
-            color: #9e8ac4;
-            font-size: 0.75em;
+            color: #7e57c2;
+            font-size: 0.8em;
+        }
+
+        .comment-text {
+            color: var(--light);
+            line-height: 1.5;
         }
 
         .comment-actions {
             display: flex;
             gap: 15px;
-            margin-top: 5px;
-            padding-left: 4px;
+            margin-top: 10px;
         }
 
         .action-btn {
@@ -611,7 +584,7 @@
             display: flex;
             align-items: center;
             gap: 5px;
-            padding: 4px 8px;
+            padding: 5px 10px;
             border-radius: 15px;
             transition: all 0.2s;
         }
@@ -625,85 +598,53 @@
             color: #ff1493;
         }
 
-        /* Facebook-style comentarios */
         .replies-container {
             margin-top: 10px;
-            padding-left: 50px;
+            padding-left: 15px;
+            border-left: 2px solid rgba(126, 87, 194, 0.3);
         }
 
         .reply-item {
-            margin-bottom: 10px;
+            background: rgba(30, 30, 60, 0.4);
+            border-radius: 10px;
+            padding: 10px;
+            margin-bottom: 8px;
         }
 
         .reply-header {
             display: flex;
-            gap: 10px;
-            align-items: flex-start;
-        }
-
-        .reply-avatar {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.75em;
-            font-weight: bold;
-            color: white;
-            flex-shrink: 0;
-        }
-
-        .reply-content {
-            flex: 1;
-            min-width: 0;
-        }
-
-        .reply-bubble {
-            background: rgba(40, 40, 70, 0.6);
-            border-radius: 18px;
-            padding: 8px 12px;
-            display: inline-block;
-            max-width: 100%;
+            justify-content: space-between;
+            margin-bottom: 5px;
         }
 
         .reply-name {
-            color: var(--primary);
-            font-size: 0.9em;
-            font-weight: 600;
-            margin-bottom: 2px;
-        }
-
-        .reply-text {
-            color: #e0e0e0;
-            font-size: 0.9em;
-            line-height: 1.4;
-        }
-
-        .reply-meta {
-            display: flex;
-            gap: 15px;
-            margin-top: 4px;
-            padding-left: 4px;
+            color: #d1c4e9;
+            font-size: 0.85em;
+            font-weight: bold;
         }
 
         .reply-date {
-            color: #9e8ac4;
+            color: #7e57c2;
             font-size: 0.75em;
+        }
+
+        .reply-text {
+            color: #b39ddb;
+            font-size: 0.9em;
         }
 
         .reply-form {
             display: flex;
             flex-wrap: wrap;
             gap: 5px;
-            margin-top: 8px;
+            margin-top: 10px;
         }
 
         .reply-actions {
             display: flex;
-            gap: 15px;
-            margin-top: 4px;
+            gap: 10px;
+            margin-top: 8px;
+            flex-wrap: wrap;
         }
 
         .reply-form-small {
@@ -714,14 +655,14 @@
         }
 
         .reply-form-small input {
-            padding: 6px 12px;
-            border-radius: 18px;
-            border: none;
+            padding: 4px 8px;
+            border-radius: 10px;
+            border: 1px solid rgba(126, 87, 194, 0.3);
             background: rgba(30, 30, 60, 0.8);
             color: #fff;
-            font-size: 0.85em;
+            font-size: 0.8em;
             flex: 1;
-            min-width: 100px;
+            min-width: 60px;
         }
 
         .reply-form-small input::placeholder {
@@ -729,29 +670,33 @@
         }
 
         .reply-form-small .send-reply-small {
-            padding: 6px 15px;
-            border-radius: 18px;
+            padding: 4px 10px;
+            border-radius: 10px;
             border: none;
             background: var(--secondary);
             color: white;
-            font-size: 0.85em;
+            font-size: 0.8em;
             cursor: pointer;
         }
 
         .nested-replies {
             margin-top: 10px;
-            padding-left: 40px;
-            border-left: 2px solid rgba(126, 87, 194, 0.25);
+            padding-left: 15px;
+            border-left: 2px solid rgba(126, 87, 194, 0.2);
         }
 
         .nested-reply {
-            margin-bottom: 10px;
+            background: rgba(20, 20, 40, 0.5);
+            border-radius: 8px;
+            padding: 8px;
+            margin-bottom: 6px;
         }
 
         .nested-reply-actions {
             display: flex;
-            gap: 15px;
-            margin-top: 4px;
+            gap: 8px;
+            margin-top: 6px;
+            flex-wrap: wrap;
         }
 
         .nested-reply-form {
@@ -759,17 +704,18 @@
             flex-wrap: wrap;
             gap: 5px;
             margin-top: 8px;
+            padding-left: 10px;
         }
 
         .nested-reply-form input {
-            padding: 6px 12px;
-            border-radius: 18px;
-            border: none;
+            padding: 3px 8px;
+            border-radius: 10px;
+            border: 1px solid rgba(126, 87, 194, 0.3);
             background: rgba(30, 30, 60, 0.8);
             color: #fff;
-            font-size: 0.85em;
+            font-size: 0.75em;
             flex: 1;
-            min-width: 100px;
+            min-width: 50px;
         }
 
         .nested-reply-form input::placeholder {
@@ -777,24 +723,30 @@
         }
 
         .nested-reply-form .send-btn {
-            padding: 6px 15px;
-            border-radius: 18px;
+            padding: 3px 10px;
+            border-radius: 10px;
             border: none;
             background: var(--secondary);
             color: white;
-            font-size: 0.85em;
+            font-size: 0.75em;
             cursor: pointer;
         }
 
+        .nested-replies .nested-replies {
+            margin-top: 8px;
+            padding-left: 12px;
+            border-left: 2px solid rgba(255, 105, 180, 0.2);
+        }
+
         .reply-form input {
-            padding: 8px 14px;
-            border-radius: 18px;
-            border: none;
+            padding: 6px 10px;
+            border-radius: 15px;
+            border: 1px solid rgba(126, 87, 194, 0.3);
             background: rgba(30, 30, 60, 0.8);
             color: #fff;
-            font-size: 0.9em;
+            font-size: 0.85em;
             flex: 1;
-            min-width: 100px;
+            min-width: 80px;
         }
 
         .reply-form input::placeholder {
@@ -802,12 +754,12 @@
         }
 
         .reply-form .send-reply-btn {
-            padding: 8px 18px;
-            border-radius: 18px;
+            padding: 6px 15px;
+            border-radius: 15px;
             border: none;
             background: var(--primary);
             color: white;
-            font-size: 0.9em;
+            font-size: 0.85em;
             cursor: pointer;
         }
 
@@ -1348,26 +1300,21 @@
                             return `
                                 <div class="nested-reply">
                                     <div class="reply-header">
-                                        <div class="reply-avatar">${nested.name.charAt(0).toUpperCase()}</div>
-                                        <div class="reply-content">
-                                            <div class="reply-bubble">
-                                                <div class="reply-name">${escapeHtml(nested.name)}</div>
-                                                <div class="reply-text">${escapeHtml(nested.text)}</div>
-                                            </div>
-                                            <div class="reply-meta">
-                                                <button class="action-btn like-nested ${isNestedLiked ? 'liked' : ''}" data-comment="${parentCommentKey}" data-reply="${parentReplyKey}" data-nested="${nestedKey}" data-story="${index}">
-                                                    💗 <span>${nestedLikes}</span>
-                                                </button>
-                                                <button class="action-btn reply-nested-btn" data-comment="${parentCommentKey}" data-reply="${parentReplyKey}" data-nested="${nestedKey}" data-story="${index}">
-                                                    Responder
-                                                </button>
-                                                <span class="reply-date">${formatDate(nested.timestamp)}</span>
-                                            </div>
-                                            <div class="nested-reply-form" id="nested-form-${parentCommentKey}-${parentReplyKey}-${nestedKey}" style="display: none; width: 100%;">
-                                                <input type="text" placeholder="Tu nombre" class="nested-name-input" maxlength="12">
-                                                <input type="text" placeholder="Escribir..." class="nested-text-input" maxlength="60">
-                                                <button class="send-btn" data-comment="${parentCommentKey}" data-reply="${parentReplyKey}" data-nested="${nestedKey}" data-story="${index}">Env</button>
-                                            </div>
+                                        <span class="reply-name">${escapeHtml(nested.name)}</span>
+                                        <span class="reply-date">${formatDate(nested.timestamp)}</span>
+                                    </div>
+                                    <div class="reply-text">${escapeHtml(nested.text)}</div>
+                                    <div class="nested-reply-actions">
+                                        <button class="action-btn like-nested ${isNestedLiked ? 'liked' : ''}" data-comment="${parentCommentKey}" data-reply="${parentReplyKey}" data-nested="${nestedKey}" data-story="${index}">
+                                            💗 <span>${nestedLikes}</span>
+                                        </button>
+                                        <button class="action-btn reply-nested-btn" data-comment="${parentCommentKey}" data-reply="${parentReplyKey}" data-nested="${nestedKey}" data-story="${index}">
+                                            💬 Responder
+                                        </button>
+                                        <div class="nested-reply-form" id="nested-form-${parentCommentKey}-${parentReplyKey}-${nestedKey}" style="display: none; width: 100%;">
+                                            <input type="text" placeholder="Tu nombre" class="nested-name-input" maxlength="12">
+                                            <input type="text" placeholder="Escribir..." class="nested-text-input" maxlength="60">
+                                            <button class="send-btn" data-comment="${parentCommentKey}" data-reply="${parentReplyKey}" data-nested="${nestedKey}" data-story="${index}">Env</button>
                                         </div>
                                     </div>
                                     ${childHtml ? `<div class="nested-replies">${childHtml}</div>` : ''}
@@ -1381,29 +1328,24 @@
                     return `
                         <div class="reply-item">
                             <div class="reply-header">
-                                <div class="reply-avatar">${reply.name.charAt(0).toUpperCase()}</div>
-                                <div class="reply-content">
-                                    <div class="reply-bubble">
-                                        <div class="reply-name">${escapeHtml(reply.name)}</div>
-                                        <div class="reply-text">${escapeHtml(reply.text)}</div>
-                                    </div>
-                                    <div class="reply-meta">
-                                        <button class="action-btn like-reply ${isReplyLiked ? 'liked' : ''}" data-comment="${commentKey}" data-reply="${replyKey}" data-story="${index}">
-                                            💗 <span>${replyLikes}</span>
-                                        </button>
-                                        <button class="action-btn reply-to-reply-btn" data-comment="${commentKey}" data-reply="${replyKey}" data-story="${index}">
-                                            Responder
-                                        </button>
-                                        <span class="reply-date">${formatDate(reply.timestamp)}</span>
-                                    </div>
-                                    <div class="reply-form-small" id="reply-small-${commentKey}-${replyKey}" style="display: none;">
-                                        <input type="text" placeholder="Tu nombre" class="reply-name-small" maxlength="15">
-                                        <input type="text" placeholder="Escribir..." class="reply-text-small" maxlength="80">
-                                        <button class="send-reply-small" data-comment="${commentKey}" data-reply="${replyKey}" data-story="${index}">Env</button>
-                                    </div>
-                                    ${nestedHtml ? `<div class="nested-replies">${nestedHtml}</div>` : ''}
+                                <span class="reply-name">${escapeHtml(reply.name)}</span>
+                                <span class="reply-date">${formatDate(reply.timestamp)}</span>
+                            </div>
+                            <div class="reply-text">${escapeHtml(reply.text)}</div>
+                            <div class="reply-actions">
+                                <button class="action-btn like-reply ${isReplyLiked ? 'liked' : ''}" data-comment="${commentKey}" data-reply="${replyKey}" data-story="${index}">
+                                    💗 <span>${replyLikes}</span>
+                                </button>
+                                <button class="action-btn reply-to-reply-btn" data-comment="${commentKey}" data-reply="${replyKey}" data-story="${index}">
+                                    💬 Responder
+                                </button>
+                                <div class="reply-form-small" id="reply-small-${commentKey}-${replyKey}" style="display: none;">
+                                    <input type="text" placeholder="Tu nombre" class="reply-name-small" maxlength="15">
+                                    <input type="text" placeholder="Escribir..." class="reply-text-small" maxlength="80">
+                                    <button class="send-reply-small" data-comment="${commentKey}" data-reply="${replyKey}" data-story="${index}">Env</button>
                                 </div>
                             </div>
+                            ${nestedHtml ? `<div class="nested-replies">${nestedHtml}</div>` : ''}
                         </div>
                     `;
                 }).join('');
@@ -1411,29 +1353,24 @@
                 return `
                     <div class="comment-item">
                         <div class="comment-header">
-                            <div class="comment-avatar">${comment.name.charAt(0).toUpperCase()}</div>
-                            <div class="comment-content">
-                                <div class="comment-bubble">
-                                    <div class="comment-name">${escapeHtml(comment.name)}</div>
-                                    <div class="comment-text">${escapeHtml(comment.text)}</div>
-                                </div>
-                                <div class="comment-actions">
-                                    <button class="action-btn like-comment ${isLiked ? 'liked' : ''}" data-key="${commentKey}" data-story="${index}">
-                                        💗 <span class="like-count">${likes}</span>
-                                    </button>
-                                    <button class="action-btn reply-btn" data-key="${commentKey}" data-story="${index}">
-                                        Responder
-                                    </button>
-                                    <span class="comment-date">${formatDate(comment.timestamp)}</span>
-                                </div>
-                                <div class="reply-form" id="reply-form-${commentKey}" style="display: none;">
-                                    <input type="text" placeholder="Tu nombre" class="reply-name-input" maxlength="15">
-                                    <input type="text" placeholder="Responder..." class="reply-text-input" maxlength="100">
-                                    <button class="send-reply-btn" data-key="${commentKey}" data-story="${index}">Enviar</button>
-                                </div>
-                                <div class="replies-container" id="replies-${commentKey}">
-                                    ${repliesHtml}
-                                </div>
+                            <span class="comment-name">${escapeHtml(comment.name)}</span>
+                            <span class="comment-date">${formatDate(comment.timestamp)}</span>
+                        </div>
+                        <div class="comment-text">${escapeHtml(comment.text)}</div>
+                        <div class="comment-actions">
+                            <button class="action-btn like-comment ${isLiked ? 'liked' : ''}" data-key="${commentKey}" data-story="${index}">
+                                💗 <span class="like-count">${likes}</span>
+                            </button>
+                            <button class="action-btn reply-btn" data-key="${commentKey}" data-story="${index}">
+                                💬 ${replyCount}
+                            </button>
+                        </div>
+                        <div class="replies-container" id="replies-${commentKey}">
+                            ${repliesHtml}
+                            <div class="reply-form" id="reply-form-${commentKey}" style="display: none;">
+                                <input type="text" placeholder="Tu nombre" class="reply-name-input" maxlength="15">
+                                <input type="text" placeholder="Responder..." class="reply-text-input" maxlength="100">
+                                <button class="send-reply-btn" data-key="${commentKey}" data-story="${index}">Enviar</button>
                             </div>
                         </div>
                     </div>
