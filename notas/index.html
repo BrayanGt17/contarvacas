@@ -429,100 +429,84 @@
             background: rgba(255, 154, 158, 0.4);
         }
 
-        .countdown-footer {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: linear-gradient(180deg, rgba(26, 10, 46, 0.98), rgba(45, 27, 78, 0.98));
-            border-top: 3px solid rgba(255, 105, 180, 0.7);
-            padding: 20px;
+        /* Cuenta regresiva integrada */
+        .countdown-inline {
+            margin-top: 40px;
+            padding: 30px;
+            background: linear-gradient(145deg, rgba(45, 45, 80, 0.8), rgba(25, 25, 55, 0.9));
+            border-radius: 25px;
+            border: 2px solid rgba(255, 105, 180, 0.4);
             text-align: center;
-            backdrop-filter: blur(15px);
-            z-index: 1000;
-            box-shadow: 0 -5px 30px rgba(255, 105, 180, 0.3);
+            backdrop-filter: blur(10px);
         }
 
-        .countdown-message {
-            color: #fecfef;
-            font-size: 1em;
-            margin-bottom: 12px;
+        .countdown-title {
+            font-size: 1.3em;
+            color: #ff9a9e;
+            margin-bottom: 15px;
             font-style: italic;
         }
 
-        .countdown-timer {
+        .countdown-timer-inline {
             display: flex;
             justify-content: center;
             gap: 20px;
             flex-wrap: wrap;
         }
 
-        .countdown-unit {
+        .countdown-box {
             background: linear-gradient(135deg, rgba(255, 154, 158, 0.3), rgba(254, 207, 239, 0.2));
             border-radius: 20px;
-            padding: 15px 25px;
+            padding: 20px 30px;
             border: 2px solid rgba(255, 154, 158, 0.5);
-            min-width: 90px;
+            min-width: 100px;
         }
 
-        .countdown-number {
-            font-size: 2.5em;
+        .countdown-num {
+            font-size: 3em;
             font-weight: bold;
             color: #ff9a9e;
             text-shadow: 0 0 15px rgba(255, 154, 158, 0.7);
             font-variant-numeric: tabular-nums;
         }
 
-        .countdown-label {
-            font-size: 0.8em;
+        .countdown-lbl {
+            font-size: 0.85em;
             color: rgba(255, 255, 255, 0.8);
             text-transform: uppercase;
             letter-spacing: 2px;
             margin-top: 5px;
         }
 
-        @keyframes tick {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
+        .countdown-message-inline {
+            margin-top: 20px;
+            color: #fecfef;
+            font-size: 1em;
+            font-style: italic;
         }
 
-        .countdown-number.tick {
-            animation: tick 0.2s ease-out;
+        body.purple-theme .countdown-inline {
+            background: linear-gradient(145deg, rgba(30, 30, 60, 0.8), rgba(15, 15, 35, 0.9));
+            border-color: rgba(206, 147, 216, 0.4);
         }
 
-        .countdown-final {
-            color: #ff9a9e;
-            font-size: 1.1em;
-            font-weight: bold;
-            animation: pulse 1s ease-in-out infinite;
-        }
-
-        body.purple-theme .countdown-footer {
-            background: linear-gradient(180deg, rgba(10, 10, 26, 0.98), rgba(26, 10, 46, 0.98));
-            border-color: rgba(206, 147, 216, 0.7);
-            box-shadow: 0 -5px 30px rgba(171, 71, 188, 0.3);
-        }
-
-        body.purple-theme .countdown-message {
+        body.purple-theme .countdown-title,
+        body.purple-theme .countdown-message-inline {
             color: #e1bee7;
         }
 
-        body.purple-theme .countdown-unit {
+        body.purple-theme .countdown-box {
             background: linear-gradient(135deg, rgba(206, 147, 216, 0.3), rgba(171, 71, 188, 0.2));
             border-color: rgba(206, 147, 216, 0.5);
         }
 
-        body.purple-theme .countdown-number {
+        body.purple-theme .countdown-num {
             color: #ce93d8;
             text-shadow: 0 0 15px rgba(206, 147, 216, 0.7);
         }
 
-        body.purple-theme .countdown-final {
-            color: #ce93d8;
-        }
-
         body {
-            padding-bottom: 180px;
+            padding-bottom: 20px;
         }
     </style>
 </head>
@@ -562,6 +546,25 @@
 
             <div class="notes-list" id="notesList">
                 <div class="empty-message">Aún no hay notitas... No me amas :(</div>
+            </div>
+
+            <div class="countdown-inline">
+                <p class="countdown-title">⏰⏰ Tienes... ⏰⏰</p>
+                <div class="countdown-timer-inline">
+                    <div class="countdown-box">
+                        <div class="countdown-num" id="countdown-hours">4000</div>
+                        <div class="countdown-lbl">horas</div>
+                    </div>
+                    <div class="countdown-box">
+                        <div class="countdown-num" id="countdown-minutes">00</div>
+                        <div class="countdown-lbl">minutos</div>
+                    </div>
+                    <div class="countdown-box">
+                        <div class="countdown-num" id="countdown-seconds">00</div>
+                        <div class="countdown-lbl">segundos</div>
+                    </div>
+                </div>
+                <p class="countdown-message-inline">💕💗💕 para pensar en volver conmigo... o ya dime que sí 💕💗💕</p>
             </div>
         </div>
     </div>
@@ -804,26 +807,5 @@
 
         loadCountdown();
     </script>
-
-    <div class="countdown-footer">
-        <p class="countdown-message">⏰⏰ Tienes... ⏰⏰</p>
-        <div class="countdown-timer" id="countdownTimer">
-            <div class="countdown-unit">
-                <div class="countdown-number" id="countdown-hours">4000</div>
-                <div class="countdown-label">horas</div>
-            </div>
-            <div class="countdown-unit">
-                <div class="countdown-number" id="countdown-minutes">00</div>
-                <div class="countdown-label">minutos</div>
-            </div>
-            <div class="countdown-unit">
-                <div class="countdown-number" id="countdown-seconds">00</div>
-                <div class="countdown-label">segundos</div>
-            </div>
-        </div>
-        <p class="countdown-message" style="margin-top: 10px; font-size: 0.9em;">
-            💕💗💕 para pensar en volver conmigo... o ya dime que sí 💕💗💕
-        </p>
-    </div>
 </body>
 </html>
