@@ -428,6 +428,88 @@
         .color-toggle:hover {
             background: rgba(255, 154, 158, 0.4);
         }
+
+        .countdown-footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(135deg, rgba(26, 10, 46, 0.95), rgba(45, 27, 78, 0.95));
+            border-top: 2px solid rgba(255, 105, 180, 0.5);
+            padding: 15px 20px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            z-index: 50;
+        }
+
+        .countdown-message {
+            color: #fecfef;
+            font-size: 0.9em;
+            margin-bottom: 8px;
+            font-style: italic;
+        }
+
+        .countdown-timer {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .countdown-unit {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 10px 20px;
+            border: 1px solid rgba(255, 154, 158, 0.3);
+        }
+
+        .countdown-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #ff9a9e;
+            text-shadow: 0 0 10px rgba(255, 154, 158, 0.5);
+        }
+
+        .countdown-label {
+            font-size: 0.75em;
+            color: rgba(255, 255, 255, 0.7);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .countdown-final {
+            color: #ff9a9e;
+            font-size: 1.1em;
+            font-weight: bold;
+            animation: pulse 1s ease-in-out infinite;
+        }
+
+        body.purple-theme .countdown-footer {
+            background: linear-gradient(135deg, rgba(10, 10, 26, 0.95), rgba(26, 10, 46, 0.95));
+            border-color: rgba(206, 147, 216, 0.5);
+        }
+
+        body.purple-theme .countdown-message {
+            color: #e1bee7;
+        }
+
+        body.purple-theme .countdown-unit {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(206, 147, 216, 0.3);
+        }
+
+        body.purple-theme .countdown-number {
+            color: #ce93d8;
+        }
+
+        body.purple-theme .countdown-final {
+            color: #ce93d8;
+        }
+
+        /* Ajustar padding del body para el footer */
+        body {
+            padding-bottom: 160px;
+        }
     </style>
 </head>
 <body>
@@ -445,7 +527,7 @@
         <div class="notes-container">
             <div class="notes-counter">
                 <span id="notesCount">0</span>
-                <p>notitas de amor 💕</p>
+                <p>notitas 💕</p>
             </div>
 
             <div class="note-form">
@@ -664,6 +746,59 @@
 
         // Inicializar
         loadNotes();
+
+        // Cuenta regresiva
+        const TOTAL_HOURS = 4000;
+        let remainingSeconds = TOTAL_HOURS * 3600;
+
+        function updateCountdown() {
+            const hours = Math.floor(remainingSeconds / 3600);
+            const minutes = Math.floor((remainingSeconds % 3600) / 60);
+            const seconds = remainingSeconds % 60;
+
+            document.getElementById('countdown-hours').textContent = hours;
+            document.getElementById('countdown-minutes').textContent = minutes;
+            document.getElementById('countdown-seconds').textContent = seconds;
+
+            if (remainingSeconds > 0) {
+                remainingSeconds--;
+            }
+        }
+
+        function loadCountdown() {
+            const saved = localStorage.getItem('countdownStart');
+            if (saved) {
+                const elapsed = Math.floor((Date.now() - parseInt(saved)) / 1000);
+                remainingSeconds = Math.max(0, TOTAL_HOURS * 3600 - elapsed);
+            } else {
+                localStorage.setItem('countdownStart', Date.now());
+            }
+            updateCountdown();
+            setInterval(updateCountdown, 1000);
+        }
+
+        loadCountdown();
     </script>
+
+    <div class="countdown-footer">
+        <p class="countdown-message">⏰ Tienes... ⏰</p>
+        <div class="countdown-timer" id="countdownTimer">
+            <div class="countdown-unit">
+                <div class="countdown-number" id="countdown-hours">4000</div>
+                <div class="countdown-label">horas</div>
+            </div>
+            <div class="countdown-unit">
+                <div class="countdown-number" id="countdown-minutes">0</div>
+                <div class="countdown-label">minutos</div>
+            </div>
+            <div class="countdown-unit">
+                <div class="countdown-number" id="countdown-seconds">0</div>
+                <div class="countdown-label">segundos</div>
+            </div>
+        </div>
+        <p class="countdown-message" style="margin-top: 8px; font-size: 0.85em;">
+            💕 para pensar en volver conmigo... o ya dime que sí 💕
+        </p>
+    </div>
 </body>
 </html>
