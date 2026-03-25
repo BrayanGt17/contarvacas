@@ -80,6 +80,30 @@
             margin: 0 auto;
         }
 
+        .notes-counter {
+            text-align: center;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 154, 158, 0.3);
+        }
+
+        .notes-counter span {
+            font-size: 2em;
+            font-weight: bold;
+            background: linear-gradient(135deg, #ff9a9e, #fecfef);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .notes-counter p {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+
         .note-form {
             background: rgba(255, 255, 255, 0.1);
             border-radius: 20px;
@@ -110,6 +134,48 @@
             outline: none;
             background: rgba(255, 255, 255, 0.3);
         }
+
+        .color-picker-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            align-items: center;
+        }
+
+        .color-picker-row label {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9em;
+        }
+
+        .color-options {
+            display: flex;
+            gap: 8px;
+        }
+
+        .color-option {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 3px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .color-option:hover {
+            transform: scale(1.2);
+        }
+
+        .color-option.selected {
+            border-color: #fff;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+
+        .color-option.rosa { background: linear-gradient(135deg, #ff9a9e, #fecfef); }
+        .color-option.amarillo { background: linear-gradient(135deg, #ffe066, #fff3bf); }
+        .color-option.verde { background: linear-gradient(135deg, #81c784, #c8e6c9); }
+        .color-option.azul { background: linear-gradient(135deg, #64b5f6, #bbdefb); }
+        .color-option.morado { background: linear-gradient(135deg, #ba68c8, #e1bee7); }
+        .color-option.naranja { background: linear-gradient(135deg, #ff9800, #ffe0b2); }
 
         .submit-btn {
             width: 100%;
@@ -144,6 +210,25 @@
             animation: slideIn 0.5s ease-out;
             position: relative;
         }
+
+        .note-card.rosa { background: linear-gradient(135deg, rgba(255, 154, 158, 0.3), rgba(254, 207, 239, 0.2)); border-color: rgba(255, 154, 158, 0.5); }
+        .note-card.amarillo { background: linear-gradient(135deg, rgba(255, 235, 59, 0.3), rgba(255, 243, 176, 0.2)); border-color: rgba(255, 235, 59, 0.5); }
+        .note-card.verde { background: linear-gradient(135deg, rgba(129, 199, 132, 0.3), rgba(200, 230, 201, 0.2)); border-color: rgba(129, 199, 132, 0.5); }
+        .note-card.azul { background: linear-gradient(135deg, rgba(100, 181, 246, 0.3), rgba(187, 222, 251, 0.2)); border-color: rgba(100, 181, 246, 0.5); }
+        .note-card.morado { background: linear-gradient(135deg, rgba(171, 71, 188, 0.3), rgba(206, 147, 216, 0.2)); border-color: rgba(171, 71, 188, 0.5); }
+        .note-card.naranja { background: linear-gradient(135deg, rgba(255, 152, 0, 0.3), rgba(255, 213, 79, 0.2)); border-color: rgba(255, 152, 0, 0.5); }
+
+        .note-card.amarillo .note-text { color: #5d4037; }
+        .note-card.verde .note-text { color: #2e7d32; }
+        .note-card.azul .note-text { color: #1565c0; }
+        .note-card.morado .note-text { color: #6a1b9a; }
+        .note-card.naranja .note-text { color: #e65100; }
+
+        .note-card.amarillo .note-date,
+        .note-card.verde .note-date,
+        .note-card.azul .note-date,
+        .note-card.morado .note-date,
+        .note-card.naranja .note-date { color: rgba(0, 0, 0, 0.5); }
 
         @keyframes slideIn {
             from {
@@ -351,15 +436,31 @@
     
     <div class="particles" id="particles"></div>
     
-    <div class="content">
+        <div class="content">
         <div class="header">
             <h1 class="title">Notitas </h1>
             <p class="subtitle">Deja una nota JAJA</p>
         </div>
 
         <div class="notes-container">
+            <div class="notes-counter">
+                <span id="notesCount">0</span>
+                <p>notitas de amor 💕</p>
+            </div>
+
             <div class="note-form">
                 <textarea class="note-input" id="noteInput" placeholder="Escribe tu notita aquí... 🐮" rows="4"></textarea>
+                <div class="color-picker-row">
+                    <label>Color:</label>
+                    <div class="color-options">
+                        <div class="color-option rosa selected" data-color="rosa" onclick="selectColor(this)"></div>
+                        <div class="color-option amarillo" data-color="amarillo" onclick="selectColor(this)"></div>
+                        <div class="color-option verde" data-color="verde" onclick="selectColor(this)"></div>
+                        <div class="color-option azul" data-color="azul" onclick="selectColor(this)"></div>
+                        <div class="color-option morado" data-color="morado" onclick="selectColor(this)"></div>
+                        <div class="color-option naranja" data-color="naranja" onclick="selectColor(this)"></div>
+                    </div>
+                </div>
                 <button class="submit-btn" onclick="submitNote()">Publicar Nota 🦒</button>
             </div>
 
@@ -387,6 +488,8 @@
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
 
+        let selectedNoteColor = 'rosa';
+
         // Crear partículas
         function createParticles() {
             const container = document.getElementById('particles');
@@ -401,16 +504,26 @@
         }
         createParticles();
 
+        function selectColor(el) {
+            document.querySelectorAll('.color-option').forEach(opt => opt.classList.remove('selected'));
+            el.classList.add('selected');
+            selectedNoteColor = el.dataset.color;
+        }
+
         // Cargar notas
         function loadNotes() {
             database.ref('notas').orderByChild('timestamp').on('value', (snapshot) => {
                 const notesList = document.getElementById('notesList');
+                const notesCount = document.getElementById('notesCount');
                 notesList.innerHTML = '';
                 
                 const notes = [];
                 snapshot.forEach((child) => {
                     notes.push({ id: child.key, ...child.val() });
                 });
+                
+                // Actualizar contador
+                notesCount.textContent = notes.length;
                 
                 // Mostrar de más nuevo a más antiguo
                 notes.reverse();
@@ -430,6 +543,9 @@
         function createNoteCard(note) {
             const card = document.createElement('div');
             card.className = 'note-card';
+            if (note.color) {
+                card.classList.add(note.color);
+            }
             card.id = 'note-' + note.id;
             
             const date = new Date(note.timestamp);
@@ -472,7 +588,8 @@
                 text: text,
                 timestamp: Date.now(),
                 likes: 0,
-                likedBy: {}
+                likedBy: {},
+                color: selectedNoteColor
             };
             
             database.ref('notas').push(newNote);
