@@ -203,21 +203,6 @@
             background: rgba(255, 154, 158, 0.5);
         }
 
-        .reply-like-btn {
-            background: rgba(255, 154, 158, 0.15);
-            border: none;
-            color: #ff9a9e;
-            padding: 5px 10px;
-            border-radius: 15px;
-            cursor: pointer;
-            font-size: 0.85em;
-            margin-top: 5px;
-        }
-
-        .reply-like-btn:hover {
-            background: rgba(255, 154, 158, 0.3);
-        }
-
         .delete-btn {
             background: rgba(255, 100, 100, 0.2);
             border: none;
@@ -243,69 +228,6 @@
         @keyframes floatUp {
             0% { opacity: 1; transform: translateY(0) scale(1); }
             100% { opacity: 0; transform: translateY(-200px) scale(0.5); }
-        }
-
-        .reply-form {
-            margin-top: 15px;
-            display: none;
-        }
-
-        .reply-form.show {
-            display: block;
-        }
-
-        .reply-input {
-            width: 100%;
-            padding: 10px;
-            border: none;
-            border-radius: 10px;
-            background: rgba(255, 255, 255, 0.1);
-            color: #fff;
-            font-size: 0.9em;
-            margin-bottom: 10px;
-            font-family: inherit;
-        }
-
-        .reply-input::placeholder {
-            color: rgba(255, 255, 255, 0.5);
-        }
-
-        .reply-btn {
-            background: rgba(255, 154, 158, 0.3);
-            border: none;
-            color: #fff;
-            padding: 8px 15px;
-            border-radius: 10px;
-            cursor: pointer;
-            font-size: 0.9em;
-        }
-
-        .reply-btn:hover {
-            background: rgba(255, 154, 158, 0.5);
-        }
-
-        .replies {
-            margin-top: 15px;
-            padding-left: 20px;
-            border-left: 2px solid rgba(255, 154, 158, 0.3);
-        }
-
-        .reply {
-            padding: 10px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 10px;
-            margin-bottom: 10px;
-        }
-
-        .reply-text {
-            color: #fff;
-            font-size: 0.95em;
-            margin-bottom: 5px;
-        }
-
-        .reply-date {
-            color: rgba(255, 255, 255, 0.5);
-            font-size: 0.8em;
         }
 
         .empty-message {
@@ -380,8 +302,7 @@
         }
 
         body.purple-theme .subtitle,
-        body.purple-theme .note-text,
-        body.purple-theme .reply-text {
+        body.purple-theme .note-text {
             color: #e1bee7;
         }
 
@@ -405,21 +326,6 @@
 
         body.purple-theme .particle {
             background: rgba(156, 39, 176, 0.6);
-        }
-
-        body.purple-theme .reply-like-btn {
-            background: rgba(156, 39, 176, 0.2);
-            color: #ce93d8;
-        }
-
-        body.purple-theme .reply-btn {
-            background: rgba(156, 39, 176, 0.3);
-            color: #e1bee7;
-        }
-
-        body.purple-theme .reply-input {
-            background: rgba(255, 255, 255, 0.1);
-            color: #e1bee7;
         }
 
         .content {
@@ -545,82 +451,12 @@
                         <button class="like-btn ${likedClass}" onclick="likeNote('${note.id}')">
                             💗 <span id="likes-${note.id}">${likes}</span>
                         </button>
-                        <button class="like-btn" onclick="toggleReply('${note.id}')">💬</button>
                         <button class="delete-btn" onclick="deleteNote('${note.id}')">🗑️</button>
                     </div>
                 </div>
-                <div class="reply-form" id="reply-form-${note.id}">
-                    <input type="text" class="reply-input" id="reply-input-${note.id}" placeholder="Escribe una respuesta...">
-                    <button class="reply-btn" onclick="submitReply('${note.id}')">Responder 💕</button>
-                </div>
-                <div class="replies" id="replies-${note.id}"></div>
             `;
             
-            // Cargar respuestas en tiempo real
-            loadReplies(note.id);
-            
             return card;
-        }
-
-        function loadReplies(noteId) {
-            const container = document.getElementById('replies-' + noteId);
-            if (!container) return;
-            
-            // Escuchar cambios en tiempo real
-            database.ref('notas/' + noteId + '/replies').on('value', (snapshot) => {
-                container.innerHTML = '';
-                
-                if (!snapshot.exists()) return;
-                
-                snapshot.forEach((child) => {
-                    const reply = child.val();
-                    const replyId = child.key;
-                    
-                    const replyDiv = document.createElement('div');
-                    replyDiv.className = 'reply';
-                    
-                    const replyDate = new Date(reply.timestamp);
-                    const formattedDate = replyDate.toLocaleDateString('es-ES', {
-                        day: 'numeric',
-                        month: 'short',
-                        hour: '2-digit',
-                        minute: '2-digit'
-                    });
-                    
-                    replyDiv.innerHTML = `
-                        <div class="reply-text">${escapeHtml(reply.text)}</div>
-                        <div class="reply-date">${formattedDate}</div>
-                        <button class="reply-like-btn" onclick="likeReply('${noteId}', '${replyId}')">
-                            💗 ${reply.likes || 0}
-                        </button>
-                    `;
-                    container.appendChild(replyDiv);
-                });
-            });
-        }
-
-        function likeReply(noteId, replyId) {
-            const replyRef = database.ref('notas/' + noteId + '/replies/' + replyId);
-            
-            replyRef.once('value').then((snapshot) => {
-                const reply = snapshot.val();
-                if (!reply) return;
-                
-                let likes = reply.likes || 0;
-                let likedBy = reply.likedBy || {};
-                const userId = getUserId();
-                
-                if (likedBy[userId]) {
-                    delete likedBy[userId];
-                    likes--;
-                } else {
-                    likedBy[userId] = true;
-                    likes++;
-                    createHeartEffect();
-                }
-                
-                replyRef.update({ likes, likedBy });
-            });
         }
 
         function submitNote() {
@@ -665,30 +501,6 @@
                 
                 noteRef.update({ likes, likedBy });
             });
-        }
-
-        function toggleReply(noteId) {
-            const form = document.getElementById('reply-form-' + noteId);
-            form.classList.toggle('show');
-        }
-
-        function submitReply(noteId) {
-            const input = document.getElementById('reply-input-' + noteId);
-            const text = input.value.trim();
-            
-            if (!text) {
-                alert('Escribe algo primero! 💕');
-                return;
-            }
-            
-            const reply = {
-                text: text,
-                timestamp: Date.now()
-            };
-            
-            database.ref('notas/' + noteId + '/replies').push(reply);
-            input.value = '';
-            document.getElementById('reply-form-' + noteId).classList.remove('show');
         }
 
         function getUserId() {
