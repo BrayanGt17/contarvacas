@@ -434,47 +434,60 @@
             bottom: 0;
             left: 0;
             right: 0;
-            background: linear-gradient(135deg, rgba(26, 10, 46, 0.95), rgba(45, 27, 78, 0.95));
-            border-top: 2px solid rgba(255, 105, 180, 0.5);
-            padding: 15px 20px;
+            background: linear-gradient(180deg, rgba(26, 10, 46, 0.98), rgba(45, 27, 78, 0.98));
+            border-top: 3px solid rgba(255, 105, 180, 0.7);
+            padding: 20px;
             text-align: center;
-            backdrop-filter: blur(10px);
-            z-index: 50;
+            backdrop-filter: blur(15px);
+            z-index: 1000;
+            box-shadow: 0 -5px 30px rgba(255, 105, 180, 0.3);
         }
 
         .countdown-message {
             color: #fecfef;
-            font-size: 0.9em;
-            margin-bottom: 8px;
+            font-size: 1em;
+            margin-bottom: 12px;
             font-style: italic;
         }
 
         .countdown-timer {
             display: flex;
             justify-content: center;
-            gap: 15px;
+            gap: 20px;
             flex-wrap: wrap;
         }
 
         .countdown-unit {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 15px;
-            padding: 10px 20px;
-            border: 1px solid rgba(255, 154, 158, 0.3);
+            background: linear-gradient(135deg, rgba(255, 154, 158, 0.3), rgba(254, 207, 239, 0.2));
+            border-radius: 20px;
+            padding: 15px 25px;
+            border: 2px solid rgba(255, 154, 158, 0.5);
+            min-width: 90px;
         }
 
         .countdown-number {
-            font-size: 2em;
+            font-size: 2.5em;
             font-weight: bold;
             color: #ff9a9e;
-            text-shadow: 0 0 10px rgba(255, 154, 158, 0.5);
+            text-shadow: 0 0 15px rgba(255, 154, 158, 0.7);
+            font-variant-numeric: tabular-nums;
         }
 
         .countdown-label {
-            font-size: 0.75em;
-            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.8em;
+            color: rgba(255, 255, 255, 0.8);
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 2px;
+            margin-top: 5px;
+        }
+
+        @keyframes tick {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .countdown-number.tick {
+            animation: tick 0.2s ease-out;
         }
 
         .countdown-final {
@@ -485,8 +498,9 @@
         }
 
         body.purple-theme .countdown-footer {
-            background: linear-gradient(135deg, rgba(10, 10, 26, 0.95), rgba(26, 10, 46, 0.95));
-            border-color: rgba(206, 147, 216, 0.5);
+            background: linear-gradient(180deg, rgba(10, 10, 26, 0.98), rgba(26, 10, 46, 0.98));
+            border-color: rgba(206, 147, 216, 0.7);
+            box-shadow: 0 -5px 30px rgba(171, 71, 188, 0.3);
         }
 
         body.purple-theme .countdown-message {
@@ -494,21 +508,21 @@
         }
 
         body.purple-theme .countdown-unit {
-            background: rgba(255, 255, 255, 0.05);
-            border-color: rgba(206, 147, 216, 0.3);
+            background: linear-gradient(135deg, rgba(206, 147, 216, 0.3), rgba(171, 71, 188, 0.2));
+            border-color: rgba(206, 147, 216, 0.5);
         }
 
         body.purple-theme .countdown-number {
             color: #ce93d8;
+            text-shadow: 0 0 15px rgba(206, 147, 216, 0.7);
         }
 
         body.purple-theme .countdown-final {
             color: #ce93d8;
         }
 
-        /* Ajustar padding del body para el footer */
         body {
-            padding-bottom: 160px;
+            padding-bottom: 180px;
         }
     </style>
 </head>
@@ -756,9 +770,20 @@
             const minutes = Math.floor((remainingSeconds % 3600) / 60);
             const seconds = remainingSeconds % 60;
 
-            document.getElementById('countdown-hours').textContent = hours;
-            document.getElementById('countdown-minutes').textContent = minutes;
-            document.getElementById('countdown-seconds').textContent = seconds;
+            const hoursEl = document.getElementById('countdown-hours');
+            const minutesEl = document.getElementById('countdown-minutes');
+            const secondsEl = document.getElementById('countdown-seconds');
+
+            hoursEl.textContent = hours;
+            minutesEl.textContent = minutes;
+            secondsEl.textContent = seconds;
+
+            // Animacion de tic
+            if (secondsEl) {
+                secondsEl.classList.remove('tick');
+                void secondsEl.offsetWidth;
+                secondsEl.classList.add('tick');
+            }
 
             if (remainingSeconds > 0) {
                 remainingSeconds--;
@@ -781,23 +806,23 @@
     </script>
 
     <div class="countdown-footer">
-        <p class="countdown-message">⏰ Tienes... ⏰</p>
+        <p class="countdown-message">⏰⏰ Tienes... ⏰⏰</p>
         <div class="countdown-timer" id="countdownTimer">
             <div class="countdown-unit">
                 <div class="countdown-number" id="countdown-hours">4000</div>
                 <div class="countdown-label">horas</div>
             </div>
             <div class="countdown-unit">
-                <div class="countdown-number" id="countdown-minutes">0</div>
+                <div class="countdown-number" id="countdown-minutes">00</div>
                 <div class="countdown-label">minutos</div>
             </div>
             <div class="countdown-unit">
-                <div class="countdown-number" id="countdown-seconds">0</div>
+                <div class="countdown-number" id="countdown-seconds">00</div>
                 <div class="countdown-label">segundos</div>
             </div>
         </div>
-        <p class="countdown-message" style="margin-top: 8px; font-size: 0.85em;">
-            💕 para pensar en volver conmigo... o ya dime que sí 💕
+        <p class="countdown-message" style="margin-top: 10px; font-size: 0.9em;">
+            💕💗💕 para pensar en volver conmigo... o ya dime que sí 💕💗💕
         </p>
     </div>
 </body>
