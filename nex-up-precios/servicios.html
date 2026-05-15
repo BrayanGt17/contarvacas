@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Servicios | Nex-Up</title>
+    <meta name="description" content="Lista de servicios disponibles">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">Nex-Up</div>
+            <ul class="nav-links">
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="servicios.html">Servicios</a></li>
+                <li><a href="index.html#contacto">Contacto</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="main-servicios">
+        <section class="servicios-page">
+            <h1>Nuestros Servicios</h1>
+            
+            <div class="search-container">
+                <input type="text" id="buscar" placeholder="🔍 Buscar servicio..." onkeyup="filtrarServicios()">
+            </div>
+
+            <div class="servicios-grid" id="servicios-grid">
+                <div class="servicio-card" data-servicio="bypass iphone" onclick="abrirModal('bypass')">
+                    <h3>🔓 Bypass iPhone 6-X</h3>
+                    <p>Bypass iCloud para iPhone 6 hasta X</p>
+                </div>
+                
+                <div class="servicio-card" data-servicio="unlock iphone" onclick="abrirModal('unlock-iphone')">
+                    <h3>📱 Unlock iPhone</h3>
+                    <p>Desbloqueo por IMEI de iPhone</p>
+                </div>
+                
+                <div class="servicio-card" data-servicio="unlock android" onclick="abrirModal('unlock-android')">
+                    <h3>📱 Unlock Android</h3>
+                    <p>Desbloqueo de dispositivos Android</p>
+                </div>
+                
+                <div class="servicio-card" data-servicio="frp samsung" onclick="abrirModal('frp-samsung')">
+                    <h3>🔧 FRP Samsung</h3>
+                    <p>Eliminación FRP Samsung</p>
+                </div>
+                
+                <div class="servicio-card" data-servicio="frp xiaomi" onclick="window.location.href='frp-xiaomi.html'">
+                    <h3>🔧 FRP Xiaomi</h3>
+                    <p>Eliminación FRP Xiaomi - Ver guía →</p>
+                </div>
+                
+                <div class="servicio-card" data-servicio="frp motorola" onclick="abrirModal('frp-motorola')">
+                    <h3>🔧 FRP Motorola</h3>
+                    <p>Eliminación FRP Motorola</p>
+                </div>
+                
+                <div class="servicio-card" data-servicio="f4 flashing" onclick="abrirModal('f4')">
+                    <h3>⚡ F4 Flashing</h3>
+                    <p>Servicio de flashing de firmware</p>
+                </div>
+                
+                <div class="servicio-card" data-servicio="licencias windows" onclick="abrirModal('lic-windows')">
+                    <h3>🔑 Licencias Windows</h3>
+                    <p>Windows 10/11 originales</p>
+                </div>
+                
+                <div class="servicio-card" data-servicio="licencias office" onclick="abrirModal('lic-office')">
+                    <h3>🔑 Microsoft Office</h3>
+                    <p>Office 365 y versiones</p>
+                </div>
+                
+                <div class="servicio-card" data-servicio="desarrollo web" onclick="abrirModal('desarrollo-web')">
+                    <h3>💻 Desarrollo Web</h3>
+                    <p>Sitios y aplicaciones web</p>
+                </div>
+                
+                <div class="servicio-card" data-servicio="diseno grafico" onclick="abrirModal('diseno')">
+                    <h3>🎨 Diseño Gráfico</h3>
+                    <p>Logos, branding, identidades</p>
+                </div>
+                
+                <div class="servicio-card" data-servicio="marketing digital" onclick="abrirModal('marketing')">
+                    <h3>📢 Marketing Digital</h3>
+                    <p>Redes sociales, SEO, publicidad</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div id="modal" class="modal" onclick="cerrarModal(event)">
+        <div class="modal-content">
+            <span class="close" onclick="cerrarModalBtn()">&times;</span>
+            <div id="modal-body"></div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Nex-Up. Todos los derechos reservados.</p>
+    </footer>
+
+    <script>
+        const servicios = {
+            'bypass': {
+                titulo: '🔓 Bypass iPhone 6-X',
+                descripcion: 'Servicio de bypass para iPhone 6, 6s, 7, 7 Plus, 8, 8 Plus y X',
+                requisitos: [
+                    'Equipo con iOS válido para el método',
+                    'IMEI no reportado como robado',
+                    'Cuenta iCloud del cliente (si es Hello)',
+                    'Equipo no dañado físicamente'
+                ],
+                precios: {
+                    'Hello (Sin señal)': { usdt: '25-50', mxn: '450-950', gtq: '250-500' },
+                    'Desactivado/Passcode (Con señal)': { usdt: '30-60', mxn: '550-1100', gtq: '300-600' }
+                },
+                tiempo: '24-72 horas',
+                nota: 'El bypass elimina el bloqueo de iCloud. El equipo quedará funcional pero sin iCloud original.'
+            },
+            'unlock-iphone': {
+                titulo: '📱 Unlock iPhone',
+                descripcion: 'Desbloqueo por IMEI para usar con cualquier operador',
+                requisitos: [
+                    'IMEI del dispositivo',
+                    'Equipo no reportado como robado',
+                    'Saldo pendiente con operador actual',
+                    'Esperar 60 días después del último cambio'
+                ],
+                precios: {
+                    'Por IMEI': { usdt: '15-80', mxn: '300-1500', gtq: '150-800' }
+                },
+                tiempo: '1-7 días',
+                nota: 'El unlock es permanente y funciona con actualizaciones.'
+            },
+            'unlock-android': {
+                titulo: '📱 Unlock Android',
+                descripcion: 'Desbloqueo de dispositivos Android por código o servidor',
+                requisitos: [
+                    'Modelo y operador del equipo',
+                    'IMEI del dispositivo',
+                    'No tener contrato pendiente'
+                ],
+                precios: {
+                    'Por código': { usdt: '10-30', mxn: '200-550', gtq: '100-300' }
+                },
+                tiempo: '1-3 días',
+                nota: 'El unlock permite usar cualquier SIM.'
+            },
+            'frp-samsung': {
+                titulo: '🔧 FRP Samsung',
+                descripcion: 'Eliminación del bloqueo FRP (Factory Reset Protection)',
+                requisitos: [
+                    'Modelo Samsung',
+                    'Cuenta Google original del cliente',
+                    'Equipo no dañado por agua'
+                ],
+                precios: {
+                    'Por modelo': { usdt: '10-25', mxn: '200-450', gtq: '100-250' }
+                },
+                tiempo: '1-2 horas',
+                nota: 'El FRP se activa tras resetear el equipo sin desconectar la cuenta Google.'
+            },
+            'frp-motorola': {
+                titulo: '🔧 FRP Motorola',
+                descripcion: 'Eliminación FRP para dispositivos Motorola',
+                requisitos: [
+                    'Modelo Motorola',
+                    'Cuenta Google del cliente',
+                    'Bootloader desbloqueado (algunos modelos)'
+                ],
+                precios: {
+                    'Por modelo': { usdt: '10-20', mxn: '200-400', gtq: '100-200' }
+                },
+                tiempo: '1-3 horas',
+                nota: 'Algunos modelos requieren desbloquear bootloader.'
+            },
+            'f4': {
+                titulo: '⚡ F4 Flashing',
+                descripcion: 'Servicio de flasheo de firmware y reparación de software',
+                requisitos: [
+                    'Modelo del dispositivo',
+                    ' firmware original o saber versión',
+                    'Equipo en modo download o fastboot'
+                ],
+                precios: {
+                    'Flasheo básico': { usdt: '10-25', mxn: '200-450', gtq: '100-250' },
+                    'Flasheo avanzado': { usdt: '25-50', mxn: '450-950', gtq: '250-500' }
+                },
+                tiempo: '1-4 horas',
+                nota: 'El flashing repara software corrupto o downgrada firmware.'
+            },
+            'lic-windows': {
+                titulo: '🔑 Licencias Windows',
+                descripcion: 'Licencias originales Windows 10 y 11',
+                requisitos: [
+                    'PC con Windows instalado',
+                    ' Saber versión requerida'
+                ],
+                precios: {
+                    'Windows 10': { usdt: '10', mxn: '180', gtq: '100' },
+                    'Windows 11': { usdt: '15', mxn: '270', gtq: '150' }
+                },
+                tiempo: 'Inmediato',
+                nota: 'Licencia digital, se activa en tu PC.'
+            },
+            'lic-office': {
+                titulo: '🔑 Microsoft Office',
+                descripcion: 'Licencias Office 365 y permanentes',
+                requisitos: [
+                    'Cuenta Microsoft (para 365)',
+                    'PC con Windows o Mac'
+                ],
+                precios: {
+                    'Office 365 (1 año)': { usdt: '25', mxn: '450', gtq: '250' },
+                    'Office 2021': { usdt: '40', mxn: '720', gtq: '400' }
+                },
+                tiempo: 'Inmediato',
+                nota: 'Office 365 incluye 1TB OneDrive.'
+            },
+            'desarrollo-web': {
+                titulo: '💻 Desarrollo Web',
+                descripcion: 'Sitios web, tiendas online y aplicaciones web',
+                requisitos: [
+                    'Brief del proyecto',
+                    'Contenido listo (textos, imágenes)',
+                    'Dominio y hosting (opcional)'
+                ],
+                precios: {
+                    'Landing page': { usdt: '100-300', mxn: '1800-5400', gtq: '1000-3000' },
+                    'Sitio web': { usdt: '300-800', mxn: '5400-14400', gtq: '3000-8000' },
+                    'E-commerce': { usdt: '500-2000', mxn: '9000-36000', gtq: '5000-20000' }
+                },
+                tiempo: '1-4 semanas',
+                nota: 'Incluye diseño responsive y SEO básico.'
+            },
+            'diseno': {
+                titulo: '🎨 Diseño Gráfico',
+                descripcion: 'Logos, branding, flyers, presentaciones',
+                requisitos: [
+                    'Brief del proyecto',
+                    'Preferencias de colores y estilo',
+                    'Referencias (opcional)'
+                ],
+                precios: {
+                    'Logo': { usdt: '30-100', mxn: '540-1800', gtq: '300-1000' },
+                    'Flyer': { usdt: '15-40', mxn: '270-720', gtq: '150-400' },
+                    'Branding': { usdt: '100-300', mxn: '1800-5400', gtq: '1000-3000' }
+                },
+                tiempo: '1-5 días',
+                nota: 'Incluye 2-3 revisiones.'
+            },
+            'marketing': {
+                titulo: '📢 Marketing Digital',
+                descripcion: 'Gestión de redes sociales, SEO y publicidad',
+                requisitos: [
+                    'Accesos a redes sociales',
+                    'Objetivos de la campaña',
+                    'Presupuesto publicitario'
+                ],
+                precios: {
+                    'Gestión mensual': { usdt: '150-400', mxn: '2700-7200', gtq: '1500-4000' },
+                    'Campaña puntual': { usdt: '50-200', mxn: '900-3600', gtq: '500-2000' }
+                },
+                tiempo: 'Mensual o por proyecto',
+                nota: 'Informes mensuales de métricas.'
+            }
+        };
+
+        function abrirModal(servicio) {
+            const s = servicios[servicio];
+            const modal = document.getElementById('modal');
+            const body = document.getElementById('modal-body');
+            
+            let html = `<h2>${s.titulo}</h2>
+                <p class="modal-desc">${s.descripcion}</p>
+                
+                <h3>📋 Requisitos</h3>
+                <ul class="modal-list">
+                    ${s.requisitos.map(r => `<li>${r}</li>`).join('')}
+                </ul>
+                
+                <h3>💰 Precios</h3>
+                <div class="precios-modal">`;
+            
+            for (const [tipo, precio] of Object.entries(s.precios)) {
+                html += `<div class="precio-item">
+                    <span class="precio-tipo">${tipo}</span>
+                    <div class="precios-div">
+                        <span>USDT: <strong>$${precio.usdt}</strong></span>
+                        <span>MXN: <strong>$${precio.mxn}</strong></span>
+                        <span>GTQ: <strong>Q${precio.gtq}</strong></span>
+                    </div>
+                </div>`;
+            }
+            
+            html += `</div>
+                <p class="modal-tiempo">⏱️ Tiempo estimado: ${s.tiempo}</p>
+                <p class="modal-nota">📝 ${s.nota}</p>
+                <a href="https://wa.me/50212345678" target="_blank" class="btn-whatsapp">Contactar por WhatsApp</a>`;
+            
+            body.innerHTML = html;
+            modal.style.display = 'flex';
+        }
+
+        function cerrarModal(e) {
+            if (e.target.id === 'modal') {
+                document.getElementById('modal').style.display = 'none';
+            }
+        }
+
+        function cerrarModalBtn() {
+            document.getElementById('modal').style.display = 'none';
+        }
+
+        function filtrarServicios() {
+            const input = document.getElementById('buscar').value.toLowerCase();
+            const cards = document.querySelectorAll('.servicio-card');
+            
+            cards.forEach(card => {
+                const texto = card.getAttribute('data-servicio');
+                if (texto.includes(input)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+    </script>
+</body>
+</html>
